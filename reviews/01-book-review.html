@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Review: CDI@Work &ndash; [CDI@Work]:AI</title>
+  <meta name="description" content="A practitioner's deep dive into dependency injection with Java EE. An honest review of Gerhard Petracek's CDI@Work.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .meta {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    article {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2.5rem 3rem;
+    }
+
+    article p {
+      margin-bottom: 1.4rem;
+    }
+
+    article h2 {
+      font-size: 1.3rem;
+      color: #0f3460;
+      margin: 2.2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    article a {
+      color: #0f3460;
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
+    }
+
+    article a:hover {
+      text-decoration-color: #0f3460;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+      border-left: 4px solid #0f3460;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong {
+      color: #0f3460;
+    }
+
+    .book-links {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    .verdict {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border-left: 4px solid #2e7d32;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .verdict strong {
+      color: #2e7d32;
+    }
+
+    code {
+      background: #f0f3f7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      article { margin: -1.5rem 1rem 3rem; padding: 1.5rem; }
+      .book-links { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">[CDI@Work]:AI &middot; Book Review</div>
+    <h1>A Practitioner&rsquo;s Deep Dive into Dependency Injection with Java EE</h1>
+    <p class="meta">Review by Claude (Anthropic) &middot; February 2026</p>
+  </header>
+
+  <article>
+    <p>
+      There is no shortage of books and tutorials that explain Contexts and
+      Dependency Injection (CDI) at a surface level &mdash; the usual
+      <code>@Inject</code> hello-world, a paragraph on scopes, and a wave
+      toward &ldquo;further reading.&rdquo; Gerhard Petracek&rsquo;s
+      <em>CDI@Work</em> is not one of those books. It is, perhaps
+      unapologetically, a book written by someone who lives inside the CDI
+      container &mdash; and it shows on every page.
+    </p>
+
+    <p>
+      Petracek, an Apache DeltaSpike committer and CDI specification
+      contributor, structures the book around a single evolving application
+      called <em>IdeaFork</em> &mdash; a collaborative idea management tool.
+      This is one of the book&rsquo;s strongest design decisions. Rather than
+      presenting isolated toy examples, each chapter builds on the same
+      codebase, and the reader watches it grow from a monolith into a set of
+      microservices. By the time the application splits into
+      <em>IdeaForkLite</em> and <em>IdeaForkMicro</em>, the architectural
+      reasoning feels earned rather than prescribed.
+    </p>
+
+    <h2>Precision Where It Matters</h2>
+
+    <p>
+      The early chapters cover CDI fundamentals with unusual thoroughness.
+      The treatment of Normal-Scopes versus Pseudo-Scopes &mdash; and the
+      subtle difference between a Contextual-Instance and a
+      Contextual-Reference (the proxy) &mdash; is the kind of precision that
+      separates developers who <em>use</em> CDI from those who
+      <em>understand</em> it. The book doesn&rsquo;t shy away from the sharp
+      edges: serialization pitfalls with <code>@SessionScoped</code> beans,
+      the behavioral differences between <code>@Dependent</code> and normal
+      scopes, the importance of <code>passivationCapable</code> &mdash; these
+      are exactly the details that cause production bugs and are rarely
+      documented this clearly.
+    </p>
+
+    <div class="highlight">
+      <strong>Standout detail:</strong> The discussion of why injecting a
+      <code>@Dependent</code>-scoped bean into a <code>@SessionScoped</code>
+      bean effectively makes the dependent bean session-scoped is the kind of
+      insight you typically only get from debugging a memory leak in
+      production.
+    </div>
+
+    <h2>CDI Extensions: The Power Chapter</h2>
+
+    <p>
+      The chapter on Portable CDI Extensions deserves particular mention.
+      Extension authoring is one of CDI&rsquo;s most powerful and least
+      accessible features. Petracek walks through the full container lifecycle
+      &mdash; from <code>BeforeBeanDiscovery</code> through
+      <code>AfterDeploymentValidation</code> &mdash; with concrete examples
+      that register beans, add qualifiers, and manipulate metadata
+      programmatically. This chapter alone would justify the book for
+      framework developers.
+    </p>
+
+    <h2>Apache DeltaSpike: Patterns Beyond the Library</h2>
+
+    <p>
+      Apache DeltaSpike receives extensive coverage, which makes sense given
+      the author&rsquo;s role in the project but may date parts of the text
+      for readers working with newer stacks. That said, the DeltaSpike
+      chapters are valuable even if you never use the library, because they
+      demonstrate <em>patterns</em>: type-safe configuration, view-layer
+      abstraction, declarative security, repository-style data access. These
+      patterns reappear in modern frameworks like Quarkus and MicroProfile,
+      and understanding their DeltaSpike origins provides useful context.
+    </p>
+
+    <h2>Beyond Pure CDI</h2>
+
+    <p>
+      The later chapters on integrating CDI with non-CDI ecosystems (Akka
+      actors, Spring services) and building microservices with Apache
+      Meecrowave are refreshingly pragmatic. The CDI-Spring Bridge example
+      &mdash; using CDI producers to wrap Spring&rsquo;s
+      <code>JavaMailSender</code> &mdash; is a small masterpiece of practical
+      interoperability. The microservices chapter introduces CDI 2.0 async
+      events and DeltaSpike&rsquo;s Partial-Beans as REST client proxies,
+      pushing the boundaries of what most developers would attempt with CDI
+      alone.
+    </p>
+
+    <div class="highlight">
+      <strong>IdeaFork&rsquo;s evolution:</strong> The progression from a
+      monolithic Java&nbsp;EE application (<em>IdeaFork</em>) to a simplified
+      CDI-only version (<em>IdeaForkLite</em>) to a microservices
+      architecture (<em>IdeaForkMicro</em>) is the narrative spine of the
+      book. Each refactoring step is motivated by a real limitation of the
+      previous design, not by a desire to demonstrate a technology.
+    </p>
+    </div>
+
+    <h2>The AI-Assisted Revision</h2>
+
+    <p>
+      A word on the format: this edition is a modernized, AI-assisted revision
+      of the original German text. The English translation reads naturally, and
+      the addition of forward-looking notes &mdash; green boxes pointing to
+      Jakarta&nbsp;EE, Quarkus, and Angular coverage in later chapters &mdash;
+      is a thoughtful touch that keeps the foundational material connected to
+      the current ecosystem. The code listings are plentiful &mdash; hundreds
+      of them &mdash; and feel like real application code rather than contrived
+      snippets.
+    </p>
+
+    <h2>Where the Book Is Less Strong</h2>
+
+    <p>
+      The density can be overwhelming. Petracek writes for developers who
+      already have Java&nbsp;EE experience, and there is little hand-holding.
+      If you don&rsquo;t know what a <code>beans.xml</code> deployment
+      descriptor does, or why EJBs and CDI beans are not the same thing, you
+      will need supplementary material. The DeltaSpike-heavy middle section,
+      while technically excellent, occupies significant real estate for a
+      library that has been superseded in many environments.
+    </p>
+
+    <h2>The Verdict</h2>
+
+    <div class="verdict">
+      <strong>Bottom line:</strong> <em>CDI@Work</em> is not a gentle
+      introduction &mdash; it is a technical reference disguised as a
+      narrative. For Java developers who work with CDI in any capacity, or who
+      want to understand the dependency injection model that influenced
+      MicroProfile and Quarkus, this book offers a level of depth and
+      practical insight that is genuinely hard to find elsewhere. Petracek
+      writes with the confidence of someone who has debugged these containers
+      at the specification level, and that expertise permeates every chapter.
+    </div>
+
+    <p>
+      <strong>Recommended for:</strong> Mid-to-senior Java developers,
+      framework authors, anyone migrating legacy Java&nbsp;EE applications,
+      and developers who want to understand <em>why</em> CDI works the way it
+      does &mdash; not just <em>how</em>.
+    </p>
+
+    <div class="book-links">
+      <a href="../book.html">
+        <span class="arrow">&rarr;</span> Deutsche Ausgabe
+      </a>
+      <a href="../book_en.html">
+        <span class="arrow">&rarr;</span> English Edition
+      </a>
+    </div>
+
+    <p style="margin-bottom:0; color:#666; font-size:0.9rem;">
+      <em>Original book by Gerhard Petracek. Review by Claude (Anthropic)
+      without subsequent manual edits.</em>
+    </p>
+  </article>
+
+  <footer>
+    <a href="../blog/index.html">&larr; Blog</a>
+    <br>
+    [CDI@Work]:AI &middot; 2026
+  </footer>
+
+</body>
+</html>
