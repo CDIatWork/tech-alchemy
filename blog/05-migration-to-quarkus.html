@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migration to Quarkus &ndash; A New Chapter for [CDI@Work]:AI</title>
+  <meta name="description" content="How Claude wrote Chapter 10 covering the migration from CDI Full and DeltaSpike to Quarkus, ArC, MicroProfile, and GraalVM Native Images.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .meta {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    article {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2.5rem 3rem;
+    }
+
+    article p {
+      margin-bottom: 1.4rem;
+    }
+
+    article h2 {
+      font-size: 1.3rem;
+      color: #0f3460;
+      margin: 2.2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    article a {
+      color: #0f3460;
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
+    }
+
+    article a:hover {
+      text-decoration-color: #0f3460;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+      border-left: 4px solid #0f3460;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong {
+      color: #0f3460;
+    }
+
+    .warning-highlight {
+      background: linear-gradient(135deg, #fff8f0, #fff3e0);
+      border-left: 4px solid #e67e22;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .warning-highlight strong {
+      color: #e67e22;
+    }
+
+    .book-links {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.45rem;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      width: 2px;
+      background: #d0d8e4;
+    }
+
+    .timeline li {
+      list-style: none;
+      position: relative;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -1.45rem;
+      top: 0.55rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0f3460;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #d0d8e4;
+    }
+
+    code {
+      background: #f0f3f7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .post-nav {
+      max-width: 680px;
+      margin: -0.5rem auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .post-nav a {
+      color: #0f3460;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      transition: color 0.2s;
+    }
+
+    .post-nav a:hover {
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+    }
+
+    .post-nav .prev { text-align: left; }
+    .post-nav .next { text-align: right; margin-left: auto; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      article { margin: -1.5rem 1rem 3rem; padding: 1.5rem; }
+      .book-links { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">AI Journey &middot; Blog Post #5</div>
+    <h1>Migration to Quarkus &ndash; Leaving the Application Server Behind</h1>
+    <p class="meta">February 2026</p>
+  </header>
+
+  <article>
+    <p>
+      Chapter 9 brought [CDI@Work]:AI from Java&nbsp;EE to Jakarta&nbsp;EE &mdash;
+      a necessary bridge, but the architecture stayed the same: an application server
+      runs the application and provides the CDI container at runtime.
+      Chapter 10 takes a bigger leap. It moves IdeaFork off the application server entirely
+      and onto <a href="https://quarkus.io">Quarkus</a>, where dependency injection happens
+      at build time.
+    </p>
+
+    <h2>Why Quarkus?</h2>
+
+    <p>
+      The CDI ecosystem has split into two worlds. CDI Full &mdash; what the book
+      covered in its original eight chapters &mdash; remains the standard for traditional
+      application servers. But for microservices and cloud-native workloads, CDI Lite
+      has become the relevant specification, and Quarkus is its most prominent implementation.
+    </p>
+
+    <p>
+      Quarkus&rsquo;s CDI implementation, called <em>ArC</em>, resolves beans at compile
+      time rather than at runtime. The result is startup times measured in milliseconds
+      instead of seconds, memory footprints a fraction of a full application server, and
+      the ability to compile applications into GraalVM Native Images. For anyone
+      maintaining a CDI/DeltaSpike application and considering modernization, Quarkus
+      is the most likely destination.
+    </p>
+
+    <h2>What Chapter 10 Covers</h2>
+
+    <p>
+      The chapter walks through the migration step by step, organized into ten sections:
+    </p>
+
+    <ul class="timeline">
+      <li>The shift from runtime to build-time CDI &mdash; what ArC does differently and why</li>
+      <li><code>beans.xml</code> in Quarkus: content is ignored, discovery mode is fixed at <code>annotated</code>, no visibility boundaries</li>
+      <li>Scope support and gaps &mdash; <code>@SessionScoped</code> requires special setup, <code>@ConversationScoped</code> is gone entirely</li>
+      <li>DeltaSpike configuration replaced by MicroProfile Config: <code>@ConfigProperty</code>, <code>ConfigProvider</code>, <code>@ConfigMapping</code>, Quarkus profiles instead of <code>ProjectStage</code></li>
+      <li>Portable CDI Extensions replaced by Quarkus <code>@BuildStep</code> extensions</li>
+      <li>DeltaSpike module replacements: Data&nbsp;&rarr;&nbsp;Panache, Security&nbsp;&rarr;&nbsp;MicroProfile&nbsp;JWT, Scheduler, Test-Control&nbsp;&rarr;&nbsp;<code>@QuarkusTest</code>, BeanProvider&nbsp;&rarr;&nbsp;<code>Arc.container()</code></li>
+      <li>Interceptors and Decorators &mdash; activation via <code>@Priority</code> instead of <code>beans.xml</code></li>
+      <li>GraalVM Native Images &mdash; the closed-world assumption, <code>@RegisterForReflection</code>, startup events</li>
+      <li>A concrete migration checklist for IdeaFork, including Maven dependency changes</li>
+    </ul>
+
+    <p>
+      The chapter contains 24 code listings (before-and-after pairs for each major feature),
+      16 tip and warning boxes, and a curated list of specification sources.
+    </p>
+
+    <h2>Warnings, Not Just Tips</h2>
+
+    <p>
+      This chapter introduced a new visual element: warning boxes. The original eight chapters
+      used blue tip boxes for helpful hints. But when migrating to Quarkus, some things
+      don&rsquo;t just work differently &mdash; they don&rsquo;t work at all. Portable CDI
+      Extensions are completely unsupported. <code>@ConversationScoped</code> has no equivalent.
+      <code>InterceptionFactory</code> doesn&rsquo;t exist.
+    </p>
+
+    <div class="warning-highlight">
+      <strong>The distinction matters:</strong> A tip says &ldquo;here&rsquo;s how to do it
+      differently.&rdquo; A warning says &ldquo;this feature does not exist &mdash; you need
+      to redesign.&rdquo; Mixing them in the same blue box would bury critical information.
+      The yellow warning boxes make it impossible to miss.
+    </div>
+
+    <h2>Learning From the Real Codebase</h2>
+
+    <p>
+      After writing the chapter, I analyzed the actual
+      <em>IdeaForkMicro</em> codebase on GitHub &mdash; the microservice variant of the
+      book&rsquo;s example application. The code revealed several DeltaSpike patterns
+      that the chapter didn&rsquo;t initially cover:
+    </p>
+
+    <ul class="timeline">
+      <li><code>@PartialBeanBinding</code> &mdash; DeltaSpike&rsquo;s mechanism for creating proxy-based beans with just an interface, used for <code>@TypedConfig</code> and <code>@ResourceClient</code></li>
+      <li>A custom <code>@ConfigScoped</code> scope that creates a new bean instance whenever configuration changes &mdash; a pattern with no direct Quarkus equivalent</li>
+      <li>A Spring-CDI Bridge that allows Spring beans and CDI beans to coexist, relevant for incremental migration strategies</li>
+      <li><code>@TransactionScoped</code> EntityManager producers, runtime <code>ConfigSource</code> registration, and DeltaSpike&rsquo;s <code>PropertyFileConfig</code> SPI</li>
+    </ul>
+
+    <p>
+      These findings were folded back into the chapter as additional migration hints,
+      making the guidance more concrete for anyone working with a real DeltaSpike codebase
+      rather than a minimal example.
+    </p>
+
+    <h2>The Growing Test Suite</h2>
+
+    <p>
+      The <a href="04-170-layout-tests.html">Playwright test suite from Post #4</a>
+      was designed to catch exactly the kind of damage that adding a new chapter can cause.
+      Chapter 10 pushed it further: the test count grew from 170 to 184 assertions,
+      covering the new chapter&rsquo;s 10 sections, 24 code blocks, and 16 tip/warning boxes.
+      The warning boxes required a test update too &mdash; the canary tests now accept
+      both the standard blue background and the new yellow warning background.
+    </p>
+
+    <div class="highlight">
+      <strong>By the numbers:</strong> The book now contains 10 chapters, 78 sections,
+      316 code listings, and 90 tip/warning boxes &mdash; verified by 184 automated tests
+      across both the German and English editions.
+    </div>
+
+    <h2>A Different Kind of Chapter</h2>
+
+    <p>
+      Chapters 1&ndash;8 taught CDI concepts. Chapter 9 bridged namespaces.
+      Chapter 10 is a migration guide &mdash; it acknowledges that readers may leave
+      the world the book originally described. Not everything transfers cleanly. Some
+      features require redesign. Some patterns have no equivalent. The chapter is honest
+      about that, and the warning boxes make the boundaries visible.
+    </p>
+
+    <p>
+      Both editions are available with the new chapter included:
+    </p>
+
+    <div class="book-links">
+      <a href="../book.html">
+        <span class="arrow">&rarr;</span> Deutsche Ausgabe
+      </a>
+      <a href="../book_en.html">
+        <span class="arrow">&rarr;</span> English Edition
+      </a>
+    </div>
+
+    <p>
+      This is the fifth post in the AI Journey series. Each one has pushed the
+      collaboration into new territory &mdash; from redesign, to translation, to writing
+      new content, to testing, and now to migration guidance that bridges an entire
+      platform shift. The book keeps growing, and the process keeps working.
+    </p>
+
+    <p style="margin-bottom:0; color:#666; font-size:0.9rem;">
+      <em>Original book by Gerhard Petracek. Chapter 10 and this blog post
+      written by Claude (Anthropic) without subsequent manual edits.</em>
+    </p>
+  </article>
+
+  <nav class="post-nav">
+    <a href="04-170-layout-tests.html" class="prev">&larr; 170 Tests to Guard a Book</a>
+    <a href="06-from-jsf-to-angular.html" class="next">From JSF to Angular &rarr;</a>
+  </nav>
+
+  <footer>
+    <a href="index.html">&larr; All Blog Posts</a>
+    <br>
+    [CDI@Work]:AI &middot; An AI Journey &middot; 2026
+  </footer>
+
+</body>
+</html>

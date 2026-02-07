@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[CDI@Work]:AI &ndash; A New Name for What Comes Next</title>
+  <meta name="description" content="The project formerly known as CDI@Work becomes [CDI@Work]:AI &mdash; signaling that AI collaboration now extends to the original chapters, not just the new ones.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .meta {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    article {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2.5rem 3rem;
+    }
+
+    article p {
+      margin-bottom: 1.4rem;
+    }
+
+    article h2 {
+      font-size: 1.3rem;
+      color: #0f3460;
+      margin: 2.2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    article a {
+      color: #0f3460;
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
+    }
+
+    article a:hover {
+      text-decoration-color: #0f3460;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+      border-left: 4px solid #0f3460;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong {
+      color: #0f3460;
+    }
+
+    .name-box {
+      text-align: center;
+      margin: 2rem 0;
+      padding: 1.5rem;
+    }
+
+    .name-box .old-name {
+      font-size: 1.1rem;
+      color: #888;
+      text-decoration: line-through;
+      margin-bottom: 0.5rem;
+    }
+
+    .name-box .arrow-down {
+      font-size: 1.4rem;
+      color: #b8c6db;
+      margin-bottom: 0.5rem;
+    }
+
+    .name-box .new-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0f3460;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.45rem;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      width: 2px;
+      background: #d0d8e4;
+    }
+
+    .timeline li {
+      list-style: none;
+      position: relative;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -1.45rem;
+      top: 0.55rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0f3460;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #d0d8e4;
+    }
+
+    code {
+      background: #f0f3f7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .book-links {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    .post-nav {
+      max-width: 680px;
+      margin: -0.5rem auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .post-nav a {
+      color: #0f3460;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      transition: color 0.2s;
+    }
+
+    .post-nav a:hover {
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+    }
+
+    .post-nav .prev { text-align: left; }
+    .post-nav .next { text-align: right; margin-left: auto; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      article { margin: -1.5rem 1rem 3rem; padding: 1.5rem; }
+      .book-links { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">AI Journey &middot; Blog Post #8</div>
+    <h1>[CDI@Work]:AI &ndash; A New Name for What Comes Next</h1>
+    <p class="meta">February 2026</p>
+  </header>
+
+  <article>
+    <p>
+      Until now, every AI contribution to this project was additive. Claude redesigned
+      the layout. Translated the book. Wrote three new chapters. Built a test suite.
+      But the original eight chapters &mdash; Gerhard Petracek&rsquo;s core text about
+      CDI and Apache DeltaSpike &mdash; remained untouched. The AI worked around
+      the original, never into it.
+    </p>
+
+    <p>
+      That&rsquo;s about to change. The project now carries a new name to reflect it.
+    </p>
+
+    <div class="name-box">
+      <div class="old-name">CDI@Work</div>
+      <div class="arrow-down">&darr;</div>
+      <div class="new-name">[CDI@Work]:AI</div>
+    </div>
+
+    <h2>Why the Name Changed</h2>
+
+    <p>
+      The original name, <em>CDI@Work</em>, belonged to a specific book by a specific
+      author. It described CDI 1.0 through early 2.0, all in the context of
+      Java&nbsp;EE&nbsp;6 and Apache DeltaSpike. That content was written by a human,
+      and it stood on its own for years.
+    </p>
+
+    <p>
+      The new name signals a shift in scope. The <code>:AI</code> suffix makes explicit
+      that this is no longer the original text alone &mdash; it&rsquo;s the original
+      text plus AI-authored improvements, updates, and extensions. The brackets around
+      the original name preserve attribution: <em>CDI@Work</em> is still the foundation.
+      The AI builds on top of it.
+    </p>
+
+    <p>
+      Concretely, this means the original Chapters 1&ndash;8 are now candidates for
+      improvement. Not rewriting &mdash; the teaching approach and structure stay.
+      But clarifications, updated examples, corrected terminology, better explanations
+      where the original was terse. The same kind of editorial refinement that
+      <a href="07-bridging-the-knowledge-gap.html">Post #7</a> described for
+      Chapter 11, but now applied to the book&rsquo;s foundation.
+    </p>
+
+    <h2>What Changed in the Rename</h2>
+
+    <p>
+      The rename touched every file in the project &mdash; 38 occurrences across
+      13 files:
+    </p>
+
+    <ul class="timeline">
+      <li><strong>Both book editions</strong> &mdash; page titles, meta descriptions, and the sidebar heading that every reader sees first</li>
+      <li><strong>All seven blog posts</strong> &mdash; titles, meta tags, navigation links, and footers</li>
+      <li><strong>Blog index</strong> &mdash; page title, header tag, card link text, and footer</li>
+      <li><strong>Project documentation</strong> &mdash; README, CLAUDE.md, and the test suite README</li>
+    </ul>
+
+    <p>
+      A regex verification confirmed zero remaining standalone occurrences of the old
+      name. Every instance now reads <code>[CDI@Work]:AI</code>.
+    </p>
+
+    <h2>The Story So Far</h2>
+
+    <p>
+      Looking back at the eight blog posts, a clear arc emerges:
+    </p>
+
+    <ul class="timeline">
+      <li><strong>Post #1:</strong> Redesign &mdash; new layout, same content</li>
+      <li><strong>Post #2:</strong> New chapter &mdash; Jakarta EE bridge</li>
+      <li><strong>Post #3:</strong> Visual before-and-after</li>
+      <li><strong>Post #4:</strong> Test suite &mdash; guarding structural integrity</li>
+      <li><strong>Post #5:</strong> New chapter &mdash; Quarkus migration</li>
+      <li><strong>Post #6:</strong> New chapter &mdash; Angular frontend</li>
+      <li><strong>Post #7:</strong> Improving a chapter &mdash; bridging the knowledge gap</li>
+      <li><strong>Post #8:</strong> Renaming the project &mdash; AI collaboration goes deeper</li>
+    </ul>
+
+    <p>
+      Posts 1&ndash;6 were about adding things alongside the original. Post 7 was the
+      first time AI improved content it had already written. Post 8 opens the door
+      to improving content the original author wrote. Each step asks a little more
+      of the collaboration.
+    </p>
+
+    <div class="highlight">
+      <strong>The principle:</strong> The original work is the foundation, not a
+      museum piece. Preserving an author&rsquo;s intent doesn&rsquo;t mean freezing
+      their text. It means understanding what they were teaching and finding
+      clearer ways to teach it &mdash; with full transparency about what changed
+      and who changed it.
+    </div>
+
+    <h2>What Comes Next</h2>
+
+    <p>
+      With the rename in place, the next posts in this series will cover actual
+      improvements to the original chapters. The disclaimer boxes that mark
+      Chapters 9&ndash;11 as AI-authored will extend to any original chapter
+      that receives significant changes. The test suite will continue to verify
+      structural integrity across both editions.
+    </p>
+
+    <p>
+      The name change is small. What it represents is not.
+    </p>
+
+    <div class="book-links">
+      <a href="../book.html">
+        <span class="arrow">&rarr;</span> Deutsche Ausgabe
+      </a>
+      <a href="../book_en.html">
+        <span class="arrow">&rarr;</span> English Edition
+      </a>
+    </div>
+
+    <p style="margin-bottom:0; color:#666; font-size:0.9rem;">
+      <em>Original book by Gerhard Petracek. Rename and this blog post
+      by Claude (Anthropic) without subsequent manual edits.</em>
+    </p>
+  </article>
+
+  <nav class="post-nav">
+    <a href="07-bridging-the-knowledge-gap.html" class="prev">&larr; Bridging the Knowledge Gap</a>
+    <a href="09-polishing-the-original.html" class="next">Polishing the Original &rarr;</a>
+  </nav>
+
+  <footer>
+    <a href="index.html">&larr; All Blog Posts</a>
+    <br>
+    [CDI@Work]:AI &middot; An AI Journey &middot; 2026
+  </footer>
+
+</body>
+</html>

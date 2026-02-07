@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Book to Classroom &ndash; [CDI@Work]:AI AI Journey</title>
+  <meta name="description" content="A 100-slide training deck for a 2-day CDI intensive course, generated from the book content with progressive hands-on exercises that build a complete application.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .meta {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    article {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2.5rem 3rem;
+    }
+
+    article p {
+      margin-bottom: 1.4rem;
+    }
+
+    article h2 {
+      font-size: 1.3rem;
+      color: #0f3460;
+      margin: 2.2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    article a {
+      color: #0f3460;
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
+    }
+
+    article a:hover {
+      text-decoration-color: #0f3460;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+      border-left: 4px solid #0f3460;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong {
+      color: #0f3460;
+    }
+
+    .book-links {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.45rem;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      width: 2px;
+      background: #d0d8e4;
+    }
+
+    .timeline li {
+      list-style: none;
+      position: relative;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -1.45rem;
+      top: 0.55rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0f3460;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #d0d8e4;
+    }
+
+    code {
+      background: #f0f3f7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .mapping-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .mapping-table th {
+      background: #0f3460;
+      color: #fff;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .mapping-table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #e8ecf1;
+    }
+
+    .mapping-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .mapping-table tr:nth-child(even) {
+      background: #f8f9fb;
+    }
+
+    .post-nav {
+      max-width: 680px;
+      margin: -0.5rem auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .post-nav a {
+      color: #0f3460;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      transition: color 0.2s;
+    }
+
+    .post-nav a:hover {
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+    }
+
+    .post-nav .prev { text-align: left; }
+    .post-nav .next { text-align: right; margin-left: auto; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      article { margin: -1.5rem 1rem 3rem; padding: 1.5rem; }
+      .book-links { flex-direction: column; }
+      .mapping-table { font-size: 0.8rem; }
+      .mapping-table th, .mapping-table td { padding: 0.4rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">AI Journey &middot; Blog Post #10</div>
+    <h1>From Book to Classroom</h1>
+    <p class="meta">February 2026</p>
+  </header>
+
+  <article>
+    <p>
+      A book explains. A training <em>teaches</em>. The difference is exercises,
+      pacing, and a deliberate arc that turns passive readers into active
+      practitioners. This post is about turning 11 chapters of CDI reference
+      material into a 2-day hands-on training course &mdash; as a single
+      self-contained HTML slide deck.
+    </p>
+
+    <h2>The Brief</h2>
+
+    <p>
+      The requirements were clear: create a 2-day CDI intensive course for
+      Java developers with zero CDI knowledge. The book should serve as
+      further reading, not as the script. Attendees need exercises between
+      lectures &mdash; and those exercises should build on each other, not
+      start from scratch every time.
+    </p>
+
+    <p>
+      That last point shaped everything. Instead of isolated coding tasks,
+      the entire training revolves around one application that grows from
+      an empty Maven project into a fully-featured CDI application across
+      10 progressive exercises.
+    </p>
+
+    <h2>TaskForge &mdash; The Training Application</h2>
+
+    <p>
+      The book uses <em>IdeaFork</em> as its demo application. The training
+      needed its own: something simple enough to explain in five minutes,
+      rich enough to demonstrate every CDI concept. The result is
+      <strong>TaskForge</strong> &mdash; a task management tool that starts
+      as a plain Java class and ends as a fully wired CDI application with
+      events, interceptors, decorators, and DeltaSpike integration.
+    </p>
+
+    <div class="highlight">
+      <strong>The key design principle:</strong> Every exercise adds to the
+      previous one. You never throw away code. Exercise&nbsp;3 refactors
+      Exercise&nbsp;2&rsquo;s repository into an interface &mdash; because
+      Exercise&nbsp;7 needs that interface for decorators. The exercises are
+      designed backwards from the final architecture, then presented forwards.
+    </div>
+
+    <p>
+      Here is the full exercise progression:
+    </p>
+
+    <table class="mapping-table">
+      <tr><th>Exercise</th><th>Topic</th><th>What Gets Added to TaskForge</th></tr>
+      <tr><td>0</td><td>Setup</td><td>Maven project, Weld SE, <code>beans.xml</code>, CDI bootstrap</td></tr>
+      <tr><td>1</td><td>First Beans</td><td><code>Task</code>, <code>TaskRepository</code>, <code>TaskService</code> with <code>@Inject</code></td></tr>
+      <tr><td>2</td><td>Scopes</td><td><code>@ApplicationScoped</code> on repository, shared state experiment</td></tr>
+      <tr><td>3</td><td>Qualifiers</td><td>Extract interface, <code>@InMemory</code>/<code>@Persistent</code> qualifiers, <code>@Alternative</code></td></tr>
+      <tr><td>4</td><td>Producers</td><td><code>ConfigProducer</code>, <code>@ConfigValue</code> qualifier, <code>Instance&lt;T&gt;</code></td></tr>
+      <tr><td>5</td><td>Events</td><td><code>TaskEvent</code>, <code>TaskLogger</code>, <code>TaskStatistics</code> observers</td></tr>
+      <tr><td>6</td><td>Interceptors</td><td><code>@Timed</code> + <code>@Logged</code> interceptors with <code>@Priority</code></td></tr>
+      <tr><td>7</td><td>Decorators</td><td><code>ValidatingTaskRepository</code> with <code>@Delegate</code></td></tr>
+      <tr><td>8</td><td>Stereotypes</td><td><code>@Service</code> and <code>@Repository</code> stereotypes</td></tr>
+      <tr><td>9</td><td>DeltaSpike</td><td><code>@ConfigProperty</code>, <code>@Exclude</code>, <code>CdiTestRunner</code></td></tr>
+    </table>
+
+    <p>
+      By Exercise&nbsp;9, participants have a TaskForge application with clean
+      separation of concerns, type-safe configuration, event-driven logging,
+      cross-cutting performance monitoring, input validation via decorators,
+      and a unit test running inside a real CDI container. All built
+      incrementally, one concept at a time.
+    </p>
+
+    <h2>100 Slides in Two Days</h2>
+
+    <p>
+      The slide deck contains exactly 100 slides, split across two days:
+    </p>
+
+    <table class="mapping-table">
+      <tr><th>Day</th><th>Slides</th><th>Topics</th></tr>
+      <tr><td>Day 1</td><td>1&ndash;45</td><td>DI fundamentals, Bean Discovery, Scopes, Qualifiers, Producers</td></tr>
+      <tr><td>Day 2</td><td>46&ndash;100</td><td>Events, Interceptors, Decorators, Stereotypes, DeltaSpike, Best Practices</td></tr>
+    </table>
+
+    <p>
+      Each section follows the same rhythm: concept introduction on 3&ndash;6
+      content slides, followed by an exercise slide with a task list and time
+      estimate, plus a hints slide with starter code. The alternation between
+      theory and practice keeps the pace and gives attendees immediate
+      reinforcement of each concept.
+    </p>
+
+    <h2>Not a Copy of the Book</h2>
+
+    <p>
+      The training is deliberately <em>not</em> a chapter-by-chapter walkthrough
+      of the book. The book&rsquo;s structure serves a reader who can skip
+      ahead, re-read, and absorb details at their own pace. A training needs
+      a different arc &mdash; one where every concept arrives exactly when
+      the exercise needs it.
+    </p>
+
+    <ul class="timeline">
+      <li><strong>Reordered topics</strong> &mdash; the book covers events in Chapter&nbsp;4 and interceptors in Chapter&nbsp;5; the training puts scopes and qualifiers first because the exercises need them sooner</li>
+      <li><strong>Condensed theory</strong> &mdash; each CDI concept gets 3&ndash;6 slides instead of 10&ndash;15 pages; the book fills in the gaps later</li>
+      <li><strong>Practical focus</strong> &mdash; code examples are TaskForge-specific, not abstract; every <code>@Inject</code> has a class name the attendee just wrote</li>
+      <li><strong>Book references</strong> &mdash; each section ends with a &ldquo;Buch: Kapitel&nbsp;X.Y&rdquo; note pointing to the detailed explanation for self-study</li>
+    </ul>
+
+    <p>
+      Chapters 9&ndash;11 (Jakarta&nbsp;EE migration, Quarkus, Angular) are
+      mentioned in the closing slides as further reading, but they are not
+      part of the training itself. A two-day course about CDI fundamentals
+      needs to stay focused on CDI fundamentals.
+    </p>
+
+    <h2>The Slide Engine</h2>
+
+    <p>
+      Like the <a href="../slides/marketing-slides.html">marketing deck</a>, the training
+      slides are a single self-contained HTML file &mdash; no external
+      dependencies, no build step, just open in a browser and present.
+      The engine uses <code>scroll-snap</code> for slide transitions,
+      <code>IntersectionObserver</code> for entrance animations, and
+      keyboard navigation (arrow keys, Page Up/Down, Home/End) for
+      presenter control. Touch swipe works on mobile.
+    </p>
+
+    <p>
+      For 100 slides, the navigation dots from the 10-slide marketing deck
+      would be unusable. Instead, the training deck uses a thin progress bar
+      at the top, a section label in the upper left, and a slide counter in
+      the lower right. Exercise slides are visually distinct &mdash; light
+      green background with a green left border and a badge &mdash; so the
+      presenter and attendees always know when it&rsquo;s time to code.
+    </p>
+
+    <h2>German Slides, English Code</h2>
+
+    <p>
+      The training content is in German, matching the primary edition of
+      the book. All code examples use English identifiers &mdash; as Java
+      code should. CDI specification terms (<code>@ApplicationScoped</code>,
+      <code>@Inject</code>, <code>@InterceptorBinding</code>) are never
+      translated, because they are part of the API. This mirrors exactly
+      how the book handles the boundary between prose and code.
+    </p>
+
+    <h2>What&rsquo;s Next</h2>
+
+    <p>
+      The project now has four HTML deliverables: the
+      <a href="../book.html">German book</a>, the
+      <a href="../book_en.html">English translation</a>, the
+      <a href="../slides/marketing-slides.html">marketing slide deck</a>, and the
+      <a href="../slides/cdi-training-slides.html">training slide deck</a>. Each is a
+      single self-contained file. Each matches the same visual design system.
+      None requires a build step, a server, or an internet connection.
+    </p>
+
+    <p>
+      A book that started as a LaTeX PDF about CDI&nbsp;1.0 now has a modern
+      web edition in two languages, three AI-authored chapters about current
+      technology, a 198-test verification suite, a marketing deck, and a
+      complete training course. All from the same codebase. All generated
+      with AI collaboration.
+    </p>
+
+    <div class="book-links">
+      <a href="../slides/cdi-training-slides.html">
+        <span class="arrow">&rarr;</span> Training Slides
+      </a>
+      <a href="../book.html">
+        <span class="arrow">&rarr;</span> Deutsche Ausgabe
+      </a>
+      <a href="../book_en.html">
+        <span class="arrow">&rarr;</span> English Edition
+      </a>
+    </div>
+
+    <p style="margin-bottom:0; color:#666; font-size:0.9rem;">
+      <em>Original book by Gerhard Petracek. Training slide deck and this blog
+      post by Claude (Anthropic) without subsequent manual edits.</em>
+    </p>
+  </article>
+
+  <nav class="post-nav">
+    <a href="09-polishing-the-original.html" class="prev">&larr; Polishing the Original</a>
+    <a href="11-angular-training.html" class="next">From Theory to Practice &rarr;</a>
+  </nav>
+
+  <footer>
+    <a href="index.html">&larr; All Blog Posts</a>
+    <br>
+    [CDI@Work]:AI &middot; An AI Journey &middot; 2026
+  </footer>
+
+</body>
+</html>

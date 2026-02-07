@@ -1,0 +1,69 @@
+<!-- Übung 4: Formular zum Erstellen einer neuen Aufgabe -->
+<!-- Reactive Forms mit Echtzeit-Validierung — wie <h:form> mit Bean Validation -->
+
+<div class="form-container">
+  <div class="form-card">
+    <h1>Neue Aufgabe erstellen</h1>
+
+    <!-- Formular mit FormGroup-Bindung und ngSubmit-Event -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- Titel (required, minLength 3, maxLength 100) -->
+      <div class="form-group">
+        <label for="title">Titel</label>
+        <input id="title" type="text" formControlName="title"
+               placeholder="Was soll erledigt werden?">
+
+        <!-- Echtzeit-Validierungsfehler (nur nach Interaktion sichtbar) -->
+        @if (form.get('title')?.invalid && form.get('title')?.touched) {
+          @if (form.get('title')?.hasError('required')) {
+            <div class="error-text">Titel ist ein Pflichtfeld.</div>
+          }
+          @if (form.get('title')?.hasError('minlength')) {
+            <div class="error-text">Mindestens 3 Zeichen erforderlich.</div>
+          }
+          @if (form.get('title')?.hasError('maxlength')) {
+            <div class="error-text">Maximal 100 Zeichen erlaubt.</div>
+          }
+        }
+      </div>
+
+      <!-- Kategorie (required) -->
+      <div class="form-group">
+        <label for="category">Kategorie</label>
+        <select id="category" formControlName="category">
+          <option value="">-- Bitte wählen --</option>
+          <option value="work">Arbeit</option>
+          <option value="learning">Lernen</option>
+          <option value="personal">Privat</option>
+        </select>
+
+        @if (form.get('category')?.invalid && form.get('category')?.touched) {
+          <div class="error-text">Bitte wählen Sie eine Kategorie.</div>
+        }
+      </div>
+
+      <!-- Beschreibung (optional) -->
+      <div class="form-group">
+        <label for="description">Beschreibung (optional)</label>
+        <textarea id="description" formControlName="description"
+                  placeholder="Zusätzliche Details zur Aufgabe..."></textarea>
+      </div>
+
+      <!-- Fehler beim Absenden -->
+      @if (submitError) {
+        <div class="error-box">{{ submitError }}</div>
+      }
+
+      <!-- Buttons -->
+      <div class="form-actions">
+        <!-- Submit-Button ist deaktiviert wenn Formular ungültig -->
+        <button type="submit" class="btn btn-primary"
+                [disabled]="form.invalid">
+          Speichern
+        </button>
+        <a routerLink="/tasks" class="btn btn-secondary">Abbrechen</a>
+      </div>
+    </form>
+  </div>
+</div>

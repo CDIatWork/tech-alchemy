@@ -1,0 +1,29 @@
+<!-- Übung 0/2/5: Root-Template mit Navigation und Auth-State -->
+<!-- Vergleichbar mit einem JSF-Template (template.xhtml) -->
+
+<nav class="navbar">
+  <!-- Markenname — Link zur Startseite -->
+  <a class="navbar-brand" routerLink="/">TaskBoard</a>
+
+  <!-- Navigationslinks -->
+  <div class="nav-links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="/tasks" routerLinkActive="active">Aufgaben</a>
+    <a routerLink="/tasks/new" routerLinkActive="active">Neue Aufgabe</a>
+  </div>
+
+  <!-- Auth-Bereich: Login/Logout je nach Zustand (Übung 5) -->
+  <div class="nav-auth">
+    @if (auth.isLoggedIn()) {
+      <span class="nav-user">{{ auth.currentUser()?.email }}</span>
+      <button class="btn-nav" (click)="auth.logout()">Logout</button>
+    } @else {
+      <a class="btn-nav" routerLink="/login">Login</a>
+    }
+  </div>
+</nav>
+
+<!-- Hier wird die aktive Route gerendert — wie <ui:insert> in JSF -->
+<main class="main-content">
+  <router-outlet />
+</main>

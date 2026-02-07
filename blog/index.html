@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[CDI@Work]:AI &ndash; AI Journey Blog</title>
+  <meta name="description" content="Blog series about transforming [CDI@Work]:AI with AI: from LaTeX to modern web, translation, new chapters, and automated testing.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .posts {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+    }
+
+    .post-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2rem 2.5rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .post-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .post-card .post-number {
+      display: inline-block;
+      background: #0f3460;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.7rem;
+    }
+
+    .post-card h2 {
+      font-size: 1.25rem;
+      color: #0f3460;
+      margin-bottom: 0.6rem;
+      line-height: 1.35;
+    }
+
+    .post-card h2 a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .post-card h2 a:hover {
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+    }
+
+    .post-card p {
+      font-size: 0.92rem;
+      color: #444;
+      margin-bottom: 0.8rem;
+    }
+
+    .post-card .read-more {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0f3460;
+      text-decoration: none;
+    }
+
+    .post-card .read-more:hover {
+      text-decoration: underline;
+    }
+
+    .book-links {
+      max-width: 680px;
+      margin: 0 auto 4rem;
+      text-align: center;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0 0.5rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      .posts { margin: -1.5rem 1rem 3rem; }
+      .post-card { padding: 1.5rem; }
+      .book-links a { margin: 0.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">[CDI@Work]:AI</div>
+    <h1>AI Journey &ndash; Blog</h1>
+    <p class="subtitle">
+      A series about transforming a German CDI book into a modern,
+      bilingual web experience &mdash; with AI as the collaborator.
+    </p>
+  </header>
+
+  <div class="posts">
+
+    <div class="post-card">
+      <div class="post-number">Post #12</div>
+      <h2><a href="12-completing-the-stack.html">Completing the Stack &mdash; Testing, Security, and Cloud</a></h2>
+      <p>
+        Three new chapters close the IdeaFork migration arc: testing the migrated stack
+        (DeltaSpike&nbsp;Test-Control to Playwright), securing it (custom interceptors to
+        Keycloak&nbsp;OIDC), and shipping it (JAR to Kubernetes). Test it, secure it, ship it.
+      </p>
+      <a href="12-completing-the-stack.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #11</div>
+      <h2><a href="11-angular-training.html">From Theory to Practice &mdash; An Angular Training for Java Developers</a></h2>
+      <p>
+        A 1-day Angular training for Java developers, a progressive TaskBoard demo app
+        with 5 exercises, and a second variant replacing json-server with a real Quarkus
+        backend &mdash; same Angular code, same 52 e2e tests, different backend.
+      </p>
+      <a href="11-angular-training.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #10</div>
+      <h2><a href="10-training-slides.html">From Book to Classroom</a></h2>
+      <p>
+        A 100-slide training deck for a 2-day CDI intensive course &mdash; with 10
+        progressive &ldquo;TaskForge&rdquo; exercises that build a complete application
+        from an empty Maven project to events, interceptors, decorators, and DeltaSpike.
+      </p>
+      <a href="10-training-slides.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #9</div>
+      <h2><a href="09-polishing-the-original.html">Polishing the Original</a></h2>
+      <p>
+        All eight original chapters received a systematic prose polish &mdash; smoother
+        German text, fixed grammar, missing commas, and green co-author hints pointing
+        to modern alternatives. No code changed. 198 tests stayed green.
+      </p>
+      <a href="09-polishing-the-original.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #8</div>
+      <h2><a href="08-a-new-name.html">[CDI@Work]:AI &ndash; A New Name for What Comes Next</a></h2>
+      <p>
+        The project is renamed from CDI@Work to [CDI@Work]:AI &mdash; signaling
+        that AI collaboration now extends to improving the original chapters,
+        not just adding new ones.
+      </p>
+      <a href="08-a-new-name.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #7</div>
+      <h2><a href="07-bridging-the-knowledge-gap.html">Bridging the Knowledge Gap</a></h2>
+      <p>
+        Chapter 11&rsquo;s code examples assumed Angular familiarity. Seven targeted
+        insertions &mdash; explaining signals, Observables, and TypeScript through
+        CDI analogies &mdash; now bridge the gap for JSF developers.
+      </p>
+      <a href="07-bridging-the-knowledge-gap.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #6</div>
+      <h2><a href="06-from-jsf-to-angular.html">From JSF to Angular &ndash; Completing the Frontend Migration</a></h2>
+      <p>
+        Chapter 11 replaces IdeaFork&rsquo;s JSF frontend with an Angular SPA &mdash;
+        mapping every DeltaSpike scope, ViewConfig, and backing bean to its Angular
+        equivalent. The modernization arc is complete.
+      </p>
+      <a href="06-from-jsf-to-angular.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #5</div>
+      <h2><a href="05-migration-to-quarkus.html">Migration to Quarkus &ndash; Leaving the Application Server Behind</a></h2>
+      <p>
+        Chapter 10 takes IdeaFork off the application server and onto Quarkus. ArC replaces
+        runtime CDI, MicroProfile replaces DeltaSpike, and yellow warning boxes mark the
+        features that simply don&rsquo;t exist anymore.
+      </p>
+      <a href="05-migration-to-quarkus.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #4</div>
+      <h2><a href="04-170-layout-tests.html">170 Tests to Guard a 10,000-Line HTML Book</a></h2>
+      <p>
+        A stray closing tag broke styling across half the book. Now 170 Playwright tests
+        verify DOM integrity, CSS values, and cross-file consistency &mdash; running in a
+        Podman container in under 6 seconds.
+      </p>
+      <a href="04-170-layout-tests.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #3</div>
+      <h2><a href="03-before-and-after.html">From LaTeX to Modern Web &ndash; A Visual Before &amp; After</a></h2>
+      <p>
+        Side-by-side comparison of the original LaTeX-generated website and the new
+        AI-rebuilt version. Same content, completely different presentation &mdash; dark
+        sidebar, Catppuccin code blocks, responsive layout.
+      </p>
+      <a href="03-before-and-after.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #2</div>
+      <h2><a href="02-new-chapter-jakarta-ee.html">From Java EE to Jakarta EE &ndash; A New Chapter</a></h2>
+      <p>
+        Claude wrote a brand-new Chapter 9 covering the namespace migration from
+        Java&nbsp;EE to Jakarta&nbsp;EE, CDI 4.1, Build Compatible Extensions,
+        and DeltaSpike 2.0 &mdash; in both German and English.
+      </p>
+      <a href="02-new-chapter-jakarta-ee.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+    <div class="post-card">
+      <div class="post-number">Post #1</div>
+      <h2><a href="01-breathing-new-life.html">Breathing New Life into [CDI@Work]:AI</a></h2>
+      <p>
+        How it all started: taking an aging LaTeX-generated German book about CDI and
+        Apache DeltaSpike, and transforming it into a modern, responsive, bilingual web book
+        with a single AI prompt.
+      </p>
+      <a href="01-breathing-new-life.html" class="read-more">Read post &rarr;</a>
+    </div>
+
+  </div>
+
+  <div class="book-links">
+    <a href="../book.html">
+      <span class="arrow">&rarr;</span> Deutsche Ausgabe
+    </a>
+    <a href="../book_en.html">
+      <span class="arrow">&rarr;</span> English Edition
+    </a>
+  </div>
+
+  <footer>
+    [CDI@Work]:AI &middot; An AI Journey &middot; 2026
+  </footer>
+
+</body>
+</html>

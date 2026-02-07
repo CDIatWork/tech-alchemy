@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angular Training – 1-Tages-Kurs | [CDI@Work]:AI</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --navy: #1a1f36;
+            --accent: #6380ff;
+            --link: #4361ee;
+            --light-bg: #f8f9fa;
+            --text: #2c3e50;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tip-bg: #f0f4ff;
+            --tip-border: #4361ee;
+            --exercise-bg: #f0fff4;
+            --exercise-accent: #27ae60;
+            --exercise-dark: #1e7a43;
+            --warn-bg: #fff3cd;
+            --warn-border: #ffc107;
+            --angular: #dd0031;
+        }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--text); background: var(--navy); overflow-x: hidden;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 4px; background: rgba(255,255,255,0.1); z-index: 100;
+        }
+        .progress-fill { height: 100%; width: 0%; background: var(--angular); transition: width 0.3s ease; }
+        .slide-counter {
+            position: fixed; bottom: 20px; right: 28px;
+            font-size: 0.8rem; color: rgba(255,255,255,0.45);
+            z-index: 100; font-variant-numeric: tabular-nums; transition: color 0.3s;
+        }
+        .slide-counter.on-light { color: rgba(0,0,0,0.25); }
+        .section-label {
+            position: fixed; top: 10px; left: 20px;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.35); z-index: 100; transition: color 0.3s;
+        }
+        .section-label.on-light { color: rgba(0,0,0,0.2); }
+        .slides-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
+        .slide {
+            min-height: 100vh; width: 100%; scroll-snap-align: start;
+            display: flex; align-items: center; justify-content: center;
+            padding: 60px 80px; position: relative;
+        }
+        .slide-content {
+            max-width: 1100px; width: 100%;
+            opacity: 0; transform: translateY(25px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .slide.visible .slide-content { opacity: 1; transform: translateY(0); }
+        .slide.dark { background: linear-gradient(135deg, #16213e, #0f3460); color: #e8e8e8; }
+        .slide.light { background: #ffffff; color: var(--text); }
+        .slide.section-title { background: linear-gradient(135deg, var(--navy), #2a3f5f); color: white; }
+        .slide.exercise {
+            background: linear-gradient(135deg, #f0fff4, #e8f5e9); color: var(--text);
+            border-left: 6px solid var(--exercise-accent);
+        }
+        h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
+        h2 { font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.3; }
+        h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.8rem; }
+        .subtitle { font-size: 1.25rem; opacity: 0.65; margin-bottom: 1.5rem; }
+        .slide.section-title h1 { font-size: 3.2rem; }
+        .slide.dark h2 { color: #fff; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.5rem; font-size: 1.05rem; line-height: 1.5; }
+        li::marker { color: var(--accent); }
+        .slide.exercise li::marker { color: var(--exercise-accent); }
+        pre {
+            background: var(--code-bg); color: var(--code-text);
+            padding: 18px 22px; border-radius: 8px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 0.88rem; line-height: 1.55; overflow-x: auto; margin: 1rem 0;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        code { font-family: inherit; }
+        .ic {
+            background: #eef1f6; padding: 2px 6px; border-radius: 4px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.88em; color: #c7254e;
+        }
+        .slide.dark .ic, .slide.section-title .ic { background: rgba(255,255,255,0.1); color: #a9b1d6; }
+        .kw { color: #c678dd; } .an { color: #e5c07b; } .st { color: #98c379; }
+        .cm { color: #5c6370; font-style: italic; } .ty { color: #61afef; }
+        .tip-box {
+            background: var(--tip-bg); border-left: 4px solid var(--tip-border);
+            padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 0.95rem;
+        }
+        .tip-box b { color: var(--tip-border); }
+        .warn-box {
+            background: var(--warn-bg); border-left: 4px solid var(--warn-border);
+            padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 0.95rem;
+            color: #664d03;
+        }
+        .warn-box b { color: #856404; }
+        .warn-box .ic { color: #664d03; background: rgba(0,0,0,0.08); }
+        .slide.dark .warn-box .ic { color: inherit; background: rgba(255,255,255,0.1); }
+        .exercise-badge {
+            display: inline-block; background: var(--exercise-accent); color: white;
+            font-size: 0.75rem; font-weight: 700; padding: 3px 12px; border-radius: 20px;
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem;
+        }
+        .exercise-title { color: var(--exercise-dark); }
+        .task-list { list-style: none; margin-left: 0; }
+        .task-list li { padding-left: 26px; position: relative; margin-bottom: 0.7rem; }
+        .task-list li::before { content: '☐'; position: absolute; left: 0; color: var(--exercise-accent); font-size: 1.1em; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+        .card {
+            background: white; border-radius: 12px; padding: 22px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #eee;
+        }
+        .slide.dark .card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+        .card h3 { font-size: 1.05rem; margin-bottom: 0.6rem; }
+        .accent { color: var(--accent); }
+        .accent-line { width: 60px; height: 3px; background: var(--angular); margin: 1rem 0; }
+        .tag {
+            display: inline-block; padding: 3px 10px; background: rgba(99,128,255,0.1);
+            color: var(--accent); border-radius: 4px; font-size: 0.82rem; margin: 2px;
+        }
+        .slide.dark .tag { background: rgba(99,128,255,0.2); }
+        .flow { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .flow-item {
+            background: white; border: 2px solid var(--accent); border-radius: 12px;
+            padding: 14px 22px; text-align: center; font-weight: 600;
+        }
+        .slide.dark .flow-item { background: rgba(255,255,255,0.08); color: white; }
+        .flow-arrow { font-size: 1.5rem; color: var(--accent); }
+        .comparison { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        .comparison th { background: var(--navy); color: white; padding: 9px 14px; text-align: left; font-size: 0.9rem; }
+        .comparison td { padding: 9px 14px; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #2c3e50; }
+        .comparison tr:nth-child(even) { background: #f8f9fa; }
+        .comparison tr:nth-child(odd) td { background: #ffffff; }
+        .book-ref { font-size: 0.82rem; color: rgba(0,0,0,0.35); margin-top: 1.5rem; font-style: italic; }
+        .slide.dark .book-ref { color: rgba(255,255,255,0.25); }
+        .vs-label {
+            display: inline-block; background: var(--angular); color: white;
+            font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+            text-transform: uppercase; vertical-align: middle; margin: 0 0.5rem;
+        }
+        @media (max-width: 900px) {
+            .slide { padding: 40px 28px; }
+            h1 { font-size: 2rem; } h2 { font-size: 1.5rem; }
+            .two-col, .three-col { grid-template-columns: 1fr; }
+            pre { font-size: 0.8rem; padding: 14px; }
+            .slide.section-title h1 { font-size: 2.2rem; }
+        }
+        @media (max-width: 600px) {
+            .slide { padding: 28px 16px; }
+            h1 { font-size: 1.5rem; } li { font-size: 0.92rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="slide-counter" id="slideCounter">1 / 60</div>
+    <div class="section-label" id="sectionLabel"></div>
+
+    <div class="slides-container" id="slidesContainer">
+
+        <!-- ==================== SLIDE 1: TITLE ==================== -->
+        <section class="slide dark" data-section="Einführung" id="slide-1">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1.5rem;"></div>
+                <h1 style="font-size:3.5rem;">Angular Training</h1>
+                <p class="subtitle">Von JSF zu Angular &mdash; für Java-Entwickler</p>
+                <div class="accent-line" style="margin:1rem auto;"></div>
+                <p style="font-size:1.1rem; opacity:0.55; margin-top:2rem;">1-Tages-Intensivkurs</p>
+                <p style="font-size:0.9rem; opacity:0.35; margin-top:1rem;">Basierend auf <em>[CDI@Work]:AI</em>, Kapitel 11</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 2: AGENDA ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-2">
+            <div class="slide-content">
+                <h2>Agenda</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3 class="accent">Vormittag</h3>
+                        <ul>
+                            <li>Von JSF zu SPA &mdash; der Architekturwechsel</li>
+                            <li>TypeScript für Java-Entwickler</li>
+                            <li>Komponenten, Signals &amp; Templates</li>
+                            <li>Routing &amp; Navigation</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="accent">Nachmittag</h3>
+                        <ul>
+                            <li>Services &amp; Dependency Injection</li>
+                            <li>HTTP-Kommunikation &amp; Observables</li>
+                            <li>Formulare &amp; Validierung</li>
+                            <li>Sicherheit: Guards &amp; Interceptors</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 3: VORAUSSETZUNGEN ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-3">
+            <div class="slide-content">
+                <h2>Voraussetzungen &amp; Übungsprojekt</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>Was Sie mitbringen sollten</h3>
+                        <ul>
+                            <li>Java &amp; CDI-Grundkenntnisse</li>
+                            <li>Grundverständnis von HTML &amp; CSS</li>
+                            <li>Node.js (v18+) installiert</li>
+                            <li>IDE mit TypeScript-Support (VS Code empfohlen)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Was wir gemeinsam aufbauen</h3>
+                        <ul>
+                            <li><strong>„TaskBoard"</strong> &mdash; eine Angular-SPA zur Aufgabenverwaltung</li>
+                            <li>Jede Übung erweitert die vorherige</li>
+                            <li>Am Ende: vollständige SPA mit REST-Anbindung</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Tipp: </b>Das Buch <em>[CDI@Work]:AI</em>, Kapitel 11, mappt jeden JSF/CDI-Begriff auf sein Angular-Äquivalent &mdash; ideal zum Nachlesen.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 4: ARCHITEKTURWECHSEL ==================== -->
+        <section class="slide dark" data-section="Einführung" id="slide-4">
+            <div class="slide-content">
+                <h2>JSF <span class="vs-label">vs</span> Angular</h2>
+                <table class="comparison">
+                    <tr><th>Eigenschaft</th><th>JSF (Server-Side)</th><th>Angular (Client-Side SPA)</th></tr>
+                    <tr><td>Rendering</td><td>Server erzeugt HTML</td><td>Browser rendert im Client</td></tr>
+                    <tr><td>State</td><td>HTTP-Session auf dem Server</td><td>Signals/Services im Browser</td></tr>
+                    <tr><td>Navigation</td><td>Full-Page-Postback</td><td>Client-Side Routing (kein Reload)</td></tr>
+                    <tr><td>Kommunikation</td><td>Form-Submit → Server</td><td>REST-API via HttpClient</td></tr>
+                    <tr><td>Validierung</td><td>Bean Validation (Server)</td><td>Reactive Forms (Client + Server)</td></tr>
+                    <tr><td>Deployment</td><td>WAR im App-Server</td><td>Statische Dateien + REST-Backend</td></tr>
+                </table>
+                <div class="flow" style="margin-top:1.5rem;">
+                    <div class="flow-item">Browser</div>
+                    <div class="flow-arrow">↔</div>
+                    <div class="flow-item" style="border-color:var(--angular);">REST API</div>
+                    <div class="flow-arrow">↔</div>
+                    <div class="flow-item">Quarkus Backend</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 5: WAS IST ANGULAR ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-5">
+            <div class="slide-content">
+                <h2>Angular im Überblick</h2>
+                <ul>
+                    <li><strong>Framework</strong> für Single Page Applications (SPA)</li>
+                    <li>Entwickelt von Google, Open Source, aktive Community</li>
+                    <li>Sprache: <strong>TypeScript</strong> (typisiertes JavaScript)</li>
+                    <li>Komponentenbasiert &mdash; wie CDI Beans, aber für die UI</li>
+                    <li>Eigenes DI-System &mdash; konzeptuell sehr ähnlich zu CDI</li>
+                </ul>
+                <div class="three-col" style="margin-top:1.5rem;">
+                    <div class="card" style="text-align:center;">
+                        <h3>Components</h3>
+                        <p style="font-size:0.88rem;">UI-Bausteine mit Template + Logik</p>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <h3>Services</h3>
+                        <p style="font-size:0.88rem;">Geschäftslogik &amp; Datenzugriff</p>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <h3>Router</h3>
+                        <p style="font-size:0.88rem;">Client-seitige Navigation</p>
+                    </div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 11.1 &mdash; Ein neues Frontend</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 6: TYPESCRIPT BASICS ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-6">
+            <div class="slide-content">
+                <h2>TypeScript für Java-Entwickler</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>Vertraut</h3>
+                        <ul>
+                            <li>Klassen, Interfaces, Generics</li>
+                            <li>Annotationen → <strong>Decorators</strong> (<span class="ic">@Component</span>)</li>
+                            <li>Typsystem mit Compile-Time-Checks</li>
+                            <li><span class="ic">import</span> statt <span class="ic">import</span> (fast gleich!)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Anders</h3>
+                        <ul>
+                            <li><span class="ic">let</span>/<span class="ic">const</span> statt Typ-Deklaration vorne</li>
+                            <li>Typ <em>nach</em> dem Namen: <span class="ic">name: string</span></li>
+                            <li>Arrow Functions: <span class="ic">(x) =&gt; x * 2</span></li>
+                            <li><span class="ic">interface</span> ohne <span class="ic">implements</span> (Structural Typing)</li>
+                        </ul>
+                    </div>
+                </div>
+                <pre><code><span class="cm">// TypeScript — vergleichen Sie mit Java!</span>
+<span class="kw">export interface</span> <span class="ty">Task</span> {
+  id: <span class="ty">string</span>;
+  title: <span class="ty">string</span>;
+  completed: <span class="ty">boolean</span>;
+  createdAt: <span class="ty">string</span>;
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 7: TYPESCRIPT KLASSEN ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-7">
+            <div class="slide-content">
+                <h2>TypeScript: Klassen &amp; Decorators</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>Java</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">TaskService</span> {
+  <span class="an">@Inject</span>
+  <span class="kw">private</span> <span class="ty">TaskRepository</span> repo;
+
+  <span class="kw">public</span> <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; <span class="fn">findAll</span>() {
+    <span class="kw">return</span> repo.findAll();
+  }
+}</code></pre>
+                    </div>
+                    <div>
+                        <h3>TypeScript</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@Injectable</span>({ providedIn: <span class="st">'root'</span> })
+<span class="kw">export class</span> <span class="ty">TaskService</span> {
+  <span class="kw">private</span> http = inject(<span class="ty">HttpClient</span>);
+
+  findAll(): <span class="ty">Observable</span>&lt;<span class="ty">Task</span>[]&gt; {
+    <span class="kw">return</span> <span class="kw">this</span>.http
+      .get&lt;<span class="ty">Task</span>[]&gt;(<span class="st">'/api/tasks'</span>);
+  }
+}</code></pre>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1rem;">
+                    <b>Parallele: </b><span class="ic">@Injectable({providedIn: 'root'})</span> ≈ <span class="ic">@ApplicationScoped</span> · <span class="ic">inject()</span> ≈ <span class="ic">@Inject</span> · Decorator ≈ Annotation
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 8: ANGULAR CLI ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-8">
+            <div class="slide-content">
+                <h2>Angular CLI &amp; Projekt-Struktur</h2>
+                <pre><code><span class="cm"># Neues Projekt erstellen:</span>
+ng new taskboard --style=css --ssr=false --routing
+
+<span class="cm"># Entwicklungsserver starten:</span>
+cd taskboard &amp;&amp; ng serve
+
+<span class="cm"># Komponente/Service generieren:</span>
+ng generate component task-list
+ng generate service task</code></pre>
+                <div class="two-col" style="margin-top:1rem;">
+                    <div>
+                        <h3>Projekt-Struktur</h3>
+                        <pre style="font-size:0.82rem;"><code>src/
+  app/
+    app.component.ts    <span class="cm">← Root</span>
+    app.config.ts       <span class="cm">← Providers</span>
+    app.routes.ts       <span class="cm">← Routing</span>
+    task-list/
+      task-list.component.ts
+      task-list.component.html
+    task.service.ts</code></pre>
+                    </div>
+                    <div>
+                        <h3>Wichtige Dateien</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><span class="ic">*.component.ts</span> — Logik</li>
+                            <li><span class="ic">*.component.html</span> — Template</li>
+                            <li><span class="ic">*.component.css</span> — Styles (scoped!)</li>
+                            <li><span class="ic">*.service.ts</span> — Services</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 9: ÜBUNG 0 ==================== -->
+        <section class="slide exercise" data-section="Einführung" id="slide-9">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 0</span>
+                <h2 class="exercise-title">Projekt-Setup: TaskBoard</h2>
+                <ul class="task-list">
+                    <li>Installieren Sie die Angular CLI: <span class="ic">npm install -g @angular/cli</span></li>
+                    <li>Erstellen Sie das Projekt: <span class="ic">ng new taskboard --style=css --ssr=false --routing</span></li>
+                    <li>Starten Sie den Dev-Server: <span class="ic">ng serve</span></li>
+                    <li>Öffnen Sie <span class="ic">http://localhost:4200</span> im Browser</li>
+                    <li>Öffnen Sie <span class="ic">src/app/app.component.ts</span> &mdash; ändern Sie den Titel zu „TaskBoard"</li>
+                    <li>Beobachten Sie: Die Seite aktualisiert sich automatisch (Hot Reload)</li>
+                </ul>
+                <div class="tip-box">
+                    <b>Tipp: </b>VS Code mit der Extension „Angular Language Service" bietet Autovervollständigung und Fehlerprüfung in Templates.
+                </div>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 10 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 10: SECTION – KOMPONENTEN ==================== -->
+        <section class="slide section-title" data-section="Komponenten" id="slide-10">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Komponenten &amp; Templates</h1>
+                <p class="subtitle">Die Bausteine einer Angular-Anwendung</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 11: STANDALONE COMPONENTS ==================== -->
+        <section class="slide light" data-section="Komponenten" id="slide-11">
+            <div class="slide-content">
+                <h2>Standalone Components</h2>
+                <pre><code><span class="an">@Component</span>({
+  selector: <span class="st">'app-task-list'</span>,
+  standalone: <span class="kw">true</span>,
+  imports: [],
+  template: <span class="st">`
+    &lt;h2&gt;Meine Aufgaben&lt;/h2&gt;
+    &lt;p&gt;{{ tasks().length }} Aufgaben vorhanden&lt;/p&gt;
+  `</span>
+})
+<span class="kw">export class</span> <span class="ty">TaskListComponent</span> {
+  tasks = signal&lt;<span class="ty">Task</span>[]&gt;([]);
+}</code></pre>
+                <ul>
+                    <li><span class="ic">@Component</span> ≈ CDI <span class="ic">@Named</span> + View-Definition in einem</li>
+                    <li><span class="ic">standalone: true</span> &mdash; kein NgModule nötig (moderner Standard)</li>
+                    <li><span class="ic">selector</span> &mdash; HTML-Tag-Name für diese Komponente</li>
+                    <li><span class="ic">template</span> oder <span class="ic">templateUrl</span> &mdash; das HTML</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 11.2 &mdash; Von JSF-Seiten zu Angular-Komponenten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 12: SIGNALS ==================== -->
+        <section class="slide light" data-section="Komponenten" id="slide-12">
+            <div class="slide-content">
+                <h2>Signals &mdash; Reaktiver State</h2>
+                <pre><code><span class="kw">export class</span> <span class="ty">TaskListComponent</span> {
+  <span class="cm">// Signal erzeugen (wie eine reaktive Variable)</span>
+  tasks = signal&lt;<span class="ty">Task</span>[]&gt;([]);
+  filter = signal(<span class="st">'all'</span>);
+
+  <span class="cm">// Computed: automatisch abgeleiteter Wert</span>
+  activeTasks = computed(() =&gt;
+    <span class="kw">this</span>.tasks().filter(t =&gt; !t.completed)
+  );
+
+  <span class="cm">// Wert ändern</span>
+  addTask(task: <span class="ty">Task</span>) {
+    <span class="kw">this</span>.tasks.update(list =&gt; [...list, task]);
+  }
+}</code></pre>
+                <ul>
+                    <li><span class="ic">signal&lt;T&gt;(initial)</span> &mdash; erzeugt einen reaktiven Wert</li>
+                    <li><span class="ic">signal()</span> &mdash; liest den aktuellen Wert (Aufruf als Funktion!)</li>
+                    <li><span class="ic">signal.set()</span> / <span class="ic">signal.update()</span> &mdash; ändert den Wert</li>
+                    <li><span class="ic">computed()</span> &mdash; automatisch abgeleiteter Wert, wie ein CDI Producer mit <span class="ic">@Observes</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 13: TEMPLATE-SYNTAX ==================== -->
+        <section class="slide light" data-section="Komponenten" id="slide-13">
+            <div class="slide-content">
+                <h2>Template-Syntax</h2>
+                <table class="comparison">
+                    <tr><th>JSF</th><th>Angular</th><th>Beschreibung</th></tr>
+                    <tr><td><span class="ic">#{bean.value}</span></td><td><span class="ic">{{ value() }}</span></td><td>Textausgabe (Interpolation)</td></tr>
+                    <tr><td><span class="ic">value="#{bean.x}"</span></td><td><span class="ic">[value]="x()"</span></td><td>Property Binding</td></tr>
+                    <tr><td><span class="ic">action="#{bean.do()}"</span></td><td><span class="ic">(click)="do()"</span></td><td>Event Binding</td></tr>
+                    <tr><td><span class="ic">rendered="#{bean.show}"</span></td><td><span class="ic">@if (show()) { }</span></td><td>Bedingte Anzeige</td></tr>
+                    <tr><td><span class="ic">ui:repeat</span></td><td><span class="ic">@for (item of list; track item.id) { }</span></td><td>Listen-Rendering</td></tr>
+                </table>
+                <pre><code><span class="cm">&lt;!-- Angular Template --&gt;</span>
+&lt;h2&gt;{{ title() }}&lt;/h2&gt;
+<span class="an">@for</span> (task <span class="kw">of</span> tasks(); track task.id) {
+  &lt;div [class.done]="task.completed"&gt;
+    {{ task.title }}
+    &lt;button (click)="complete(task)"&gt;Erledigt&lt;/button&gt;
+  &lt;/div&gt;
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 14: KONTROLLFLUSS ==================== -->
+        <section class="slide light" data-section="Komponenten" id="slide-14">
+            <div class="slide-content">
+                <h2>Neuer Kontrollfluss (Angular 17+)</h2>
+                <div class="two-col">
+                    <div>
+                        <h3><span class="ic">@if</span> / <span class="ic">@else</span></h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@if</span> (loading()) {
+  &lt;p&gt;Laden...&lt;/p&gt;
+} <span class="an">@else if</span> (error()) {
+  &lt;p class="error"&gt;{{ error() }}&lt;/p&gt;
+} <span class="an">@else</span> {
+  &lt;app-task-list [tasks]="tasks()" /&gt;
+}</code></pre>
+                    </div>
+                    <div>
+                        <h3><span class="ic">@switch</span></h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@switch</span> (task.priority) {
+  <span class="an">@case</span> (<span class="st">'high'</span>) {
+    &lt;span class="badge-high"&gt;Hoch&lt;/span&gt;
+  }
+  <span class="an">@case</span> (<span class="st">'low'</span>) {
+    &lt;span class="badge-low"&gt;Niedrig&lt;/span&gt;
+  }
+  <span class="an">@default</span> {
+    &lt;span&gt;Normal&lt;/span&gt;
+  }
+}</code></pre>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1rem;">
+                    <b>Tipp: </b>Der neue <span class="ic">@for</span>/<span class="ic">@if</span>/<span class="ic">@switch</span>-Kontrollfluss ersetzt die alten Direktiven (<span class="ic">*ngFor</span>, <span class="ic">*ngIf</span>) und ist performanter.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 15: COMPONENT LIFECYCLE ==================== -->
+        <section class="slide dark" data-section="Komponenten" id="slide-15">
+            <div class="slide-content">
+                <h2>Component Lifecycle</h2>
+                <table class="comparison">
+                    <tr><th>CDI / JSF</th><th>Angular</th><th>Wann?</th></tr>
+                    <tr><td><span class="ic">@PostConstruct</span></td><td><span class="ic">ngOnInit()</span></td><td>Nach Erzeugung &amp; Input-Bindung</td></tr>
+                    <tr><td><span class="ic">@PreDestroy</span></td><td><span class="ic">ngOnDestroy()</span></td><td>Bevor die Komponente entfernt wird</td></tr>
+                    <tr><td><span class="ic">@PreRenderView</span></td><td><span class="ic">ngAfterViewInit()</span></td><td>Nach dem ersten Rendering</td></tr>
+                    <tr><td>&mdash;</td><td><span class="ic">ngOnChanges()</span></td><td>Wenn sich ein Input ändert</td></tr>
+                </table>
+                <pre><code><span class="kw">export class</span> <span class="ty">TaskListComponent</span> <span class="kw">implements</span> <span class="ty">OnInit</span>, <span class="ty">OnDestroy</span> {
+  ngOnInit() {
+    <span class="cm">// Daten laden — wie @PostConstruct</span>
+    <span class="kw">this</span>.loadTasks();
+  }
+
+  ngOnDestroy() {
+    <span class="cm">// Aufräumen — wie @PreDestroy</span>
+    console.log(<span class="st">'Komponente wird entfernt'</span>);
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 16: SCOPE MAPPING ==================== -->
+        <section class="slide light" data-section="Komponenten" id="slide-16">
+            <div class="slide-content">
+                <h2>CDI-Scopes → Angular-Äquivalente</h2>
+                <table class="comparison">
+                    <tr><th>CDI / DeltaSpike</th><th>Angular</th><th>Lebensdauer</th></tr>
+                    <tr><td><span class="ic">@ApplicationScoped</span></td><td><span class="ic">providedIn: 'root'</span></td><td>Singleton für die gesamte App</td></tr>
+                    <tr><td><span class="ic">@ViewAccessScoped</span></td><td>Component-Instanz</td><td>Lebt mit der Komponente</td></tr>
+                    <tr><td><span class="ic">@WindowScoped</span></td><td>Root-Service + State</td><td>Pro Browser-Tab (Singleton)</td></tr>
+                    <tr><td><span class="ic">@GroupedConversationScoped</span></td><td>Route-scoped Provider</td><td>Lebt mit der Route</td></tr>
+                    <tr><td><span class="ic">@SessionScoped</span></td><td>Service + <span class="ic">localStorage</span></td><td>Über Seiten-Reloads hinweg</td></tr>
+                    <tr><td><span class="ic">@RequestScoped</span></td><td>Observable / Promise</td><td>Pro HTTP-Request</td></tr>
+                </table>
+                <div class="tip-box" style="margin-top:1rem;">
+                    <b>Kernidee: </b>In Angular gibt es keine magischen Scope-Annotationen. Der Lebenszyklus wird durch die <em>Position</em> bestimmt: Root-Injector, Route-Provider oder Component-Provider.
+                </div>
+                <p class="book-ref">Buch: Kapitel 11.4 &mdash; Scopes und Lebenszyklus</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 17: ÜBUNG 1 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Komponenten" id="slide-17">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 1</span>
+                <h2 class="exercise-title">Erste Komponente: TaskList</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie ein Interface <span class="ic">Task</span> in <span class="ic">src/app/task.model.ts</span> (id, title, completed, createdAt)</li>
+                    <li>Generieren Sie eine Komponente: <span class="ic">ng generate component task-list</span></li>
+                    <li>Erstellen Sie ein Signal <span class="ic">tasks</span> mit 3&ndash;4 Beispiel-Tasks</li>
+                    <li>Rendern Sie die Tasks mit <span class="ic">@for</span> als Liste</li>
+                    <li>Fügen Sie einen Button hinzu, der Tasks als „erledigt" markiert (Signal-Update)</li>
+                    <li>Zeigen Sie einen Zähler: <span class="ic">computed()</span> für offene/erledigte Tasks</li>
+                    <li>Binden Sie die Komponente in <span class="ic">app.component.html</span> ein: <span class="ic">&lt;app-task-list /&gt;</span></li>
+                </ul>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 25 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 18: ÜBUNG 1 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Komponenten" id="slide-18">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 1 &mdash; Hinweise</span>
+                <h2 class="exercise-title">Signal + Template</h2>
+                <pre><code>tasks = signal&lt;<span class="ty">Task</span>[]&gt;([
+  { id: 1, title: <span class="st">'Angular lernen'</span>, completed: <span class="kw">false</span>,
+    createdAt: <span class="kw">new</span> <span class="ty">Date</span>() },
+  { id: 2, title: <span class="st">'TaskBoard bauen'</span>, completed: <span class="kw">false</span>,
+    createdAt: <span class="kw">new</span> <span class="ty">Date</span>() },
+]);
+
+openCount = computed(() =&gt;
+  <span class="kw">this</span>.tasks().filter(t =&gt; !t.completed).length
+);
+
+complete(task: <span class="ty">Task</span>) {
+  <span class="kw">this</span>.tasks.update(list =&gt;
+    list.map(t =&gt; t.id === task.id
+      ? { ...t, completed: <span class="kw">true</span> } : t)
+  );
+}</code></pre>
+                <div class="tip-box">
+                    <b>Wichtig: </b>Signals sind immutable &mdash; <span class="ic">update()</span> erzeugt eine neue Liste. Direkte Mutation (<span class="ic">task.completed = true</span>) funktioniert nicht mit Change Detection!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 19: SECTION – ROUTING ==================== -->
+        <section class="slide section-title" data-section="Routing" id="slide-19">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Routing &amp; Navigation</h1>
+                <p class="subtitle">ViewConfig → Angular Router</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 20: ROUTES DEFINIEREN ==================== -->
+        <section class="slide light" data-section="Routing" id="slide-20">
+            <div class="slide-content">
+                <h2>Routes definieren</h2>
+                <pre><code><span class="cm">// app.routes.ts</span>
+<span class="kw">export const</span> routes: <span class="ty">Routes</span> = [
+  { path: <span class="st">''</span>,
+    component: <span class="ty">HomeComponent</span> },
+  { path: <span class="st">'tasks'</span>,
+    loadComponent: () =&gt; import(<span class="st">'./task-list/task-list.component'</span>)
+      .then(m =&gt; m.<span class="ty">TaskListComponent</span>) },
+  { path: <span class="st">'tasks/new'</span>,
+    loadComponent: () =&gt; import(<span class="st">'./create-task/create-task.component'</span>)
+      .then(m =&gt; m.<span class="ty">CreateTaskComponent</span>) },
+  { path: <span class="st">'tasks/:id'</span>,
+    loadComponent: () =&gt; import(<span class="st">'./task-detail/task-detail.component'</span>)
+      .then(m =&gt; m.<span class="ty">TaskDetailComponent</span>) },
+];</code></pre>
+                <ul>
+                    <li><span class="ic">loadComponent</span> &mdash; Lazy Loading (Komponente wird erst bei Bedarf geladen)</li>
+                    <li><span class="ic">:id</span> &mdash; Route-Parameter (wie <span class="ic">@PathParam</span> in JAX-RS)</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 11.3 &mdash; Navigation: ViewConfig zu Angular Router</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 21: VIEWCONFIG VS ROUTER ==================== -->
+        <section class="slide light" data-section="Routing" id="slide-21">
+            <div class="slide-content">
+                <h2>ViewConfig <span class="vs-label">vs</span> Angular Router</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>DeltaSpike ViewConfig</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="kw">public interface</span> <span class="ty">Pages</span>
+    <span class="kw">extends</span> <span class="ty">ViewConfig</span> {
+  <span class="kw">class</span> <span class="ty">TaskList</span>
+    <span class="kw">implements</span> <span class="ty">Pages</span> {}
+  <span class="kw">class</span> <span class="ty">TaskDetail</span>
+    <span class="kw">implements</span> <span class="ty">Pages</span> {}
+}</code></pre>
+                    </div>
+                    <div>
+                        <h3>Angular Routes</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="kw">export const</span> routes: <span class="ty">Routes</span> = [
+  { path: <span class="st">'tasks'</span>,
+    loadComponent: () =&gt;
+      import(<span class="st">'./task-list...'</span>) },
+  { path: <span class="st">'tasks/:id'</span>,
+    loadComponent: () =&gt;
+      import(<span class="st">'./task-detail...'</span>) },
+];</code></pre>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1rem;">
+                    <b>Tipp: </b>Typsichere Routen-Konstanten (<span class="ic">ROUTES = { tasks: '/tasks' }</span>) ersetzen die compile-time-Sicherheit von DeltaSpike ViewConfig.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 22: NAVIGATION ==================== -->
+        <section class="slide light" data-section="Routing" id="slide-22">
+            <div class="slide-content">
+                <h2>Navigation &amp; router-outlet</h2>
+                <pre><code><span class="cm">&lt;!-- app.component.html — das Layout --&gt;</span>
+&lt;nav&gt;
+  &lt;a routerLink="/"&gt;Home&lt;/a&gt;
+  &lt;a routerLink="/tasks"&gt;Aufgaben&lt;/a&gt;
+  &lt;a routerLink="/tasks/new"&gt;Neue Aufgabe&lt;/a&gt;
+&lt;/nav&gt;
+
+<span class="cm">&lt;!-- Hier wird die aktive Route gerendert: --&gt;</span>
+&lt;router-outlet /&gt;</code></pre>
+                <ul>
+                    <li><span class="ic">routerLink</span> &mdash; deklarative Navigation im Template</li>
+                    <li><span class="ic">router-outlet</span> &mdash; Platzhalter für die aktive Komponente</li>
+                    <li>Programmatisch: <span class="ic">this.router.navigate(['/tasks', id])</span></li>
+                </ul>
+                <pre><code><span class="cm">// Route-Parameter auslesen:</span>
+<span class="kw">private</span> route = inject(<span class="ty">ActivatedRoute</span>);
+
+ngOnInit() {
+  <span class="kw">const</span> id = <span class="kw">this</span>.route.snapshot.params[<span class="st">'id'</span>];
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 23: ÜBUNG 2 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Routing" id="slide-23">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 2</span>
+                <h2 class="exercise-title">Routing in TaskBoard</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie eine <span class="ic">HomeComponent</span> mit einer Willkommensnachricht</li>
+                    <li>Verschieben Sie die TaskList in eine eigene Route <span class="ic">/tasks</span></li>
+                    <li>Definieren Sie die Routes in <span class="ic">app.routes.ts</span> mit Lazy Loading</li>
+                    <li>Fügen Sie eine Navigation hinzu (<span class="ic">routerLink</span>) in <span class="ic">app.component.html</span></li>
+                    <li>Erstellen Sie eine <span class="ic">TaskDetailComponent</span> unter <span class="ic">/tasks/:id</span></li>
+                    <li>Klick auf einen Task navigiert zur Detail-Ansicht</li>
+                </ul>
+                <div class="tip-box">
+                    <b>Tipp: </b>Vergessen Sie nicht, <span class="ic">RouterOutlet</span> und <span class="ic">RouterLink</span> in den <span class="ic">imports</span> der AppComponent hinzuzufügen.
+                </div>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 25 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 24: ÜBUNG 2 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Routing" id="slide-24">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 2 &mdash; Hinweise</span>
+                <h2 class="exercise-title">Router-Setup</h2>
+                <pre><code><span class="cm">// app.config.ts — Router aktivieren:</span>
+<span class="kw">export const</span> appConfig: <span class="ty">ApplicationConfig</span> = {
+  providers: [provideRouter(routes)]
+};
+
+<span class="cm">// Navigation zur Detail-Ansicht im Template:</span>
+<span class="an">@for</span> (task <span class="kw">of</span> tasks(); track task.id) {
+  &lt;div (click)="router.navigate([<span class="st">'/tasks'</span>, task.id])"&gt;
+    {{ task.title }}
+  &lt;/div&gt;
+}</code></pre>
+                <div class="warn-box">
+                    <b>Achtung: </b>Die Route <span class="ic">tasks/new</span> muss <em>vor</em> <span class="ic">tasks/:id</span> definiert werden, sonst interpretiert der Router „new" als ID!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 25: SECTION – SERVICES ==================== -->
+        <section class="slide section-title" data-section="Services &amp; DI" id="slide-25">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Services &amp; DI</h1>
+                <p class="subtitle">@Inject → inject() &mdash; HTTP-Kommunikation mit REST</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 26: ANGULAR DI ==================== -->
+        <section class="slide light" data-section="Services &amp; DI" id="slide-26">
+            <div class="slide-content">
+                <h2>Angular DI <span class="vs-label">vs</span> CDI</h2>
+                <table class="comparison">
+                    <tr><th>CDI</th><th>Angular</th><th>Bedeutung</th></tr>
+                    <tr><td><span class="ic">@Inject</span></td><td><span class="ic">inject(Service)</span></td><td>Abhängigkeit anfordern</td></tr>
+                    <tr><td><span class="ic">@ApplicationScoped</span></td><td><span class="ic">providedIn: 'root'</span></td><td>Singleton</td></tr>
+                    <tr><td><span class="ic">@Produces</span></td><td><span class="ic">useFactory</span></td><td>Factory für Werte</td></tr>
+                    <tr><td><span class="ic">@Qualifier</span></td><td><span class="ic">InjectionToken</span></td><td>Typ-unterscheidung</td></tr>
+                    <tr><td><span class="ic">beans.xml</span></td><td><span class="ic">providers: [...]</span></td><td>Konfiguration</td></tr>
+                </table>
+                <div class="tip-box" style="margin-top:1rem;">
+                    <b>Kernunterschied: </b>CDI ist typbasiert (Klasse + Qualifier). Angular ist token-basiert (Klasse oder <span class="ic">InjectionToken</span>) mit hierarchischen Injektoren.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 27: INJECTABLE ==================== -->
+        <section class="slide light" data-section="Services &amp; DI" id="slide-27">
+            <div class="slide-content">
+                <h2>Services erstellen</h2>
+                <pre><code><span class="an">@Injectable</span>({ providedIn: <span class="st">'root'</span> })
+<span class="kw">export class</span> <span class="ty">TaskService</span> {
+  <span class="kw">private</span> http = inject(<span class="ty">HttpClient</span>);
+  <span class="kw">private</span> apiUrl = <span class="st">'/api/tasks'</span>;
+
+  findAll(): <span class="ty">Observable</span>&lt;<span class="ty">Task</span>[]&gt; {
+    <span class="kw">return this</span>.http.get&lt;<span class="ty">Task</span>[]&gt;(<span class="kw">this</span>.apiUrl);
+  }
+
+  findById(id: <span class="ty">string</span>): <span class="ty">Observable</span>&lt;<span class="ty">Task</span>&gt; {
+    <span class="kw">return this</span>.http.get&lt;<span class="ty">Task</span>&gt;(<span class="st">`</span>${<span class="kw">this</span>.apiUrl}/${id}<span class="st">`</span>);
+  }
+
+  create(task: <span class="ty">Partial</span>&lt;<span class="ty">Task</span>&gt;): <span class="ty">Observable</span>&lt;<span class="ty">Task</span>&gt; {
+    <span class="kw">return this</span>.http.post&lt;<span class="ty">Task</span>&gt;(<span class="kw">this</span>.apiUrl, task);
+  }
+}</code></pre>
+                <ul>
+                    <li><span class="ic">@Injectable({providedIn: 'root'})</span> = <span class="ic">@ApplicationScoped</span></li>
+                    <li><span class="ic">inject(HttpClient)</span> = <span class="ic">@Inject HttpClient</span></li>
+                    <li>Rückgabe: <span class="ic">Observable&lt;T&gt;</span> (asynchron!)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 28: OBSERVABLES ==================== -->
+        <section class="slide dark" data-section="Services &amp; DI" id="slide-28">
+            <div class="slide-content">
+                <h2>Observables verstehen</h2>
+                <p style="margin-bottom:1rem;">Ein <span class="ic">Observable&lt;T&gt;</span> ist ein asynchroner Datenstrom &mdash; wie ein <span class="ic">CompletableFuture&lt;T&gt;</span>, aber mächtiger.</p>
+                <pre><code><span class="cm">// Service aufrufen und Ergebnis verarbeiten:</span>
+<span class="kw">this</span>.taskService.findAll().subscribe({
+  next: (tasks) =&gt; <span class="kw">this</span>.tasks.set(tasks),
+  error: (err) =&gt; <span class="kw">this</span>.error.set(<span class="st">'Fehler beim Laden'</span>),
+});
+
+<span class="cm">// Mit Operatoren (pipe):</span>
+<span class="kw">this</span>.taskService.findAll().pipe(
+  catchError(err =&gt; {
+    <span class="kw">this</span>.error.set(<span class="st">'Fehler: '</span> + err.message);
+    <span class="kw">return</span> of([]);  <span class="cm">// Fallback: leere Liste</span>
+  }),
+  finalize(() =&gt; <span class="kw">this</span>.loading.set(<span class="kw">false</span>))
+).subscribe(tasks =&gt; <span class="kw">this</span>.tasks.set(tasks));</code></pre>
+                <ul>
+                    <li><span class="ic">.subscribe()</span> startet den Request (wie <span class="ic">CompletableFuture.thenAccept()</span>)</li>
+                    <li><span class="ic">pipe()</span> ermöglicht Transformationen: <span class="ic">map()</span>, <span class="ic">filter()</span>, <span class="ic">catchError()</span></li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 11.7 &mdash; REST-Kommunikation</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 29: LOADING & ERROR ==================== -->
+        <section class="slide light" data-section="Services &amp; DI" id="slide-29">
+            <div class="slide-content">
+                <h2>Loading-State &amp; Fehlerbehandlung</h2>
+                <pre><code><span class="kw">export class</span> <span class="ty">TaskListComponent</span> <span class="kw">implements</span> <span class="ty">OnInit</span> {
+  tasks = signal&lt;<span class="ty">Task</span>[]&gt;([]);
+  loading = signal(<span class="kw">true</span>);
+  error = signal&lt;<span class="ty">string</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>);
+
+  <span class="kw">private</span> taskService = inject(<span class="ty">TaskService</span>);
+
+  ngOnInit() {
+    <span class="kw">this</span>.taskService.findAll().pipe(
+      catchError(err =&gt; {
+        <span class="kw">this</span>.error.set(<span class="st">'Laden fehlgeschlagen'</span>);
+        <span class="kw">return</span> of([]);
+      }),
+      finalize(() =&gt; <span class="kw">this</span>.loading.set(<span class="kw">false</span>))
+    ).subscribe(data =&gt; <span class="kw">this</span>.tasks.set(data));
+  }
+}</code></pre>
+                <pre><code><span class="cm">&lt;!-- Template: --&gt;</span>
+<span class="an">@if</span> (loading()) { &lt;p&gt;Laden...&lt;/p&gt; }
+<span class="an">@else if</span> (error()) { &lt;p class="error"&gt;{{ error() }}&lt;/p&gt; }
+<span class="an">@else</span> { <span class="cm">&lt;!-- Task-Liste rendern --&gt;</span> }</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 30: ÜBUNG 3 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Services &amp; DI" id="slide-30">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 3</span>
+                <h2 class="exercise-title">TaskService &amp; HTTP-Kommunikation</h2>
+                <ul class="task-list">
+                    <li>Generieren Sie einen Service: <span class="ic">ng generate service task</span></li>
+                    <li>Implementieren Sie <span class="ic">findAll()</span>, <span class="ic">findById()</span>, <span class="ic">create()</span>, <span class="ic">complete()</span></li>
+                    <li>Erstellen Sie eine <span class="ic">proxy.conf.json</span> für API-Proxying zum Backend (oder nutzen Sie <span class="ic">json-server</span>)</li>
+                    <li>Ersetzen Sie die hardcodierten Tasks in <span class="ic">TaskListComponent</span> durch den Service</li>
+                    <li>Fügen Sie Loading-State und Fehlerbehandlung hinzu</li>
+                    <li>Laden Sie Task-Details in der <span class="ic">TaskDetailComponent</span> per Route-Parameter</li>
+                </ul>
+                <div class="tip-box">
+                    <b>Schnellstart: </b><span class="ic">npm i -D json-server</span> und eine <span class="ic">db.json</span> reichen als Mock-Backend für die Übung.
+                </div>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 30 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 31: ÜBUNG 3 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Services &amp; DI" id="slide-31">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 3 &mdash; Hinweise</span>
+                <h2 class="exercise-title">Mock-Backend &amp; Proxy</h2>
+                <pre><code><span class="cm">// db.json für json-server:</span>
+{
+  <span class="st">"tasks"</span>: [
+    { <span class="st">"id"</span>: 1, <span class="st">"title"</span>: <span class="st">"Angular lernen"</span>,
+      <span class="st">"completed"</span>: <span class="kw">false</span> },
+    { <span class="st">"id"</span>: 2, <span class="st">"title"</span>: <span class="st">"REST-API anbinden"</span>,
+      <span class="st">"completed"</span>: <span class="kw">false</span> }
+  ]
+}
+
+<span class="cm">// Starten: npx json-server db.json --port 3000</span>
+
+<span class="cm">// proxy.conf.json:</span>
+{ <span class="st">"/api"</span>: {
+    <span class="st">"target"</span>: <span class="st">"http://localhost:3000"</span>,
+    <span class="st">"pathRewrite"</span>: { <span class="st">"^/api"</span>: <span class="st">""</span> }
+}}</code></pre>
+                <p style="font-size:0.9rem; margin-top:0.5rem;">Starten mit: <span class="ic">ng serve --proxy-config proxy.conf.json</span></p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 32: SECTION – FORMULARE ==================== -->
+        <section class="slide section-title" data-section="Formulare" id="slide-32">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Formulare &amp; Validierung</h1>
+                <p class="subtitle">h:form → Reactive Forms</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 33: JSF VS ANGULAR FORMS ==================== -->
+        <section class="slide light" data-section="Formulare" id="slide-33">
+            <div class="slide-content">
+                <h2>JSF-Formulare <span class="vs-label">vs</span> Reactive Forms</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>JSF</h3>
+                        <pre style="font-size:0.82rem;"><code>&lt;<span class="kw">h:form</span>&gt;
+  &lt;<span class="kw">h:inputText</span>
+    value=<span class="st">"#{bean.title}"</span>
+    required=<span class="st">"true"</span> /&gt;
+  &lt;<span class="kw">h:message</span> for=<span class="st">"..."</span> /&gt;
+  &lt;<span class="kw">h:commandButton</span>
+    action=<span class="st">"#{bean.save}"</span>
+    value=<span class="st">"Speichern"</span> /&gt;
+&lt;/<span class="kw">h:form</span>&gt;</code></pre>
+                        <p style="font-size:0.85rem;">Validierung beim Postback auf dem Server</p>
+                    </div>
+                    <div>
+                        <h3>Angular Reactive Forms</h3>
+                        <pre style="font-size:0.82rem;"><code>&lt;<span class="kw">form</span> [formGroup]=<span class="st">"form"</span>
+      (ngSubmit)=<span class="st">"onSubmit()"</span>&gt;
+  &lt;<span class="kw">input</span> formControlName=<span class="st">"title"</span> /&gt;
+  <span class="an">@if</span> (form.get(<span class="st">'title'</span>)?.errors) {
+    &lt;span&gt;Pflichtfeld&lt;/span&gt;
+  }
+  &lt;<span class="kw">button</span> type=<span class="st">"submit"</span>&gt;
+    Speichern
+  &lt;/<span class="kw">button</span>&gt;
+&lt;/<span class="kw">form</span>&gt;</code></pre>
+                        <p style="font-size:0.85rem;">Echtzeit-Validierung im Client</p>
+                    </div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 11.5 &mdash; Formulare und Validierung</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 34: FORMGROUP ==================== -->
+        <section class="slide light" data-section="Formulare" id="slide-34">
+            <div class="slide-content">
+                <h2>FormGroup &amp; FormControl</h2>
+                <pre><code><span class="kw">export class</span> <span class="ty">CreateTaskComponent</span> {
+  <span class="kw">private</span> taskService = inject(<span class="ty">TaskService</span>);
+  <span class="kw">private</span> router = inject(<span class="ty">Router</span>);
+
+  form = <span class="kw">new</span> <span class="ty">FormGroup</span>({
+    title: <span class="kw">new</span> <span class="ty">FormControl</span>(<span class="st">''</span>, [
+      <span class="ty">Validators</span>.required,
+      <span class="ty">Validators</span>.minLength(3),
+      <span class="ty">Validators</span>.maxLength(100)
+    ]),
+    category: <span class="kw">new</span> <span class="ty">FormControl</span>(<span class="st">''</span>,
+      <span class="ty">Validators</span>.required),
+    description: <span class="kw">new</span> <span class="ty">FormControl</span>(<span class="st">''</span>),
+  });
+
+  onSubmit() {
+    <span class="kw">if</span> (<span class="kw">this</span>.form.valid) {
+      <span class="kw">this</span>.taskService.create(<span class="kw">this</span>.form.value)
+        .subscribe(() =&gt;
+          <span class="kw">this</span>.router.navigate([<span class="st">'/tasks'</span>]));
+    }
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 35: VALIDATOREN ==================== -->
+        <section class="slide light" data-section="Formulare" id="slide-35">
+            <div class="slide-content">
+                <h2>Validatoren &amp; Fehlermeldungen</h2>
+                <table class="comparison">
+                    <tr><th>Bean Validation (Java)</th><th>Angular Validators</th></tr>
+                    <tr><td><span class="ic">@NotNull</span></td><td><span class="ic">Validators.required</span></td></tr>
+                    <tr><td><span class="ic">@Size(min=3)</span></td><td><span class="ic">Validators.minLength(3)</span></td></tr>
+                    <tr><td><span class="ic">@Size(max=100)</span></td><td><span class="ic">Validators.maxLength(100)</span></td></tr>
+                    <tr><td><span class="ic">@Pattern("...")</span></td><td><span class="ic">Validators.pattern("...")</span></td></tr>
+                    <tr><td><span class="ic">@Email</span></td><td><span class="ic">Validators.email</span></td></tr>
+                </table>
+                <pre><code><span class="cm">&lt;!-- Fehlermeldung im Template: --&gt;</span>
+<span class="an">@if</span> (form.get(<span class="st">'title'</span>)?.hasError(<span class="st">'required'</span>)) {
+  &lt;span class="error"&gt;Titel ist ein Pflichtfeld&lt;/span&gt;
+}
+<span class="an">@if</span> (form.get(<span class="st">'title'</span>)?.hasError(<span class="st">'minlength'</span>)) {
+  &lt;span class="error"&gt;Mindestens 3 Zeichen&lt;/span&gt;
+}</code></pre>
+                <div class="tip-box">
+                    <b>Vorteil: </b>Reactive Forms validieren in Echtzeit &mdash; der Benutzer sieht Fehler sofort, nicht erst nach dem Submit.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 36: ÜBUNG 4 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Formulare" id="slide-36">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 4</span>
+                <h2 class="exercise-title">Formular: Task erstellen</h2>
+                <ul class="task-list">
+                    <li>Generieren Sie: <span class="ic">ng generate component create-task</span></li>
+                    <li>Erstellen Sie eine <span class="ic">FormGroup</span> mit Feldern: title (required, minLength 3), category (required), description (optional)</li>
+                    <li>Zeigen Sie Validierungsfehler in Echtzeit an</li>
+                    <li>Submit: rufen Sie <span class="ic">taskService.create()</span> auf und navigieren Sie zur Liste</li>
+                    <li>Deaktivieren Sie den Submit-Button wenn das Formular ungültig ist</li>
+                    <li>Testen: Versuchen Sie, ein Formular mit leerem Titel abzuschicken</li>
+                </ul>
+                <div class="tip-box">
+                    <b>Tipp: </b>Importieren Sie <span class="ic">ReactiveFormsModule</span> in den <span class="ic">imports</span> der Komponente.
+                </div>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 25 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 37: ÜBUNG 4 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Formulare" id="slide-37">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 4 &mdash; Hinweise</span>
+                <h2 class="exercise-title">Formular-Template</h2>
+                <pre><code><span class="cm">&lt;!-- create-task.component.html --&gt;</span>
+&lt;form [formGroup]="form" (ngSubmit)="onSubmit()"&gt;
+  &lt;label&gt;Titel
+    &lt;input formControlName="title" /&gt;
+  &lt;/label&gt;
+  <span class="an">@if</span> (form.get(<span class="st">'title'</span>)?.invalid
+       &amp;&amp; form.get(<span class="st">'title'</span>)?.touched) {
+    &lt;div class="error"&gt;
+      Bitte geben Sie einen Titel ein (min. 3 Zeichen)
+    &lt;/div&gt;
+  }
+
+  &lt;label&gt;Kategorie
+    &lt;select formControlName="category"&gt;
+      &lt;option value=""&gt;-- Bitte wählen --&lt;/option&gt;
+      &lt;option value="work"&gt;Arbeit&lt;/option&gt;
+      &lt;option value="personal"&gt;Privat&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/label&gt;
+
+  &lt;button type="submit"
+    [disabled]="form.invalid"&gt;Speichern&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 38: SECTION – SICHERHEIT ==================== -->
+        <section class="slide section-title" data-section="Sicherheit" id="slide-38">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Sicherheit</h1>
+                <p class="subtitle">Guards, JWT &amp; HTTP-Interceptors</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 39: SECURITY ÜBERBLICK ==================== -->
+        <section class="slide light" data-section="Sicherheit" id="slide-39">
+            <div class="slide-content">
+                <h2>Sicherheit: JSF/CDI <span class="vs-label">vs</span> Angular</h2>
+                <table class="comparison">
+                    <tr><th>DeltaSpike / CDI</th><th>Angular</th><th>Zweck</th></tr>
+                    <tr><td><span class="ic">@Secured</span></td><td>Route Guards (<span class="ic">canActivate</span>)</td><td>Zugriffskontrolle</td></tr>
+                    <tr><td><span class="ic">AccessDecisionVoter</span></td><td>Guard-Funktion</td><td>Entscheidungslogik</td></tr>
+                    <tr><td>Session-Cookie</td><td>JWT in <span class="ic">localStorage</span></td><td>Authentifizierung</td></tr>
+                    <tr><td>Servlet Filter</td><td>HTTP-Interceptor</td><td>Token an Requests anhängen</td></tr>
+                    <tr><td><span class="ic">@RolesAllowed</span></td><td>Backend-Enforcement!</td><td>Echte Sicherheit</td></tr>
+                </table>
+                <div class="warn-box" style="margin-top:1rem;">
+                    <b>Wichtig: </b>Client-seitige Guards sind nur UX &mdash; sie verhindern die Navigation, aber <em>nicht</em> den API-Zugriff. Das Backend (Quarkus + <span class="ic">@RolesAllowed</span>) muss die echte Sicherheit gewährleisten!
+                </div>
+                <p class="book-ref">Buch: Kapitel 11.6 &mdash; Sicherheit im Frontend</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 40: AUTHSERVICE ==================== -->
+        <section class="slide light" data-section="Sicherheit" id="slide-40">
+            <div class="slide-content">
+                <h2>AuthService &mdash; JWT-Verwaltung</h2>
+                <pre><code><span class="an">@Injectable</span>({ providedIn: <span class="st">'root'</span> })
+<span class="kw">export class</span> <span class="ty">AuthService</span> {
+  <span class="kw">private</span> http = inject(<span class="ty">HttpClient</span>);
+  currentUser = signal&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>);
+  isLoggedIn = computed(() =&gt; <span class="kw">this</span>.currentUser() !== <span class="kw">null</span>);
+
+  login(email: <span class="ty">string</span>, password: <span class="ty">string</span>) {
+    <span class="kw">return this</span>.http.post&lt;{ token: <span class="ty">string</span> }&gt;(
+      <span class="st">'/api/auth/login'</span>, { email, password }
+    ).pipe(
+      tap(res =&gt; {
+        localStorage.setItem(<span class="st">'token'</span>, res.token);
+        <span class="kw">this</span>.currentUser.set(<span class="kw">this</span>.decodeToken(res.token));
+      })
+    );
+  }
+
+  logout() {
+    localStorage.removeItem(<span class="st">'token'</span>);
+    <span class="kw">this</span>.currentUser.set(<span class="kw">null</span>);
+  }
+
+  getToken(): <span class="ty">string</span> | <span class="kw">null</span> {
+    <span class="kw">return</span> localStorage.getItem(<span class="st">'token'</span>);
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 41: ROUTE GUARDS ==================== -->
+        <section class="slide light" data-section="Sicherheit" id="slide-41">
+            <div class="slide-content">
+                <h2>Route Guards</h2>
+                <pre><code><span class="cm">// auth.guard.ts</span>
+<span class="kw">export const</span> authGuard: <span class="ty">CanActivateFn</span> = (route, state) =&gt; {
+  <span class="kw">const</span> auth = inject(<span class="ty">AuthService</span>);
+  <span class="kw">const</span> router = inject(<span class="ty">Router</span>);
+
+  <span class="kw">if</span> (auth.isLoggedIn()) {
+    <span class="kw">return true</span>;
+  }
+  <span class="cm">// Weiterleiten zum Login mit Rückkehr-URL</span>
+  <span class="kw">return</span> router.createUrlTree(
+    [<span class="st">'/login'</span>], { queryParams: { returnUrl: state.url } }
+  );
+};
+
+<span class="cm">// In den Routes verwenden:</span>
+{ path: <span class="st">'tasks'</span>,
+  canActivate: [authGuard],
+  loadComponent: () =&gt; import(<span class="st">'...'</span>) }</code></pre>
+                <ul>
+                    <li><span class="ic">CanActivateFn</span> &mdash; funktionaler Guard (moderner Ansatz)</li>
+                    <li>Gibt <span class="ic">true</span> (erlaubt) oder <span class="ic">UrlTree</span> (Redirect) zurück</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 42: HTTP INTERCEPTOR ==================== -->
+        <section class="slide dark" data-section="Sicherheit" id="slide-42">
+            <div class="slide-content">
+                <h2>HTTP-Interceptor &mdash; JWT automatisch anhängen</h2>
+                <pre><code><span class="cm">// auth.interceptor.ts</span>
+<span class="kw">export const</span> authInterceptor: <span class="ty">HttpInterceptorFn</span> =
+    (req, next) =&gt; {
+  <span class="kw">const</span> auth = inject(<span class="ty">AuthService</span>);
+  <span class="kw">const</span> token = auth.getToken();
+
+  <span class="kw">if</span> (token) {
+    <span class="kw">const</span> cloned = req.clone({
+      setHeaders: {
+        Authorization: <span class="st">`Bearer </span>${token}<span class="st">`</span>
+      }
+    });
+    <span class="kw">return</span> next(cloned);
+  }
+  <span class="kw">return</span> next(req);
+};
+
+<span class="cm">// In app.config.ts registrieren:</span>
+providers: [
+  provideHttpClient(withInterceptors([authInterceptor]))
+]</code></pre>
+                <div class="tip-box" style="background:rgba(240,244,255,0.1); border-color:var(--accent);">
+                    <b style="color:var(--accent);">Parallele: </b>Ein HTTP-Interceptor in Angular entspricht einem Servlet-Filter oder CDI-Interceptor &mdash; er umschließt jeden ausgehenden Request.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 43: ÜBUNG 5 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Sicherheit" id="slide-43">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 5</span>
+                <h2 class="exercise-title">Sicherheit in TaskBoard</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie einen <span class="ic">AuthService</span> mit <span class="ic">login()</span>, <span class="ic">logout()</span>, <span class="ic">isLoggedIn</span> (Signal)</li>
+                    <li>Erstellen Sie eine <span class="ic">LoginComponent</span> mit E-Mail/Passwort-Formular</li>
+                    <li>Erstellen Sie einen <span class="ic">authGuard</span> &mdash; schützt die Route <span class="ic">/tasks</span></li>
+                    <li>Implementieren Sie den <span class="ic">authInterceptor</span> &mdash; hängt den Token an jeden Request</li>
+                    <li>Zeigen Sie Login/Logout-Button in der Navigation je nach State</li>
+                    <li><strong>Bonus:</strong> Redirect zum Login mit <span class="ic">returnUrl</span>, nach Login zurück navigieren</li>
+                </ul>
+                <div class="tip-box">
+                    <b>Vereinfachung: </b>Für die Übung reicht ein simulierter Login (Token im <span class="ic">localStorage</span> speichern, kein echtes Backend nötig).
+                </div>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 30 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 44: ÜBUNG 5 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Sicherheit" id="slide-44">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 5 &mdash; Hinweise</span>
+                <h2 class="exercise-title">Simulierter Login</h2>
+                <pre><code><span class="cm">// Einfacher AuthService für die Übung:</span>
+login(email: <span class="ty">string</span>, password: <span class="ty">string</span>) {
+  <span class="cm">// Simuliert — kein echtes Backend</span>
+  <span class="kw">const</span> fakeToken = btoa(
+    JSON.stringify({ email, role: <span class="st">'user'</span> })
+  );
+  localStorage.setItem(<span class="st">'token'</span>, fakeToken);
+  <span class="kw">this</span>.currentUser.set({ email });
+  <span class="kw">return</span> of({ token: fakeToken });
+}
+
+<span class="cm">// Navigation-Template:</span>
+<span class="an">@if</span> (auth.isLoggedIn()) {
+  &lt;span&gt;{{ auth.currentUser()?.email }}&lt;/span&gt;
+  &lt;button (click)="auth.logout()"&gt;Logout&lt;/button&gt;
+} <span class="an">@else</span> {
+  &lt;a routerLink="/login"&gt;Login&lt;/a&gt;
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 45: SECTION – INTEGRATION ==================== -->
+        <section class="slide section-title" data-section="Integration" id="slide-45">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Integration &amp; Deployment</h1>
+                <p class="subtitle">Quarkus + Quinoa &mdash; Backend und Frontend vereint</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 46: QUARKUS + QUINOA ==================== -->
+        <section class="slide light" data-section="Integration" id="slide-46">
+            <div class="slide-content">
+                <h2>Quarkus + Quinoa</h2>
+                <p style="margin-bottom:1rem;">Quinoa integriert Angular nahtlos in ein Quarkus-Projekt &mdash; ein Build, ein JAR, ein Deployment.</p>
+                <pre><code><span class="cm"># application.properties:</span>
+quarkus.quinoa.enable-spa-routing=<span class="kw">true</span>
+quarkus.quinoa.package-manager-install=<span class="kw">true</span>
+
+<span class="cm"># Projekt-Struktur:</span>
+src/main/
+  java/         <span class="cm">← Quarkus REST-API</span>
+  webui/        <span class="cm">← Angular-Projekt</span>
+    src/app/
+    package.json
+    angular.json</code></pre>
+                <ul>
+                    <li>Quinoa führt <span class="ic">npm install</span> + <span class="ic">ng build</span> automatisch aus</li>
+                    <li>Angular-Build landet in Quarkus &mdash; serviert als statische Dateien</li>
+                    <li><span class="ic">enable-spa-routing=true</span> leitet alle Nicht-API-Pfade an <span class="ic">index.html</span></li>
+                    <li>Entwicklung: Angular CLI (4200) + Quarkus (8080) parallel mit Proxy</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 11.9 &mdash; IdeaFork-Frontend migrieren</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 47: BEST PRACTICES ==================== -->
+        <section class="slide dark" data-section="Best Practices" id="slide-47">
+            <div class="slide-content">
+                <h2>Best Practices</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Empfohlen</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>Standalone Components verwenden</li>
+                            <li>Signals statt Subjects für State</li>
+                            <li>Lazy Loading für alle Routes</li>
+                            <li>Reactive Forms statt Template Forms</li>
+                            <li>Funktionale Guards &amp; Interceptors</li>
+                            <li>Strict TypeScript (<span class="ic">strict: true</span>)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Vermeiden</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>Geschäftslogik in Komponenten</li>
+                            <li><span class="ic">any</span>-Typ verwenden</li>
+                            <li>Subscriptions ohne Unsubscribe</li>
+                            <li>Direkte DOM-Manipulation</li>
+                            <li>Sicherheitslogik nur im Frontend</li>
+                            <li>State in globalen Variablen</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 48: HÄUFIGE FEHLER ==================== -->
+        <section class="slide light" data-section="Best Practices" id="slide-48">
+            <div class="slide-content">
+                <h2>Häufige Fehler &amp; Lösungen</h2>
+                <table class="comparison">
+                    <tr><th>Fehler</th><th>Ursache</th><th>Lösung</th></tr>
+                    <tr>
+                        <td>Template zeigt nichts</td>
+                        <td><span class="ic">signal()</span> nicht aufgerufen</td>
+                        <td><span class="ic">{{ tasks() }}</span> nicht <span class="ic">{{ tasks }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Import not found</td>
+                        <td>Fehlender <span class="ic">imports</span>-Eintrag</td>
+                        <td>Component in <span class="ic">imports: [...]</span> hinzufügen</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP 404</td>
+                        <td>Proxy nicht konfiguriert</td>
+                        <td><span class="ic">proxy.conf.json</span> prüfen</td>
+                    </tr>
+                    <tr>
+                        <td>Form submitted but invalid</td>
+                        <td>Kein <span class="ic">form.valid</span>-Check</td>
+                        <td><span class="ic">if (this.form.valid)</span> prüfen</td>
+                    </tr>
+                    <tr>
+                        <td>Guard wird ignoriert</td>
+                        <td>Nicht in Route registriert</td>
+                        <td><span class="ic">canActivate: [authGuard]</span></td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 49: MIGRATION CHECKLIST ==================== -->
+        <section class="slide light" data-section="Zusammenfassung" id="slide-49">
+            <div class="slide-content">
+                <h2>JSF → Angular: Migration Cheat Sheet</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>View-Schicht</h3>
+                        <ul style="font-size:0.9rem;">
+                            <li>XHTML-Seiten → Components</li>
+                            <li><span class="ic">#{}</span> → <span class="ic">{{ }}</span></li>
+                            <li><span class="ic">ui:repeat</span> → <span class="ic">@for</span></li>
+                            <li><span class="ic">rendered</span> → <span class="ic">@if</span></li>
+                            <li><span class="ic">h:form</span> → Reactive Forms</li>
+                            <li><span class="ic">h:commandButton</span> → <span class="ic">(click)</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Backend-Anbindung</h3>
+                        <ul style="font-size:0.9rem;">
+                            <li><span class="ic">@Named</span> Bean → <span class="ic">@Injectable</span> Service</li>
+                            <li>Form-Submit → REST + <span class="ic">HttpClient</span></li>
+                            <li>Session-State → Signals + localStorage</li>
+                            <li>Servlet Filter → HTTP-Interceptor</li>
+                            <li>ViewConfig → Routes-Array</li>
+                            <li><span class="ic">@Secured</span> → <span class="ic">canActivate</span> Guard</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 11.9 &mdash; IdeaFork-Frontend migrieren</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 50: TASKBOARD GESAMTBILD ==================== -->
+        <section class="slide dark" data-section="Zusammenfassung" id="slide-50">
+            <div class="slide-content">
+                <h2>TaskBoard &mdash; Das Gesamtbild</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3 class="accent">Komponenten</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><span class="ic">AppComponent</span> &mdash; Layout + Navigation</li>
+                            <li><span class="ic">HomeComponent</span> &mdash; Startseite</li>
+                            <li><span class="ic">TaskListComponent</span> &mdash; Übersicht</li>
+                            <li><span class="ic">TaskDetailComponent</span> &mdash; Detail</li>
+                            <li><span class="ic">CreateTaskComponent</span> &mdash; Formular</li>
+                            <li><span class="ic">LoginComponent</span> &mdash; Anmeldung</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="accent">Services &amp; Guards</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><span class="ic">TaskService</span> &mdash; REST-Client</li>
+                            <li><span class="ic">AuthService</span> &mdash; JWT &amp; User-State</li>
+                            <li><span class="ic">authGuard</span> &mdash; Zugriffskontrolle</li>
+                            <li><span class="ic">authInterceptor</span> &mdash; Token-Injection</li>
+                            <li>Reactive Forms &mdash; Validierung</li>
+                            <li>Signals &mdash; State Management</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 51: ARCHITEKTUR ==================== -->
+        <section class="slide dark" data-section="Zusammenfassung" id="slide-51">
+            <div class="slide-content" style="text-align:center;">
+                <h2>Architektur: TaskBoard + Quarkus</h2>
+                <div style="display:flex; flex-direction:column; gap:1rem; max-width:600px; margin:1.5rem auto 0;">
+                    <div class="flow-item" style="background:rgba(221,0,49,0.15); border-color:var(--angular);">
+                        <strong>Angular SPA (Browser)</strong><br><small>Components · Services · Router · Guards</small>
+                    </div>
+                    <div style="color:var(--accent);">↕ REST / JSON</div>
+                    <div class="flow-item" style="background:rgba(99,128,255,0.15); border-color:var(--accent);">
+                        <strong>Quarkus Backend</strong><br><small>JAX-RS · CDI · @RolesAllowed · JPA</small>
+                    </div>
+                    <div style="color:var(--accent);">↕</div>
+                    <div class="flow-item" style="background:rgba(46,204,113,0.15); border-color:var(--exercise-accent);">
+                        <strong>Datenbank</strong><br><small>PostgreSQL / H2</small>
+                    </div>
+                </div>
+                <p style="margin-top:1.5rem; opacity:0.5; font-size:0.95rem;">Angular im Browser, CDI im Backend &mdash; verbunden durch REST</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 52: WEITERFÜHREND ==================== -->
+        <section class="slide light" data-section="Zusammenfassung" id="slide-52">
+            <div class="slide-content">
+                <h2>Weiterführende Themen</h2>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>State Management</h3>
+                        <p style="font-size:0.88rem;">NgRx / SignalStore für komplexe Anwendungen, zentrale State-Verwaltung</p>
+                    </div>
+                    <div class="card">
+                        <h3>Testing</h3>
+                        <p style="font-size:0.88rem;">Jasmine + Karma für Unit-Tests, Cypress/Playwright für E2E-Tests</p>
+                    </div>
+                    <div class="card">
+                        <h3>SSR &amp; Hydration</h3>
+                        <p style="font-size:0.88rem;">Angular Universal für Server-Side Rendering und SEO-Optimierung</p>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Lesetipp: </b>Das Buch behandelt in Kapitel 10 die Migration des Backends zu Quarkus (CDI → ArC, DeltaSpike → MicroProfile) &mdash; die perfekte Ergänzung zu diesem Training.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 53: BUCHEMPFEHLUNG ==================== -->
+        <section class="slide dark" data-section="Zusammenfassung" id="slide-53">
+            <div class="slide-content" style="text-align:center;">
+                <h2>Zum Nachlesen</h2>
+                <div class="two-col" style="margin-top:1.5rem;">
+                    <div class="card" style="text-align:center;">
+                        <h3>Kapitel 11</h3>
+                        <p style="font-size:1rem; margin:0.8rem 0;"><strong>Von JSF zu Angular</strong></p>
+                        <p style="font-size:0.88rem; opacity:0.7;">30 Code-Listings &middot; 11 Tipps &middot; Vollständige Migration</p>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <h3>Kapitel 9 &amp; 10</h3>
+                        <p style="font-size:1rem; margin:0.8rem 0;"><strong>Jakarta EE &amp; Quarkus</strong></p>
+                        <p style="font-size:0.88rem; opacity:0.7;">Backend-Migration &middot; ArC &middot; MicroProfile &middot; Native Images</p>
+                    </div>
+                </div>
+                <div style="margin-top:2rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+                    <a href="book.html" style="color:var(--accent); text-decoration:none; padding:0.5rem 1.2rem; border:1px solid var(--accent); border-radius:8px;">Deutsche Ausgabe</a>
+                    <a href="book_en.html" style="color:var(--accent); text-decoration:none; padding:0.5rem 1.2rem; border:1px solid var(--accent); border-radius:8px;">English Edition</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 54: FRAGEN ==================== -->
+        <section class="slide light" data-section="Abschluss" id="slide-54">
+            <div class="slide-content" style="text-align:center;">
+                <h2>Fragen &amp; Feedback</h2>
+                <p style="font-size:1.15rem; margin:2rem 0;">Haben Sie noch Fragen zu den Themen des Kurses?</p>
+                <div class="three-col" style="margin-top:2rem;">
+                    <div class="card">
+                        <h3>Inhalt</h3>
+                        <p style="font-size:0.9rem;">Welche Themen waren besonders hilfreich?</p>
+                    </div>
+                    <div class="card">
+                        <h3>Übungen</h3>
+                        <p style="font-size:0.9rem;">War das Tempo angemessen?</p>
+                    </div>
+                    <div class="card">
+                        <h3>Nächste Schritte</h3>
+                        <p style="font-size:0.9rem;">Welche Themen möchten Sie vertiefen?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 55: ABSCHLUSS ==================== -->
+        <section class="slide dark" data-section="Abschluss" id="slide-55">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1.5rem;"></div>
+                <h1 style="font-size:3rem;">Vielen Dank!</h1>
+                <p class="subtitle" style="margin-top:1rem;">Angular Training &mdash; Von JSF zu Angular</p>
+                <div class="accent-line" style="margin:1.5rem auto;"></div>
+                <p style="font-size:1rem; opacity:0.6; margin-top:2rem;">Basierend auf <em>[CDI@Work]:AI</em>, Kapitel 11</p>
+                <p style="font-size:0.9rem; opacity:0.4;">von Gerhard Petracek</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('slidesContainer');
+        const slides = document.querySelectorAll('.slide');
+        const progressFill = document.getElementById('progressFill');
+        const slideCounter = document.getElementById('slideCounter');
+        const sectionLabel = document.getElementById('sectionLabel');
+        const totalSlides = slides.length;
+
+        function updateUI(index) {
+            const pct = (index / (totalSlides - 1)) * 100;
+            progressFill.style.width = pct + '%';
+            slideCounter.textContent = (index + 1) + ' / ' + totalSlides;
+
+            const section = slides[index].dataset.section || '';
+            sectionLabel.textContent = section;
+
+            const isLight = slides[index].classList.contains('light') ||
+                            slides[index].classList.contains('exercise');
+            slideCounter.classList.toggle('on-light', isLight);
+            sectionLabel.classList.toggle('on-light', isLight);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const idx = Array.from(slides).indexOf(entry.target);
+                    if (idx >= 0) updateUI(idx);
+                }
+            });
+        }, { root: container, threshold: 0.5 });
+
+        slides.forEach(slide => observer.observe(slide));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                const current = getCurrentSlideIndex();
+                if (current < totalSlides - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                const current = getCurrentSlideIndex();
+                if (current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+            } else if (e.key === 'Home') {
+                e.preventDefault(); slides[0].scrollIntoView({ behavior: 'smooth' });
+            } else if (e.key === 'End') {
+                e.preventDefault(); slides[totalSlides - 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        function getCurrentSlideIndex() {
+            const rect = container.getBoundingClientRect();
+            const center = rect.top + rect.height / 2;
+            let closest = 0, minDist = Infinity;
+            slides.forEach((slide, i) => {
+                const r = slide.getBoundingClientRect();
+                const dist = Math.abs(r.top + r.height / 2 - center);
+                if (dist < minDist) { minDist = dist; closest = i; }
+            });
+            return closest;
+        }
+
+        let touchStartY = 0;
+        container.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+        container.addEventListener('touchend', (e) => {
+            const diff = touchStartY - e.changedTouches[0].clientY;
+            const current = getCurrentSlideIndex();
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && current < totalSlides - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+                else if (diff < 0 && current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        }, { passive: true });
+
+        updateUI(0);
+        slides[0].classList.add('visible');
+    </script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Java EE to Jakarta EE &ndash; A New Chapter for [CDI@Work]:AI</title>
+  <meta name="description" content="How Claude wrote a brand-new chapter bridging [CDI@Work]:AI from Java EE 6 to Jakarta EE 11, covering the namespace migration, CDI 4.1, and DeltaSpike 2.0.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .meta {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    article {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2.5rem 3rem;
+    }
+
+    article p {
+      margin-bottom: 1.4rem;
+    }
+
+    article h2 {
+      font-size: 1.3rem;
+      color: #0f3460;
+      margin: 2.2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    article a {
+      color: #0f3460;
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
+    }
+
+    article a:hover {
+      text-decoration-color: #0f3460;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+      border-left: 4px solid #0f3460;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong {
+      color: #0f3460;
+    }
+
+    .book-links {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.45rem;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      width: 2px;
+      background: #d0d8e4;
+    }
+
+    .timeline li {
+      list-style: none;
+      position: relative;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -1.45rem;
+      top: 0.55rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0f3460;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #d0d8e4;
+    }
+
+    code {
+      background: #f0f3f7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .post-nav {
+      max-width: 680px;
+      margin: -0.5rem auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .post-nav a {
+      color: #0f3460;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      transition: color 0.2s;
+    }
+
+    .post-nav a:hover {
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+    }
+
+    .post-nav .prev { text-align: left; }
+    .post-nav .next { text-align: right; margin-left: auto; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      article { margin: -1.5rem 1rem 3rem; padding: 1.5rem; }
+      .book-links { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">AI Journey &middot; Blog Post #2</div>
+    <h1>From Java EE to Jakarta EE &ndash; A New Chapter</h1>
+    <p class="meta">February 2026</p>
+  </header>
+
+  <article>
+    <p>
+      In the <a href="blog.html">first post</a> of this series, I described how
+      Claude transformed my old LaTeX-generated CDI book into a modern bilingual
+      web experience. Two complete HTML books &mdash; German and English &mdash;
+      with identical structure, identical code, and a fresh design.
+      But the content itself was still frozen in 2014.
+    </p>
+
+    <p>
+      The book covers CDI 1.0 through early 2.0 concepts, all in the context of
+      Java&nbsp;EE&nbsp;6. Meanwhile, the world moved on. Java&nbsp;EE became
+      Jakarta&nbsp;EE. The <code>javax</code> namespace became <code>jakarta</code>.
+      CDI went through major architectural changes, reaching version 4.1.
+      The book&rsquo;s core teachings are still sound &mdash; but they needed
+      a bridge to the present.
+    </p>
+
+    <h2>Writing a Chapter That Didn't Exist</h2>
+
+    <p>
+      This time, the task was different. The first two steps &mdash; redesigning
+      the website and translating the text &mdash; were transformations of
+      existing material. Claude had source content to work with. For Chapter 9,
+      there was no source. The chapter had to be written from scratch.
+    </p>
+
+    <p>
+      I gave Claude a structural outline: eight sections covering the migration
+      from Java&nbsp;EE to Jakarta&nbsp;EE, the CDI&nbsp;4.0 architectural split,
+      the new extension model, changed defaults, DeltaSpike&nbsp;2.0, updated
+      implementations, and a concrete migration guide for the book&rsquo;s
+      example application. Claude had to research the current state of the
+      specifications, write accurate technical content, produce matching code
+      examples, and do it all in both German and English &mdash; while
+      maintaining the style and HTML patterns of eight existing chapters.
+    </p>
+
+    <h2>What Chapter 9 Covers</h2>
+
+    <p>
+      The new chapter, titled <em>&ldquo;Von Java EE zu Jakarta EE&rdquo;</em>
+      (German) and <em>&ldquo;From Java EE to Jakarta EE&rdquo;</em> (English),
+      picks up exactly where the original book left off and walks the reader
+      through everything that changed:
+    </p>
+
+    <ul class="timeline">
+      <li>The <code>javax</code> to <code>jakarta</code> namespace migration &mdash; imports, <code>beans.xml</code>, Maven coordinates, shown with the book&rsquo;s own IdeaFork code</li>
+      <li>The CDI Lite vs. CDI Full split in CDI 4.0, explicitly addressing a naming collision with the book&rsquo;s own Chapter 6 &ldquo;CDI Lite&rdquo;</li>
+      <li>Build Compatible Extensions &mdash; the new extension model compared side-by-side with the Portable Extensions from Chapter 4</li>
+      <li>Changed defaults: bean discovery mode switching from <code>all</code> to <code>annotated</code>, <code>@Priority</code> on producers, and the Method Invokers API</li>
+      <li>DeltaSpike 2.0 and its straightforward migration to the Jakarta namespace</li>
+      <li>A version mapping table for Weld 6.x and OpenWebBeans 4.x</li>
+      <li>A step-by-step migration checklist for upgrading IdeaFork itself</li>
+    </ul>
+
+    <p>
+      The chapter contains 12 code listings showing before-and-after
+      comparisons, 6 tip boxes with practical migration advice, and a
+      curated list of specification and implementation sources.
+    </p>
+
+    <h2>The Bilingual Challenge</h2>
+
+    <p>
+      Writing new content in two languages simultaneously is harder than
+      translating existing text. When translating, the structure is fixed &mdash;
+      you just convert the words. When writing from scratch in parallel,
+      code examples can quietly diverge, explanations can drift apart,
+      and anchor names can end up inconsistent.
+    </p>
+
+    <p>
+      That&rsquo;s exactly what happened on the first pass. The German and
+      English versions were generated in parallel for speed, and the resulting
+      code examples used completely different class names and method signatures.
+      A direct comparison caught it, and the English version was rewritten
+      from scratch using the German as the authoritative source &mdash;
+      the same approach that worked for the original eight chapters.
+    </p>
+
+    <div class="highlight">
+      <strong>Lesson learned:</strong> When generating bilingual technical content
+      with AI, always write one language first and use it as the template for the
+      other. Parallel generation is fast but produces drift. Sequential generation
+      with a shared code base stays consistent.
+    </div>
+
+    <h2>Fitting Into an Existing Book</h2>
+
+    <p>
+      The trickiest part wasn&rsquo;t the writing &mdash; it was the integration.
+      Both book files are large single-page HTML documents with embedded CSS,
+      JavaScript, a sidebar table of contents, and hundreds of cross-referenced
+      anchors. Adding a new chapter meant inserting a TOC entry in the exact
+      right place, appending the chapter content in the exact right place, and
+      making sure every anchor name followed the existing naming convention so
+      the sidebar navigation and internal links all work.
+    </p>
+
+    <p>
+      The chapter uses the same HTML patterns as the rest of the book &mdash;
+      the same heading structure, the same code block markup, the same tip box
+      styling, the same paragraph break pattern. A reader scrolling from
+      Chapter 8 into Chapter 9 shouldn&rsquo;t notice a seam.
+    </p>
+
+    <h2>What's Next</h2>
+
+    <p>
+      Chapter 9 is a bridge, not a rewrite. It connects what readers already
+      learned in the original eight chapters to where the technology stands today.
+      Whether the book eventually receives a deeper modernization &mdash;
+      rewriting earlier chapters for Jakarta&nbsp;EE, adding Quarkus examples,
+      covering MicroProfile &mdash; remains an open question.
+    </p>
+
+    <p>
+      For now, both editions are available with the new chapter included:
+    </p>
+
+    <div class="book-links">
+      <a href="../book.html">
+        <span class="arrow">&rarr;</span> Deutsche Ausgabe
+      </a>
+      <a href="../book_en.html">
+        <span class="arrow">&rarr;</span> English Edition
+      </a>
+    </div>
+
+    <p>
+      This is the second post in the AI Journey series. The first one covered
+      the redesign and translation. This one covered writing genuinely new
+      technical content. Each step asked a little more of the collaboration
+      &mdash; and each time, it worked a little better than expected.
+    </p>
+
+    <p style="margin-bottom:0; color:#666; font-size:0.9rem;">
+      <em>Original book by Gerhard Petracek. Chapter 9 and this blog post
+      written by Claude (Anthropic) without subsequent manual edits.</em>
+    </p>
+  </article>
+
+  <nav class="post-nav">
+    <a href="01-breathing-new-life.html" class="prev">&larr; Breathing New Life into [CDI@Work]:AI</a>
+    <a href="03-before-and-after.html" class="next">From LaTeX to Modern Web &rarr;</a>
+  </nav>
+
+  <footer>
+    <a href="index.html">&larr; All Blog Posts</a>
+    <br>
+    [CDI@Work]:AI &middot; An AI Journey &middot; 2026
+  </footer>
+
+</body>
+</html>

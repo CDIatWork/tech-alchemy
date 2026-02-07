@@ -1,0 +1,69 @@
+<!-- Übung 2: Detail-Ansicht einer Aufgabe -->
+<!-- Übung 3: Daten per Route-Parameter :id vom Service laden -->
+
+<div class="detail-container">
+
+  <!-- Zurück-Link -->
+  <a class="back-link" routerLink="/tasks">&larr; Zurück zur Liste</a>
+
+  <!-- Loading-State -->
+  @if (loading()) {
+    <div class="loading">Aufgabe wird geladen</div>
+  }
+
+  <!-- Fehler -->
+  @else if (error()) {
+    <div class="error-box">{{ error() }}</div>
+    <button class="btn btn-secondary mt-1" (click)="goBack()">Zurück zur Liste</button>
+  }
+
+  <!-- Aufgaben-Detail -->
+  @else {
+    @if (task(); as t) {
+      <div class="detail-card">
+        <h1>{{ t.title }}</h1>
+
+        <div class="detail-meta">
+          <div class="meta-item">
+            <strong>Kategorie:</strong>
+            <span class="badge" [class.badge-work]="t.category === 'work'"
+                                [class.badge-learning]="t.category === 'learning'"
+                                [class.badge-personal]="t.category === 'personal'">
+              {{ t.category }}
+            </span>
+          </div>
+          <div class="meta-item">
+            <strong>Status:</strong>
+            @if (t.completed) {
+              <span class="badge badge-completed">Erledigt</span>
+            } @else {
+              <span class="badge badge-open">Offen</span>
+            }
+          </div>
+          <div class="meta-item">
+            <strong>Erstellt:</strong> {{ t.createdAt | date:'dd.MM.yyyy, HH:mm' }}
+          </div>
+        </div>
+
+        @if (t.description) {
+          <div class="detail-description">
+            {{ t.description }}
+          </div>
+        }
+
+        <div class="detail-actions">
+          @if (t.completed) {
+            <button class="btn btn-secondary" (click)="toggleComplete()">
+              Als offen markieren
+            </button>
+          } @else {
+            <button class="btn btn-success" (click)="toggleComplete()">
+              Als erledigt markieren
+            </button>
+          }
+          <button class="btn btn-secondary" (click)="goBack()">Zurück</button>
+        </div>
+      </div>
+    }
+  }
+</div>

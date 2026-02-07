@@ -1,0 +1,2535 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDI Training – 2-Tages-Kurs | [CDI@Work]:AI</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --navy: #1a1f36;
+            --accent: #6380ff;
+            --link: #4361ee;
+            --light-bg: #f8f9fa;
+            --text: #2c3e50;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tip-bg: #f0f4ff;
+            --tip-border: #4361ee;
+            --exercise-bg: #f0fff4;
+            --exercise-accent: #27ae60;
+            --exercise-dark: #1e7a43;
+            --warn-bg: #fff3cd;
+            --warn-border: #ffc107;
+        }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--text); background: var(--navy); overflow-x: hidden;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 4px; background: rgba(255,255,255,0.1); z-index: 100;
+        }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent); transition: width 0.3s ease; }
+        .slide-counter {
+            position: fixed; bottom: 20px; right: 28px;
+            font-size: 0.8rem; color: rgba(255,255,255,0.45);
+            z-index: 100; font-variant-numeric: tabular-nums; transition: color 0.3s;
+        }
+        .slide-counter.on-light { color: rgba(0,0,0,0.25); }
+        .section-label {
+            position: fixed; top: 10px; left: 20px;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.35); z-index: 100; transition: color 0.3s;
+        }
+        .section-label.on-light { color: rgba(0,0,0,0.2); }
+        .slides-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
+        .slide {
+            min-height: 100vh; width: 100%; scroll-snap-align: start;
+            display: flex; align-items: center; justify-content: center;
+            padding: 60px 80px; position: relative;
+        }
+        .slide-content {
+            max-width: 1100px; width: 100%;
+            opacity: 0; transform: translateY(25px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .slide.visible .slide-content { opacity: 1; transform: translateY(0); }
+        .slide.dark { background: linear-gradient(135deg, #16213e, #0f3460); color: #e8e8e8; }
+        .slide.light { background: #ffffff; color: var(--text); }
+        .slide.section-title { background: linear-gradient(135deg, var(--navy), #2a3f5f); color: white; }
+        .slide.exercise {
+            background: linear-gradient(135deg, #f0fff4, #e8f5e9); color: var(--text);
+            border-left: 6px solid var(--exercise-accent);
+        }
+        h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
+        h2 { font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.3; }
+        h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.8rem; }
+        .subtitle { font-size: 1.25rem; opacity: 0.65; margin-bottom: 1.5rem; }
+        .slide.section-title h1 { font-size: 3.2rem; }
+        .slide.dark h2 { color: #fff; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.5rem; font-size: 1.05rem; line-height: 1.5; }
+        li::marker { color: var(--accent); }
+        .slide.exercise li::marker { color: var(--exercise-accent); }
+        pre {
+            background: var(--code-bg); color: var(--code-text);
+            padding: 18px 22px; border-radius: 8px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 0.88rem; line-height: 1.55; overflow-x: auto; margin: 1rem 0;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        code { font-family: inherit; }
+        .ic {
+            background: #eef1f6; padding: 2px 6px; border-radius: 4px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.88em; color: #c7254e;
+        }
+        .slide.dark .ic, .slide.section-title .ic { background: rgba(255,255,255,0.1); color: #a9b1d6; }
+        .kw { color: #c678dd; } .an { color: #e5c07b; } .st { color: #98c379; }
+        .cm { color: #5c6370; font-style: italic; } .ty { color: #61afef; }
+        .tip-box {
+            background: var(--tip-bg); border-left: 4px solid var(--tip-border);
+            padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 0.95rem;
+        }
+        .tip-box b { color: var(--tip-border); }
+        .warn-box {
+            background: var(--warn-bg); border-left: 4px solid var(--warn-border);
+            padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 0.95rem;
+            color: #664d03;
+        }
+        .warn-box b { color: #856404; }
+        .warn-box .ic { color: #664d03; background: rgba(0,0,0,0.08); }
+        .slide.dark .warn-box .ic { color: inherit; background: rgba(255,255,255,0.1); }
+        .exercise-badge {
+            display: inline-block; background: var(--exercise-accent); color: white;
+            font-size: 0.75rem; font-weight: 700; padding: 3px 12px; border-radius: 20px;
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem;
+        }
+        .exercise-title { color: var(--exercise-dark); }
+        .task-list { list-style: none; margin-left: 0; }
+        .task-list li { padding-left: 26px; position: relative; margin-bottom: 0.7rem; }
+        .task-list li::before { content: '☐'; position: absolute; left: 0; color: var(--exercise-accent); font-size: 1.1em; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+        .card {
+            background: white; border-radius: 12px; padding: 22px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #eee;
+        }
+        .slide.dark .card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+        .card h3 { font-size: 1.05rem; margin-bottom: 0.6rem; }
+        .accent { color: var(--accent); }
+        .accent-line { width: 60px; height: 3px; background: var(--accent); margin: 1rem 0; }
+        .tag {
+            display: inline-block; padding: 3px 10px; background: rgba(99,128,255,0.1);
+            color: var(--accent); border-radius: 4px; font-size: 0.82rem; margin: 2px;
+        }
+        .slide.dark .tag { background: rgba(99,128,255,0.2); }
+        .flow { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .flow-item {
+            background: white; border: 2px solid var(--accent); border-radius: 12px;
+            padding: 14px 22px; text-align: center; font-weight: 600;
+        }
+        .slide.dark .flow-item { background: rgba(255,255,255,0.08); color: white; }
+        .flow-arrow { font-size: 1.5rem; color: var(--accent); }
+        .comparison { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        .comparison th { background: var(--navy); color: white; padding: 9px 14px; text-align: left; font-size: 0.9rem; }
+        .comparison td { padding: 9px 14px; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #2c3e50; }
+        .comparison tr:nth-child(even) { background: #f8f9fa; }
+        .comparison tr:nth-child(odd) td { background: #ffffff; }
+        .book-ref { font-size: 0.82rem; color: rgba(0,0,0,0.35); margin-top: 1.5rem; font-style: italic; }
+        .slide.dark .book-ref { color: rgba(255,255,255,0.25); }
+        .day-number {
+            font-size: 5rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .vs-label {
+            display: inline-block; background: #e74c3c; color: white;
+            font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+            text-transform: uppercase; vertical-align: middle; margin: 0 0.5rem;
+        }
+        @media (max-width: 900px) {
+            .slide { padding: 40px 28px; }
+            h1 { font-size: 2rem; } h2 { font-size: 1.5rem; }
+            .two-col, .three-col { grid-template-columns: 1fr; }
+            pre { font-size: 0.8rem; padding: 14px; }
+            .slide.section-title h1 { font-size: 2.2rem; }
+        }
+        @media (max-width: 600px) {
+            .slide { padding: 28px 16px; }
+            h1 { font-size: 1.5rem; } li { font-size: 0.92rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="slide-counter" id="slideCounter">1 / 100</div>
+    <div class="section-label" id="sectionLabel"></div>
+
+    <div class="slides-container" id="slidesContainer">
+
+        <!-- ==================== SLIDE 1: TITLE ==================== -->
+        <section class="slide dark" data-section="Einführung" id="slide-1">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1.5rem;"></div>
+                <h1 style="font-size:3.5rem;">CDI Training</h1>
+                <p class="subtitle">Contexts and Dependency Injection für Java</p>
+                <div class="accent-line" style="margin:1rem auto;"></div>
+                <p style="font-size:1.1rem; opacity:0.55; margin-top:2rem;">2-Tages-Intensivkurs</p>
+                <p style="font-size:0.9rem; opacity:0.35; margin-top:1rem;">Basierend auf <em>[CDI@Work]:AI</em> von Gerhard Petracek</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 2: AGENDA ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-2">
+            <div class="slide-content">
+                <h2>Agenda</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3 class="accent">Tag 1 — Grundlagen</h3>
+                        <ul>
+                            <li>Einführung &amp; Projekt-Setup</li>
+                            <li>Dependency Injection mit CDI</li>
+                            <li>Scopes &amp; Kontexte</li>
+                            <li>Qualifier &amp; Alternatives</li>
+                            <li>Producer &amp; Disposer</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="accent">Tag 2 — Fortgeschritten</h3>
+                        <ul>
+                            <li>Events &amp; Observer</li>
+                            <li>Interceptors</li>
+                            <li>Decorators</li>
+                            <li>Stereotypes &amp; Extensions</li>
+                            <li>Apache DeltaSpike</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 3: VORAUSSETZUNGEN ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-3">
+            <div class="slide-content">
+                <h2>Voraussetzungen &amp; Übungsprojekt</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>Was Sie mitbringen sollten</h3>
+                        <ul>
+                            <li>Solide Java-Kenntnisse (SE 11+)</li>
+                            <li>Grundlagen von Maven</li>
+                            <li>IDE Ihrer Wahl (IntelliJ, Eclipse, VS Code)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Was wir gemeinsam aufbauen</h3>
+                        <ul>
+                            <li><strong>„TaskForge"</strong> — eine Aufgabenverwaltung</li>
+                            <li>Jede Übung erweitert die vorherige</li>
+                            <li>Am Ende: vollständige CDI-Anwendung</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Tipp: </b>Das Buch <em>[CDI@Work]:AI</em> enthält vertiefende Erklärungen zu allen Themen — ideal zum Nachlesen nach dem Kurs.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 4: WAS IST DI? ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-4">
+            <div class="slide-content">
+                <h2>Was ist Dependency Injection?</h2>
+                <ul>
+                    <li>Ein Entwurfsmuster zur <strong>Entkopplung</strong> von Komponenten</li>
+                    <li>Objekte erzeugen ihre Abhängigkeiten <strong>nicht selbst</strong></li>
+                    <li>Stattdessen werden Abhängigkeiten von außen <strong>injiziert</strong></li>
+                    <li>Folgt dem <em>Inversion of Control</em> (IoC) Prinzip</li>
+                </ul>
+                <div class="flow" style="margin-top:2rem;">
+                    <div class="flow-item">Komponente A</div>
+                    <div class="flow-arrow">←</div>
+                    <div class="flow-item" style="border-color:var(--exercise-accent);">CDI Container</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Komponente B</div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 1 — Einleitung</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 5: PROBLEM OHNE DI ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-5">
+            <div class="slide-content">
+                <h2>Das Problem: Enge Kopplung</h2>
+                <pre><code><span class="kw">public class</span> <span class="ty">TaskService</span> {
+    <span class="cm">// TaskService erzeugt seine Abhängigkeit selbst</span>
+    <span class="kw">private</span> <span class="ty">TaskRepository</span> repository =
+        <span class="kw">new</span> <span class="ty">InMemoryTaskRepository</span>();
+
+    <span class="kw">public</span> <span class="ty">Task</span> <span class="fn">createTask</span>(<span class="ty">String</span> title) {
+        <span class="ty">Task</span> task = <span class="kw">new</span> <span class="ty">Task</span>(title);
+        repository.add(task);
+        <span class="kw">return</span> task;
+    }
+}</code></pre>
+                <div class="warn-box">
+                    <b>Probleme: </b>Nicht testbar mit Mocks · Implementierung fest verdrahtet · Wechsel zu anderer Implementierung erfordert Codeänderung
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 6: LÖSUNG MIT DI ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-6">
+            <div class="slide-content">
+                <h2>Die Lösung: Dependency Injection</h2>
+                <pre><code><span class="kw">public class</span> <span class="ty">TaskService</span> {
+    <span class="kw">private final</span> <span class="ty">TaskRepository</span> repository;
+
+    <span class="an">@Inject</span>
+    <span class="kw">public</span> <span class="fn">TaskService</span>(<span class="ty">TaskRepository</span> repository) {
+        <span class="kw">this</span>.repository = repository;
+    }
+
+    <span class="kw">public</span> <span class="ty">Task</span> <span class="fn">createTask</span>(<span class="ty">String</span> title) {
+        <span class="ty">Task</span> task = <span class="kw">new</span> <span class="ty">Task</span>(title);
+        repository.add(task);
+        <span class="kw">return</span> task;
+    }
+}</code></pre>
+                <div class="tip-box">
+                    <b>Vorteile: </b>Lose Kopplung · Einfach testbar · Implementierung austauschbar · Container verwaltet den Lebenszyklus
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 7: WAS IST CDI? ==================== -->
+        <section class="slide dark" data-section="Einführung" id="slide-7">
+            <div class="slide-content">
+                <h2>Was ist CDI?</h2>
+                <p style="font-size:1.15rem; margin-bottom:1.5rem;"><strong>C</strong>ontexts and <strong>D</strong>ependency <strong>I</strong>njection — der Standard für DI in Java</p>
+                <div class="two-col">
+                    <div class="card">
+                        <h3><span class="accent">Contexts</span></h3>
+                        <ul>
+                            <li>Lebenszyklus von Beans</li>
+                            <li>Scopes: Request, Session, Application, …</li>
+                            <li>Automatische Erzeugung &amp; Zerstörung</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><span class="accent">Dependency Injection</span></h3>
+                        <ul>
+                            <li>Typbasierte Injection</li>
+                            <li>Qualifier zur Auswahl</li>
+                            <li>Kein XML nötig — Annotationen</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 2 — CDI</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 8: CDI ÖKOSYSTEM ==================== -->
+        <section class="slide light" data-section="Einführung" id="slide-8">
+            <div class="slide-content">
+                <h2>CDI im Java-Ökosystem</h2>
+                <table class="comparison">
+                    <tr><th>Version</th><th>Spezifikation</th><th>Umgebung</th></tr>
+                    <tr><td>CDI 1.0</td><td>JSR 299</td><td>Java EE 6</td></tr>
+                    <tr><td>CDI 1.1</td><td>JSR 346</td><td>Java EE 7</td></tr>
+                    <tr><td>CDI 2.0</td><td>JSR 365</td><td>Java EE 8, SE-Support</td></tr>
+                    <tr><td>CDI 3.0</td><td>Jakarta</td><td>Jakarta EE 9 (Namespace)</td></tr>
+                    <tr><td>CDI 4.0</td><td>Jakarta</td><td>Jakarta EE 10, CDI Lite</td></tr>
+                </table>
+                <div class="tip-box">
+                    <b>Implementierungen: </b>Weld (JBoss/WildFly), OpenWebBeans (Apache/TomEE), ArC (Quarkus, Build-Time)
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 9: ÜBUNG 0 ==================== -->
+        <section class="slide exercise" data-section="Einführung" id="slide-9">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 0</span>
+                <h2 class="exercise-title">Projekt-Setup: TaskForge</h2>
+                <ul class="task-list">
+                    <li>Maven-Projekt erstellen (<span class="ic">maven-archetype-quickstart</span>)</li>
+                    <li>Abhängigkeit hinzufügen: <span class="ic">org.jboss.weld.se:weld-se-shaded:5.1.2.Final</span></li>
+                    <li><span class="ic">META-INF/beans.xml</span> anlegen mit <span class="ic">bean-discovery-mode="all"</span></li>
+                    <li>Main-Klasse mit CDI-Container starten (siehe Code unten)</li>
+                </ul>
+                <pre><code><span class="kw">public class</span> <span class="ty">TaskForgeApp</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">try</span> (<span class="ty">SeContainer</span> container = <span class="ty">SeContainerInitializer</span>
+                .newInstance().initialize()) {
+            <span class="ty">System</span>.out.println(<span class="st">"TaskForge CDI gestartet!"</span>);
+        }
+    }
+}</code></pre>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 15 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 10: SECTION – DI ==================== -->
+        <section class="slide section-title" data-section="Dependency Injection" id="slide-10">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Dependency Injection</h1>
+                <p class="subtitle">Beans, Injection-Arten &amp; Bean Discovery</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 11: INJECTION-ARTEN ==================== -->
+        <section class="slide light" data-section="Dependency Injection" id="slide-11">
+            <div class="slide-content">
+                <h2>Drei Arten der Injection</h2>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>Feld-Injection</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@Inject</span>
+<span class="kw">private</span> <span class="ty">TaskRepository</span> repo;</code></pre>
+                        <p style="font-size:0.88rem;">Einfach, kompakt, am häufigsten verwendet</p>
+                    </div>
+                    <div class="card">
+                        <h3>Konstruktor-Injection</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@Inject</span>
+<span class="kw">public</span> <span class="fn">TaskService</span>(
+    <span class="ty">TaskRepository</span> repo) {
+  <span class="kw">this</span>.repo = repo;
+}</code></pre>
+                        <p style="font-size:0.88rem;">Immutable, testfreundlich</p>
+                    </div>
+                    <div class="card">
+                        <h3>Methoden-Injection</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@Inject</span>
+<span class="kw">public void</span> <span class="fn">init</span>(
+    <span class="ty">TaskRepository</span> repo) {
+  <span class="kw">this</span>.repo = repo;
+}</code></pre>
+                        <p style="font-size:0.88rem;">Für mehrere Parameter, selten verwendet</p>
+                    </div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 2.2 — Injection</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 12: FELD-INJECTION ==================== -->
+        <section class="slide light" data-section="Dependency Injection" id="slide-12">
+            <div class="slide-content">
+                <h2>Feld-Injection im Detail</h2>
+                <pre><code><span class="kw">public class</span> <span class="ty">TaskService</span> {
+
+    <span class="an">@Inject</span>
+    <span class="kw">private</span> <span class="ty">TaskRepository</span> repository;
+
+    <span class="an">@Inject</span>
+    <span class="kw">private</span> <span class="ty">TaskValidator</span> validator;
+
+    <span class="kw">public</span> <span class="ty">Task</span> <span class="fn">createTask</span>(<span class="ty">String</span> title) {
+        <span class="ty">Task</span> task = <span class="kw">new</span> <span class="ty">Task</span>(title);
+        validator.validate(task);
+        repository.add(task);
+        <span class="kw">return</span> task;
+    }
+}</code></pre>
+                <ul>
+                    <li>Feld darf <strong>nicht</strong> <span class="ic">final</span> sein</li>
+                    <li>Sichtbarkeit: <span class="ic">private</span>, <span class="ic">protected</span> oder <span class="ic">package-private</span> — alles erlaubt</li>
+                    <li>Container setzt den Wert <em>nach</em> der Konstruktion via Reflection</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 13: KONSTRUKTOR-INJECTION ==================== -->
+        <section class="slide light" data-section="Dependency Injection" id="slide-13">
+            <div class="slide-content">
+                <h2>Konstruktor-Injection</h2>
+                <pre><code><span class="kw">public class</span> <span class="ty">TaskService</span> {
+    <span class="kw">private final</span> <span class="ty">TaskRepository</span> repository;
+    <span class="kw">private final</span> <span class="ty">TaskValidator</span> validator;
+
+    <span class="an">@Inject</span>
+    <span class="kw">public</span> <span class="fn">TaskService</span>(<span class="ty">TaskRepository</span> repository,
+                       <span class="ty">TaskValidator</span> validator) {
+        <span class="kw">this</span>.repository = repository;
+        <span class="kw">this</span>.validator = validator;
+    }
+}</code></pre>
+                <div class="tip-box">
+                    <b>Empfehlung: </b>Konstruktor-Injection bevorzugen — ermöglicht <span class="ic">final</span>-Felder, macht Abhängigkeiten explizit sichtbar und vereinfacht Unit-Tests.
+                </div>
+                <p class="book-ref">Buch: Kapitel 2.2 — Injection</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 14: MANAGED BEANS ==================== -->
+        <section class="slide light" data-section="Dependency Injection" id="slide-14">
+            <div class="slide-content">
+                <h2>Was ist ein Managed Bean?</h2>
+                <p style="margin-bottom:1rem;">Ein <strong>Managed Bean</strong> ist jede Java-Klasse, die vom CDI-Container verwaltet wird.</p>
+                <h3>Voraussetzungen:</h3>
+                <ul>
+                    <li>Konkrete Klasse (nicht abstrakt, außer <span class="ic">@Decorator</span>)</li>
+                    <li>Nicht-statische innere Klasse nur wenn <span class="ic">@Dependent</span></li>
+                    <li>Hat einen passenden Konstruktor (parameterlosen oder <span class="ic">@Inject</span>-Konstruktor)</li>
+                    <li>Nicht mit <span class="ic">@Vetoed</span> annotiert</li>
+                </ul>
+                <div class="tip-box">
+                    <b>Merke: </b>Fast jede „normale" Java-Klasse kann ein CDI Bean sein — kein Interface oder Basisklasse nötig!
+                </div>
+                <p class="book-ref">Buch: Kapitel 2.3 — Managed-Beans</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 15: BEAN DISCOVERY ==================== -->
+        <section class="slide light" data-section="Dependency Injection" id="slide-15">
+            <div class="slide-content">
+                <h2>Bean Discovery</h2>
+                <p style="margin-bottom:1rem;">CDI muss wissen, welche Klassen als Beans behandelt werden sollen.</p>
+                <h3>beans.xml — der Schlüssel</h3>
+                <pre><code><span class="cm">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="kw">&lt;beans</span> xmlns=<span class="st">"https://jakarta.ee/xml/ns/jakartaee"</span>
+       version=<span class="st">"4.0"</span>
+       bean-discovery-mode=<span class="st">"all"</span><span class="kw">&gt;
+&lt;/beans&gt;</span></code></pre>
+                <table class="comparison" style="margin-top:1rem;">
+                    <tr><th>Modus</th><th>Verhalten</th></tr>
+                    <tr><td><span class="ic">all</span></td><td>Alle Klassen werden gescannt (auch ohne Annotationen)</td></tr>
+                    <tr><td><span class="ic">annotated</span></td><td>Nur Klassen mit Bean-Defining-Annotations (Standard ab CDI 4.0)</td></tr>
+                    <tr><td><span class="ic">none</span></td><td>Kein Scanning — CDI ist deaktiviert für dieses Archiv</td></tr>
+                </table>
+                <p class="book-ref">Buch: Kapitel 2.4 — Bean Discovery</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 16: BEAN-DEFINING ANNOTATIONS ==================== -->
+        <section class="slide light" data-section="Dependency Injection" id="slide-16">
+            <div class="slide-content">
+                <h2>Bean-Defining Annotations</h2>
+                <p style="margin-bottom:1rem;">Im Modus <span class="ic">annotated</span> braucht jedes Bean mindestens eine dieser Annotationen:</p>
+                <div class="two-col">
+                    <div>
+                        <h3>Scope-Annotationen</h3>
+                        <ul>
+                            <li><span class="ic">@ApplicationScoped</span></li>
+                            <li><span class="ic">@SessionScoped</span></li>
+                            <li><span class="ic">@RequestScoped</span></li>
+                            <li><span class="ic">@ConversationScoped</span></li>
+                            <li><span class="ic">@Dependent</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Weitere</h3>
+                        <ul>
+                            <li><span class="ic">@Interceptor</span></li>
+                            <li><span class="ic">@Decorator</span></li>
+                            <li><span class="ic">@Stereotype</span></li>
+                            <li>Jede eigene Stereotype-Annotation</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="warn-box" style="margin-top:1rem;">
+                    <b>Achtung: </b>Im Modus <span class="ic">annotated</span> wird eine Klasse ohne Bean-Defining Annotation <em>nicht</em> als Bean erkannt — auch wenn sie einen <span class="ic">@Inject</span>-Konstruktor hat!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 17: BEAN TYPES ==================== -->
+        <section class="slide light" data-section="Dependency Injection" id="slide-17">
+            <div class="slide-content">
+                <h2>Bean Types</h2>
+                <p style="margin-bottom:1rem;">Jedes Bean hat eine Menge von <strong>Bean Types</strong> — alle Typen, unter denen es injiziert werden kann.</p>
+                <pre><code><span class="kw">public class</span> <span class="ty">InMemoryTaskRepository</span>
+        <span class="kw">implements</span> <span class="ty">TaskRepository</span>, <span class="ty">Serializable</span> { ... }</code></pre>
+                <p style="margin:1rem 0;">Bean Types von <span class="ic">InMemoryTaskRepository</span>:</p>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <span class="tag">InMemoryTaskRepository</span>
+                    <span class="tag">TaskRepository</span>
+                    <span class="tag">Serializable</span>
+                    <span class="tag">Object</span>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Tipp: </b>Mit <span class="ic">@Typed({TaskRepository.class})</span> können Sie die sichtbaren Bean Types einschränken.
+                </div>
+                <p class="book-ref">Buch: Kapitel 2.5 — Bean Types</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 18: EL-NAMES ==================== -->
+        <section class="slide dark" data-section="Dependency Injection" id="slide-18">
+            <div class="slide-content">
+                <h2>EL-Names &amp; @Named</h2>
+                <pre><code><span class="an">@Named</span>
+<span class="kw">public class</span> <span class="ty">TaskService</span> { ... }
+
+<span class="cm">// Zugriff in JSF/EL:</span>
+<span class="cm">// #{taskService.tasks}</span></code></pre>
+                <ul style="margin-top:1rem;">
+                    <li><span class="ic">@Named</span> vergibt einen <strong>EL-Namen</strong> (Expression Language)</li>
+                    <li>Standard: Klassenname mit kleinem Anfangsbuchstaben</li>
+                    <li>Eigener Name möglich: <span class="ic">@Named("myService")</span></li>
+                    <li>Primär für die View-Schicht (JSF, JSP)</li>
+                </ul>
+                <div class="warn-box" style="margin-top:1rem;">
+                    <b>Warnung: </b><span class="ic">@Named</span> ist <strong>kein</strong> Qualifier für die typbasierte Injection — verwenden Sie eigene Qualifier stattdessen!
+                </div>
+                <p class="book-ref">Buch: Kapitel 2.6 — EL-Names</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 19: ÜBUNG 1 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Dependency Injection" id="slide-19">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 1</span>
+                <h2 class="exercise-title">Erste Beans: Task &amp; TaskService</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie eine Klasse <span class="ic">Task</span> mit Feldern: <span class="ic">title</span> (String), <span class="ic">completed</span> (boolean), <span class="ic">createdAt</span> (LocalDateTime)</li>
+                    <li>Erstellen Sie <span class="ic">TaskRepository</span> mit einer <span class="ic">ArrayList&lt;Task&gt;</span> und Methoden: <span class="ic">add()</span>, <span class="ic">findAll()</span>, <span class="ic">findByTitle()</span></li>
+                    <li>Erstellen Sie <span class="ic">TaskService</span> mit <span class="ic">@Inject</span> für das Repository</li>
+                    <li>Fügen Sie Methoden hinzu: <span class="ic">createTask(String)</span>, <span class="ic">completeTask(String)</span>, <span class="ic">listTasks()</span></li>
+                    <li>Rufen Sie den Service in der Main-Methode auf:
+                        <span class="ic">container.select(TaskService.class).get()</span></li>
+                </ul>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 20 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 20: ÜBUNG 1 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Dependency Injection" id="slide-20">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 1 — Hinweise</span>
+                <h2 class="exercise-title">So sollte es aussehen</h2>
+                <pre><code><span class="kw">public class</span> <span class="ty">TaskService</span> {
+    <span class="an">@Inject</span>
+    <span class="kw">private</span> <span class="ty">TaskRepository</span> repository;
+
+    <span class="kw">public</span> <span class="ty">Task</span> <span class="fn">createTask</span>(<span class="ty">String</span> title) {
+        <span class="ty">Task</span> task = <span class="kw">new</span> <span class="ty">Task</span>(title);
+        repository.add(task);
+        <span class="kw">return</span> task;
+    }
+
+    <span class="kw">public</span> <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; <span class="fn">listTasks</span>() {
+        <span class="kw">return</span> repository.findAll();
+    }
+}</code></pre>
+                <div class="tip-box">
+                    <b>Test: </b>Erstellen Sie 2–3 Tasks und geben Sie sie auf der Konsole aus. Die Injection sollte automatisch funktionieren!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 21: SECTION – SCOPES ==================== -->
+        <section class="slide section-title" data-section="Scopes &amp; Kontexte" id="slide-21">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Scopes &amp; Kontexte</h1>
+                <p class="subtitle">Der Lebenszyklus von CDI Beans</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 22: SCOPES ÜBERBLICK ==================== -->
+        <section class="slide light" data-section="Scopes &amp; Kontexte" id="slide-22">
+            <div class="slide-content">
+                <h2>Scopes im Überblick</h2>
+                <p style="margin-bottom:1rem;">CDI definiert, <strong>wie lange</strong> eine Bean-Instanz lebt und <strong>wer</strong> sie sieht.</p>
+                <table class="comparison">
+                    <tr><th>Scope</th><th>Lebensdauer</th><th>Shared?</th></tr>
+                    <tr><td><span class="ic">@Dependent</span></td><td>Wie der Injection-Point</td><td>Nein — immer neue Instanz</td></tr>
+                    <tr><td><span class="ic">@RequestScoped</span></td><td>Ein HTTP-Request</td><td>Ja, innerhalb des Requests</td></tr>
+                    <tr><td><span class="ic">@SessionScoped</span></td><td>Eine HTTP-Session</td><td>Ja, innerhalb der Session</td></tr>
+                    <tr><td><span class="ic">@ConversationScoped</span></td><td>Manuell gesteuert</td><td>Ja, innerhalb der Conversation</td></tr>
+                    <tr><td><span class="ic">@ApplicationScoped</span></td><td>Gesamte Anwendung</td><td>Ja, global (Singleton-ähnlich)</td></tr>
+                </table>
+                <p class="book-ref">Buch: Kapitel 3 — Scopes</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 23: @DEPENDENT ==================== -->
+        <section class="slide light" data-section="Scopes &amp; Kontexte" id="slide-23">
+            <div class="slide-content">
+                <h2>@Dependent — Der Standard-Scope</h2>
+                <pre><code><span class="an">@Dependent</span>  <span class="cm">// oder gar keine Scope-Annotation</span>
+<span class="kw">public class</span> <span class="ty">TaskValidator</span> {
+    <span class="kw">public boolean</span> <span class="fn">isValid</span>(<span class="ty">Task</span> task) {
+        <span class="kw">return</span> task.getTitle() != <span class="kw">null</span>
+            &amp;&amp; !task.getTitle().isBlank();
+    }
+}</code></pre>
+                <ul>
+                    <li><strong>Pseudo-Scope</strong> — kein eigener Kontext</li>
+                    <li>Lebt so lange wie das Bean, das es injiziert hat</li>
+                    <li>Jeder Injection-Point bekommt eine <strong>eigene Instanz</strong></li>
+                    <li>Standard, wenn keine Scope-Annotation angegeben ist</li>
+                    <li>Kein Proxy — die echte Instanz wird injiziert</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 24: @APPLICATIONSCOPED ==================== -->
+        <section class="slide light" data-section="Scopes &amp; Kontexte" id="slide-24">
+            <div class="slide-content">
+                <h2>@ApplicationScoped</h2>
+                <pre><code><span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">TaskRepository</span> {
+    <span class="kw">private final</span> <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; tasks = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+
+    <span class="kw">public void</span> <span class="fn">add</span>(<span class="ty">Task</span> task) { tasks.add(task); }
+    <span class="kw">public</span> <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; <span class="fn">findAll</span>() {
+        <span class="kw">return</span> <span class="ty">Collections</span>.unmodifiableList(tasks);
+    }
+}</code></pre>
+                <ul>
+                    <li><strong>Normal-Scope</strong> — genau eine Instanz pro Anwendung</li>
+                    <li>Ähnlich wie ein Singleton, aber vom Container verwaltet</li>
+                    <li>Wird als <strong>Proxy</strong> injiziert (lazy initialization)</li>
+                    <li>Thread-Safety muss selbst sichergestellt werden!</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 25: @REQUESTSCOPED ==================== -->
+        <section class="slide light" data-section="Scopes &amp; Kontexte" id="slide-25">
+            <div class="slide-content">
+                <h2>@RequestScoped &amp; @SessionScoped</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3><span class="ic">@RequestScoped</span></h3>
+                        <ul>
+                            <li>Lebt für einen HTTP-Request</li>
+                            <li>Ideal für Request-spezifische Daten</li>
+                            <li>Normal-Scope (Proxy)</li>
+                            <li>In SE: manuell via <span class="ic">RequestContextController</span></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><span class="ic">@SessionScoped</span></h3>
+                        <ul>
+                            <li>Lebt für eine HTTP-Session</li>
+                            <li>Ideal für Benutzer-Daten (Login, Warenkorb)</li>
+                            <li>Normal-Scope (Proxy)</li>
+                            <li>Bean muss <span class="ic">Serializable</span> sein!</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 3.3–3.5 — Scopes im Detail</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 26: NORMAL VS PSEUDO SCOPE ==================== -->
+        <section class="slide dark" data-section="Scopes &amp; Kontexte" id="slide-26">
+            <div class="slide-content">
+                <h2>Normal-Scope vs. Pseudo-Scope</h2>
+                <table class="comparison">
+                    <tr><th>Eigenschaft</th><th>Normal-Scope</th><th>Pseudo-Scope</th></tr>
+                    <tr><td>Beispiele</td><td>@ApplicationScoped, @RequestScoped</td><td>@Dependent</td></tr>
+                    <tr><td>Proxy</td><td>Ja — Client erhält Proxy</td><td>Nein — direkte Referenz</td></tr>
+                    <tr><td>Lazy?</td><td>Ja — erst bei Zugriff erzeugt</td><td>Nein — sofort erzeugt</td></tr>
+                    <tr><td>Shared?</td><td>Ja — gleiche Instanz im Kontext</td><td>Nein — immer neu</td></tr>
+                    <tr><td>Serializable?</td><td>Proxy ist serializable</td><td>Kommt drauf an</td></tr>
+                </table>
+                <div class="tip-box" style="background:rgba(240,244,255,0.1); border-color:var(--accent);">
+                    <b style="color:var(--accent);">Merke: </b>Der Proxy leitet jeden Methodenaufruf an die <em>richtige</em> Instanz im aktiven Kontext weiter — das ist die „Contexts"-Magie von CDI!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 27: PROXIES ==================== -->
+        <section class="slide light" data-section="Scopes &amp; Kontexte" id="slide-27">
+            <div class="slide-content">
+                <h2>Proxies verstehen</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>So funktioniert es</h3>
+                        <ol>
+                            <li>Container erzeugt einen <strong>Proxy</strong> der Bean-Klasse</li>
+                            <li>Proxy wird in den Injection-Point injiziert</li>
+                            <li>Bei Methodenaufruf: Proxy sucht die <em>aktuelle</em> Instanz im Kontext</li>
+                            <li>Falls keine existiert → neue Instanz erzeugen</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3>Konsequenzen</h3>
+                        <ul>
+                            <li>Bean braucht einen <strong>parameterlosen Konstruktor</strong> (kann <span class="ic">protected</span> sein)</li>
+                            <li>Klasse darf <strong>nicht</strong> <span class="ic">final</span> sein</li>
+                            <li>Keine <span class="ic">final</span>-Methoden</li>
+                            <li><span class="ic">this</span> im Bean ≠ Proxy-Referenz</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="warn-box" style="margin-top:1rem;">
+                    <b>Häufiger Fehler: </b>Direkte Feldzugriffe auf Proxy-Objekte liefern <span class="ic">null</span> — immer Getter/Methoden verwenden!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 28: @POSTCONSTRUCT ==================== -->
+        <section class="slide light" data-section="Scopes &amp; Kontexte" id="slide-28">
+            <div class="slide-content">
+                <h2>Lebenszyklus-Callbacks</h2>
+                <pre><code><span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">TaskRepository</span> {
+    <span class="kw">private</span> <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; tasks;
+
+    <span class="an">@PostConstruct</span>
+    <span class="kw">void</span> <span class="fn">init</span>() {
+        tasks = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+        <span class="ty">System</span>.out.println(<span class="st">"TaskRepository initialisiert"</span>);
+    }
+
+    <span class="an">@PreDestroy</span>
+    <span class="kw">void</span> <span class="fn">cleanup</span>() {
+        <span class="ty">System</span>.out.println(<span class="st">"TaskRepository wird zerstört"</span>);
+    }
+}</code></pre>
+                <ul>
+                    <li><span class="ic">@PostConstruct</span> — nach Erzeugung und Injection</li>
+                    <li><span class="ic">@PreDestroy</span> — bevor der Kontext zerstört wird</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 3.7 — Lebenszyklus</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 29: ÜBUNG 2 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Scopes &amp; Kontexte" id="slide-29">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 2</span>
+                <h2 class="exercise-title">Scopes in TaskForge</h2>
+                <ul class="task-list">
+                    <li>Annotieren Sie <span class="ic">TaskRepository</span> mit <span class="ic">@ApplicationScoped</span></li>
+                    <li>Fügen Sie <span class="ic">@PostConstruct</span> und <span class="ic">@PreDestroy</span> Callbacks hinzu (mit Konsolenausgabe)</li>
+                    <li>Erzeugen Sie <strong>zwei</strong> <span class="ic">TaskService</span>-Instanzen per <span class="ic">container.select()</span></li>
+                    <li>Fügen Sie über beide Services Tasks hinzu — prüfen Sie: teilen sie das Repository?</li>
+                    <li><strong>Experiment:</strong> Ändern Sie den Scope auf <span class="ic">@Dependent</span> und beobachten Sie den Unterschied</li>
+                </ul>
+                <div class="tip-box">
+                    <b>Erwartung: </b>Mit <span class="ic">@ApplicationScoped</span> sehen beide Services die gleichen Tasks. Mit <span class="ic">@Dependent</span> hat jeder sein eigenes Repository.
+                </div>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 15 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 30: SECTION – QUALIFIER ==================== -->
+        <section class="slide section-title" data-section="Qualifier" id="slide-30">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Qualifier &amp; Alternatives</h1>
+                <p class="subtitle">Die richtige Implementierung auswählen</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 31: AMBIGUOUS DEPENDENCIES ==================== -->
+        <section class="slide light" data-section="Qualifier" id="slide-31">
+            <div class="slide-content">
+                <h2>Das Problem: Ambiguous Dependencies</h2>
+                <pre><code><span class="kw">public interface</span> <span class="ty">TaskRepository</span> {
+    <span class="kw">void</span> <span class="fn">add</span>(<span class="ty">Task</span> task);
+    <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; <span class="fn">findAll</span>();
+}
+
+<span class="kw">public class</span> <span class="ty">InMemoryTaskRepository</span> <span class="kw">implements</span> <span class="ty">TaskRepository</span> { ... }
+<span class="kw">public class</span> <span class="ty">FileTaskRepository</span> <span class="kw">implements</span> <span class="ty">TaskRepository</span> { ... }</code></pre>
+                <pre style="background:#2d1f1f; border-color:#c0392b;"><code style="color:#e74c3c;">WELD-001409: Ambiguous dependencies for type TaskRepository
+  with qualifiers @Default at injection point
+  [BackedAnnotatedField] @Inject private TaskService.repository</code></pre>
+                <p style="margin-top:1rem;">Zwei Implementierungen → CDI weiß nicht, welche es nehmen soll!</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 32: EIGENE QUALIFIER ==================== -->
+        <section class="slide light" data-section="Qualifier" id="slide-32">
+            <div class="slide-content">
+                <h2>Eigene Qualifier erstellen</h2>
+                <pre><code><span class="an">@Qualifier</span>
+<span class="an">@Retention</span>(<span class="ty">RUNTIME</span>)
+<span class="an">@Target</span>({<span class="ty">FIELD</span>, <span class="ty">TYPE</span>, <span class="ty">METHOD</span>, <span class="ty">PARAMETER</span>})
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">InMemory</span> {}
+
+<span class="an">@Qualifier</span>
+<span class="an">@Retention</span>(<span class="ty">RUNTIME</span>)
+<span class="an">@Target</span>({<span class="ty">FIELD</span>, <span class="ty">TYPE</span>, <span class="ty">METHOD</span>, <span class="ty">PARAMETER</span>})
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">Persistent</span> {}</code></pre>
+                <pre><code><span class="an">@InMemory</span> <span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">InMemoryTaskRepository</span> <span class="kw">implements</span> <span class="ty">TaskRepository</span> { ... }
+
+<span class="an">@Persistent</span> <span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">FileTaskRepository</span> <span class="kw">implements</span> <span class="ty">TaskRepository</span> { ... }</code></pre>
+                <pre><code><span class="an">@Inject</span> <span class="an">@InMemory</span>
+<span class="kw">private</span> <span class="ty">TaskRepository</span> repository;</code></pre>
+                <p class="book-ref">Buch: Kapitel 2.8 — Qualifier</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 33: @DEFAULT & @ANY ==================== -->
+        <section class="slide light" data-section="Qualifier" id="slide-33">
+            <div class="slide-content">
+                <h2>Built-in Qualifier: @Default &amp; @Any</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3><span class="ic">@Default</span></h3>
+                        <ul>
+                            <li>Wird automatisch vergeben, wenn kein expliziter Qualifier angegeben</li>
+                            <li><span class="ic">@Inject TaskRepository repo;</span><br>= <span class="ic">@Inject @Default TaskRepository repo;</span></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><span class="ic">@Any</span></h3>
+                        <ul>
+                            <li>Wird jedem Bean automatisch hinzugefügt</li>
+                            <li>Nützlich mit <span class="ic">Instance&lt;T&gt;</span> um <em>alle</em> Implementierungen zu erhalten</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Merke: </b>Sobald Sie einen eigenen Qualifier auf ein Bean setzen, verliert es den <span class="ic">@Default</span>-Qualifier — es sei denn, Sie fügen <span class="ic">@Default</span> explizit hinzu.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 34: @ALTERNATIVE ==================== -->
+        <section class="slide light" data-section="Qualifier" id="slide-34">
+            <div class="slide-content">
+                <h2>@Alternative</h2>
+                <pre><code><span class="an">@Alternative</span>
+<span class="an">@Priority</span>(1000)
+<span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">MockTaskRepository</span> <span class="kw">implements</span> <span class="ty">TaskRepository</span> {
+    <span class="cm">// Test-Implementierung</span>
+    <span class="kw">private final</span> <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; tasks = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+    <span class="kw">public void</span> <span class="fn">add</span>(<span class="ty">Task</span> t) { tasks.add(t); }
+    <span class="kw">public</span> <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; <span class="fn">findAll</span>() { <span class="kw">return</span> tasks; }
+}</code></pre>
+                <ul>
+                    <li><span class="ic">@Alternative</span> kennzeichnet eine Ersatz-Implementierung</li>
+                    <li>Standardmäßig <strong>deaktiviert</strong> — muss explizit aktiviert werden</li>
+                    <li>Aktivierung: <span class="ic">@Priority(N)</span> oder in <span class="ic">beans.xml</span></li>
+                    <li>Ideal für Tests und umgebungsspezifische Konfiguration</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 2.9 — Alternatives</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 35: ÜBUNG 3 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Qualifier" id="slide-35">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 3</span>
+                <h2 class="exercise-title">Qualifier &amp; Alternatives in TaskForge</h2>
+                <ul class="task-list">
+                    <li>Extrahieren Sie ein <strong>Interface</strong> <span class="ic">TaskRepository</span> aus der bisherigen Klasse</li>
+                    <li>Benennen Sie die bisherige Implementierung in <span class="ic">InMemoryTaskRepository</span> um</li>
+                    <li>Erstellen Sie einen Qualifier <span class="ic">@InMemory</span></li>
+                    <li>Erstellen Sie <span class="ic">FileTaskRepository</span> mit <span class="ic">@Persistent</span>-Qualifier (Datei-basiert, simpel)</li>
+                    <li>Wechseln Sie im <span class="ic">TaskService</span> zwischen beiden Implementierungen per Qualifier</li>
+                    <li><strong>Bonus:</strong> Erstellen Sie ein <span class="ic">@Alternative</span> <span class="ic">MockTaskRepository</span> für Tests</li>
+                </ul>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 25 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 36: ÜBUNG 3 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Qualifier" id="slide-36">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 3 — Hinweise</span>
+                <h2 class="exercise-title">Interface &amp; Qualifier</h2>
+                <pre><code><span class="kw">public interface</span> <span class="ty">TaskRepository</span> {
+    <span class="kw">void</span> <span class="fn">add</span>(<span class="ty">Task</span> task);
+    <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; <span class="fn">findAll</span>();
+    <span class="ty">Optional</span>&lt;<span class="ty">Task</span>&gt; <span class="fn">findByTitle</span>(<span class="ty">String</span> title);
+}
+
+<span class="an">@InMemory</span> <span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">InMemoryTaskRepository</span>
+        <span class="kw">implements</span> <span class="ty">TaskRepository</span> {
+    <span class="kw">private final</span> <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; tasks = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+    <span class="cm">// ... Methoden implementieren</span>
+}</code></pre>
+                <div class="tip-box">
+                    <b>Tipp: </b>Das Interface wird in Übung 7 (Decorators) wichtig — Decorators brauchen ein Interface oder eine abstrakte Klasse als Delegate-Typ.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 37: SECTION – PRODUCER ==================== -->
+        <section class="slide section-title" data-section="Producer" id="slide-37">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Producer &amp; Disposer</h1>
+                <p class="subtitle">Beans erzeugen, die der Container nicht kennt</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 38: WARUM PRODUCER? ==================== -->
+        <section class="slide light" data-section="Producer" id="slide-38">
+            <div class="slide-content">
+                <h2>Warum Producer?</h2>
+                <p style="margin-bottom:1rem;">Nicht jedes Objekt kann ein Managed Bean sein. Producer lösen dieses Problem:</p>
+                <ul>
+                    <li>Klassen aus <strong>Drittbibliotheken</strong> (keine Annotationen möglich)</li>
+                    <li>Objekte, die <strong>Konfiguration</strong> benötigen (Datenbankverbindung, Logger)</li>
+                    <li><strong>Primitive Werte</strong> und Strings (int, String, …)</li>
+                    <li>Objekte, deren Erzeugung von <strong>Laufzeitbedingungen</strong> abhängt</li>
+                </ul>
+                <div class="flow" style="margin-top:1.5rem;">
+                    <div class="flow-item">Producer-Methode</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="border-color:var(--exercise-accent);">CDI Bean</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Injection-Point</div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 2.10 — Producer</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 39: @PRODUCES ==================== -->
+        <section class="slide light" data-section="Producer" id="slide-39">
+            <div class="slide-content">
+                <h2>@Produces — Methoden &amp; Felder</h2>
+                <pre><code><span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">ConfigProducer</span> {
+
+    <span class="an">@Produces</span> <span class="an">@MaxTasks</span>
+    <span class="kw">private int</span> maxTasks = 100;
+
+    <span class="an">@Produces</span> <span class="an">@AppName</span>
+    <span class="kw">public</span> <span class="ty">String</span> <span class="fn">appName</span>() {
+        <span class="kw">return</span> <span class="st">"TaskForge v1.0"</span>;
+    }
+
+    <span class="an">@Produces</span>
+    <span class="kw">public</span> <span class="ty">Logger</span> <span class="fn">createLogger</span>(<span class="ty">InjectionPoint</span> ip) {
+        <span class="kw">return</span> <span class="ty">Logger</span>.getLogger(
+            ip.getMember().getDeclaringClass().getName());
+    }
+}</code></pre>
+                <ul>
+                    <li>Felder und Methoden können mit <span class="ic">@Produces</span> annotiert werden</li>
+                    <li>Rückgabetyp + Qualifier = Bean Type + Qualifier des erzeugten Beans</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 40: INJECTIONPOINT ==================== -->
+        <section class="slide light" data-section="Producer" id="slide-40">
+            <div class="slide-content">
+                <h2>InjectionPoint API</h2>
+                <pre><code><span class="an">@Produces</span>
+<span class="kw">public</span> <span class="ty">Logger</span> <span class="fn">createLogger</span>(<span class="ty">InjectionPoint</span> ip) {
+    <span class="cm">// Wer hat den Logger angefordert?</span>
+    <span class="ty">String</span> className = ip.getMember()
+        .getDeclaringClass().getName();
+    <span class="kw">return</span> <span class="ty">Logger</span>.getLogger(className);
+}</code></pre>
+                <ul>
+                    <li><span class="ic">InjectionPoint</span> liefert Metadaten über den Injection-Point</li>
+                    <li>Verfügbar: Klasse, Feld/Methode, Annotationen, Qualifier</li>
+                    <li>Nur für <span class="ic">@Dependent</span>-Beans verfügbar!</li>
+                </ul>
+                <div class="tip-box">
+                    <b>Klassiker: </b>Logger-Erzeugung per <span class="ic">InjectionPoint</span> — jede Klasse bekommt automatisch einen passend konfigurierten Logger.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 41: @DISPOSES ==================== -->
+        <section class="slide light" data-section="Producer" id="slide-41">
+            <div class="slide-content">
+                <h2>@Disposes — Aufräumen</h2>
+                <pre><code><span class="an">@Produces</span> <span class="an">@TaskDB</span>
+<span class="kw">public</span> <span class="ty">Connection</span> <span class="fn">createConnection</span>() {
+    <span class="kw">return</span> <span class="ty">DriverManager</span>.getConnection(
+        <span class="st">"jdbc:h2:mem:taskforge"</span>);
+}
+
+<span class="kw">public void</span> <span class="fn">closeConnection</span>(
+        <span class="an">@Disposes</span> <span class="an">@TaskDB</span> <span class="ty">Connection</span> conn)
+        <span class="kw">throws</span> <span class="ty">SQLException</span> {
+    conn.close();
+}</code></pre>
+                <ul>
+                    <li><span class="ic">@Disposes</span>-Methode wird aufgerufen, wenn der Kontext des Beans endet</li>
+                    <li>Qualifier müssen mit der Producer-Methode übereinstimmen</li>
+                    <li>Ideal für Ressourcen: Verbindungen, Streams, Dateien</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 42: INSTANCE<T> ==================== -->
+        <section class="slide light" data-section="Producer" id="slide-42">
+            <div class="slide-content">
+                <h2>Instance&lt;T&gt; — Programmatischer Lookup</h2>
+                <pre><code><span class="an">@Inject</span> <span class="an">@Any</span>
+<span class="kw">private</span> <span class="ty">Instance</span>&lt;<span class="ty">TaskRepository</span>&gt; repositories;
+
+<span class="kw">public void</span> <span class="fn">listAllImplementations</span>() {
+    <span class="kw">for</span> (<span class="ty">TaskRepository</span> repo : repositories) {
+        <span class="ty">System</span>.out.println(repo.getClass().getSimpleName());
+    }
+}
+
+<span class="kw">public</span> <span class="ty">TaskRepository</span> <span class="fn">getInMemory</span>() {
+    <span class="kw">return</span> repositories
+        .select(<span class="kw">new</span> <span class="ty">AnnotationLiteral</span>&lt;<span class="ty">InMemory</span>&gt;(){})
+        .get();
+}</code></pre>
+                <ul>
+                    <li><span class="ic">Instance&lt;T&gt;</span> ermöglicht dynamische Bean-Auswahl zur Laufzeit</li>
+                    <li>Iteration über alle Implementierungen mit <span class="ic">@Any</span></li>
+                    <li>Filtern per <span class="ic">.select(qualifier)</span></li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 2.11 — Instance</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 43: ÜBUNG 4 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Producer" id="slide-43">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 4</span>
+                <h2 class="exercise-title">Producer in TaskForge</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie eine Klasse <span class="ic">ConfigProducer</span></li>
+                    <li>Definieren Sie einen Qualifier <span class="ic">@ConfigValue(key=...)</span> mit Member</li>
+                    <li>Producer-Methode: liest <span class="ic">InjectionPoint</span> aus, gibt String-Wert zurück</li>
+                    <li>Injizieren Sie z.B. <span class="ic">@ConfigValue("app.name")</span> in den TaskService</li>
+                    <li>Nutzen Sie <span class="ic">Instance&lt;TaskRepository&gt;</span> um alle Repository-Implementierungen aufzulisten</li>
+                </ul>
+                <pre><code><span class="an">@Inject</span> <span class="an">@ConfigValue</span>(<span class="st">"app.name"</span>)
+<span class="kw">private</span> <span class="ty">String</span> appName;</code></pre>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 20 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 44: ÜBUNG 4 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Producer" id="slide-44">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 4 — Hinweise</span>
+                <h2 class="exercise-title">Qualifier mit Member</h2>
+                <pre><code><span class="an">@Qualifier</span>
+<span class="an">@Retention</span>(<span class="ty">RUNTIME</span>)
+<span class="an">@Target</span>({<span class="ty">FIELD</span>, <span class="ty">METHOD</span>, <span class="ty">PARAMETER</span>})
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">ConfigValue</span> {
+    <span class="ty">String</span> <span class="fn">value</span>();
+}
+
+<span class="an">@Produces</span> <span class="an">@ConfigValue</span>(<span class="st">""</span>)
+<span class="kw">public</span> <span class="ty">String</span> <span class="fn">getConfig</span>(<span class="ty">InjectionPoint</span> ip) {
+    <span class="ty">ConfigValue</span> cv = ip.getAnnotated()
+        .getAnnotation(<span class="ty">ConfigValue</span>.class);
+    <span class="kw">return</span> config.getOrDefault(cv.value(), <span class="st">"?"</span>);
+}</code></pre>
+                <div class="warn-box">
+                    <b>Achtung: </b>Qualifier-Members werden per <span class="ic">equals()</span> verglichen — die Producer-Methode braucht <span class="ic">@Nonbinding</span> auf dem Member, sonst muss jeder Wert exakt matchen!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 45: TAG 1 ZUSAMMENFASSUNG ==================== -->
+        <section class="slide dark" data-section="Zusammenfassung" id="slide-45">
+            <div class="slide-content">
+                <h2>Tag 1 — Zusammenfassung</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3 class="accent">Was wir gelernt haben</h3>
+                        <ul>
+                            <li><span class="ic">@Inject</span> — Feld, Konstruktor, Methode</li>
+                            <li>Bean Discovery &amp; <span class="ic">beans.xml</span></li>
+                            <li>Scopes: <span class="ic">@Dependent</span>, <span class="ic">@ApplicationScoped</span>, …</li>
+                            <li>Qualifier &amp; <span class="ic">@Alternative</span></li>
+                            <li><span class="ic">@Produces</span> &amp; <span class="ic">@Disposes</span></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="accent">Unser TaskForge bisher</h3>
+                        <ul>
+                            <li><span class="ic">Task</span> — Domänenobjekt</li>
+                            <li><span class="ic">TaskRepository</span> — Interface + 2 Implementierungen</li>
+                            <li><span class="ic">TaskService</span> — Geschäftslogik</li>
+                            <li><span class="ic">ConfigProducer</span> — Konfigurationswerte</li>
+                            <li>Qualifier: <span class="ic">@InMemory</span>, <span class="ic">@Persistent</span>, <span class="ic">@ConfigValue</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <p style="margin-top:1.5rem; text-align:center; opacity:0.5;">Morgen: Events, Interceptors, Decorators, Stereotypes &amp; DeltaSpike</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 46: TAG 2 START ==================== -->
+        <section class="slide dark" data-section="Tag 2" id="slide-46">
+            <div class="slide-content" style="text-align:center;">
+                <div class="day-number">2</div>
+                <h1>Tag 2</h1>
+                <p class="subtitle">Fortgeschrittene CDI-Konzepte</p>
+                <div class="accent-line" style="margin:1rem auto;"></div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 47: RECAP ==================== -->
+        <section class="slide light" data-section="Tag 2" id="slide-47">
+            <div class="slide-content">
+                <h2>Kurzer Rückblick — Tag 1</h2>
+                <div class="flow">
+                    <div class="flow-item">@Inject</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Scopes</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Qualifier</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Producer</div>
+                </div>
+                <div style="margin-top:2rem;">
+                    <h3>Offene Fragen?</h3>
+                    <p style="font-size:1.05rem;">Gibt es Punkte aus Tag 1 oder den Übungen, die wir nochmal besprechen sollten?</p>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Heute: </b>Events · Interceptors · Decorators · Stereotypes · DeltaSpike
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 48: SECTION – EVENTS ==================== -->
+        <section class="slide section-title" data-section="Events" id="slide-48">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Events &amp; Observer</h1>
+                <p class="subtitle">Lose gekoppelte Kommunikation zwischen Beans</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 49: EVENT-KONZEPT ==================== -->
+        <section class="slide light" data-section="Events" id="slide-49">
+            <div class="slide-content">
+                <h2>Das Observer-Pattern in CDI</h2>
+                <p style="margin-bottom:1rem;">Events ermöglichen <strong>lose Kopplung</strong> — der Sender kennt die Empfänger nicht.</p>
+                <div class="flow">
+                    <div class="flow-item">Producer<br><small>feuert Event</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="border-color:var(--exercise-accent);">CDI Container<br><small>Event-Bus</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Observer A</div>
+                </div>
+                <div class="flow" style="margin-top:0.5rem;">
+                    <div style="width:200px;"></div>
+                    <div style="width:150px;"></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Observer B</div>
+                </div>
+                <ul style="margin-top:1.5rem;">
+                    <li>Typsicher — Event-Typ = Java-Klasse (kein String!)</li>
+                    <li>Synchron (<span class="ic">@Observes</span>) oder asynchron (<span class="ic">@ObservesAsync</span>)</li>
+                    <li>Qualifier für weitere Filterung möglich</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 4 — Events</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 50: EVENT FEUERN ==================== -->
+        <section class="slide light" data-section="Events" id="slide-50">
+            <div class="slide-content">
+                <h2>Events definieren &amp; feuern</h2>
+                <pre><code><span class="cm">// 1. Event-Klasse definieren</span>
+<span class="kw">public class</span> <span class="ty">TaskEvent</span> {
+    <span class="kw">public enum</span> <span class="ty">Action</span> { CREATED, COMPLETED, DELETED }
+    <span class="kw">private final</span> <span class="ty">Task</span> task;
+    <span class="kw">private final</span> <span class="ty">Action</span> action;
+    <span class="cm">// Konstruktor + Getter</span>
+}
+
+<span class="cm">// 2. Event feuern</span>
+<span class="kw">public class</span> <span class="ty">TaskService</span> {
+    <span class="an">@Inject</span>
+    <span class="kw">private</span> <span class="ty">Event</span>&lt;<span class="ty">TaskEvent</span>&gt; taskEvent;
+
+    <span class="kw">public</span> <span class="ty">Task</span> <span class="fn">createTask</span>(<span class="ty">String</span> title) {
+        <span class="ty">Task</span> task = <span class="kw">new</span> <span class="ty">Task</span>(title);
+        repository.add(task);
+        taskEvent.fire(<span class="kw">new</span> <span class="ty">TaskEvent</span>(task, CREATED));
+        <span class="kw">return</span> task;
+    }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 51: @OBSERVES ==================== -->
+        <section class="slide light" data-section="Events" id="slide-51">
+            <div class="slide-content">
+                <h2>@Observes — Events empfangen</h2>
+                <pre><code><span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">TaskLogger</span> {
+
+    <span class="kw">public void</span> <span class="fn">onTaskEvent</span>(<span class="an">@Observes</span> <span class="ty">TaskEvent</span> event) {
+        <span class="ty">System</span>.out.printf(<span class="st">"[LOG] %s: %s%n"</span>,
+            event.getAction(), event.getTask().getTitle());
+    }
+}
+
+<span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">TaskStatistics</span> {
+    <span class="kw">private int</span> created = 0;
+
+    <span class="kw">public void</span> <span class="fn">onCreated</span>(<span class="an">@Observes</span> <span class="ty">TaskEvent</span> event) {
+        <span class="kw">if</span> (event.getAction() == CREATED) created++;
+    }
+}</code></pre>
+                <ul>
+                    <li>Jede Methode mit <span class="ic">@Observes</span>-Parameter wird zum Observer</li>
+                    <li>Mehrere Observer für denselben Event-Typ möglich</li>
+                    <li>Synchron — werden <em>vor</em> der Rückkehr von <span class="ic">fire()</span> aufgerufen</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 52: EVENT-QUALIFIER ==================== -->
+        <section class="slide light" data-section="Events" id="slide-52">
+            <div class="slide-content">
+                <h2>Event-Qualifier</h2>
+                <pre><code><span class="an">@Qualifier</span>
+<span class="an">@Retention</span>(<span class="ty">RUNTIME</span>)
+<span class="an">@Target</span>({<span class="ty">FIELD</span>, <span class="ty">PARAMETER</span>, <span class="ty">METHOD</span>})
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">Created</span> {}
+
+<span class="cm">// Feuern mit Qualifier:</span>
+<span class="an">@Inject</span> <span class="an">@Created</span>
+<span class="kw">private</span> <span class="ty">Event</span>&lt;<span class="ty">TaskEvent</span>&gt; createdEvent;
+
+<span class="cm">// Nur @Created-Events empfangen:</span>
+<span class="kw">public void</span> <span class="fn">onCreated</span>(<span class="an">@Observes</span> <span class="an">@Created</span> <span class="ty">TaskEvent</span> e) {
+    <span class="ty">System</span>.out.println(<span class="st">"Neuer Task: "</span> + e.getTask());
+}</code></pre>
+                <div class="tip-box">
+                    <b>Tipp: </b>Event-Qualifier ermöglichen feingranulare Filterung — ein Observer empfängt nur Events mit passenden Qualifiern.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 53: @OBSERVESASYNC ==================== -->
+        <section class="slide dark" data-section="Events" id="slide-53">
+            <div class="slide-content">
+                <h2>Asynchrone Events</h2>
+                <pre><code><span class="cm">// Feuern — gibt CompletionStage zurück</span>
+taskEvent.<span class="fn">fireAsync</span>(<span class="kw">new</span> <span class="ty">TaskEvent</span>(task, CREATED));
+
+<span class="cm">// Empfangen — anderer Thread!</span>
+<span class="kw">public void</span> <span class="fn">onTaskAsync</span>(
+        <span class="an">@ObservesAsync</span> <span class="ty">TaskEvent</span> event) {
+    <span class="cm">// Läuft in einem separaten Thread</span>
+    sendNotification(event);
+}</code></pre>
+                <ul>
+                    <li><span class="ic">fireAsync()</span> + <span class="ic">@ObservesAsync</span> = asynchrone Verarbeitung</li>
+                    <li>Observer läuft in einem <strong>anderen Thread</strong></li>
+                    <li>Rückgabe: <span class="ic">CompletionStage&lt;TaskEvent&gt;</span></li>
+                    <li><span class="ic">@Observes</span>-Observer werden von <span class="ic">fireAsync()</span> <strong>nicht</strong> aufgerufen (und umgekehrt)</li>
+                </ul>
+                <div class="warn-box" style="background:rgba(255,243,205,0.15); border-color:var(--warn-border); color:#ffeeba;">
+                    <b style="color:#ffc107;">Achtung: </b>Asynchrone Observer haben keinen Request/Session-Kontext — nur <span class="ic">@ApplicationScoped</span> und <span class="ic">@Dependent</span> sind verfügbar!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 54: ÜBUNG 5 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Events" id="slide-54">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 5</span>
+                <h2 class="exercise-title">Events in TaskForge</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie eine <span class="ic">TaskEvent</span>-Klasse mit <span class="ic">Task</span> und <span class="ic">Action</span> (CREATED, COMPLETED)</li>
+                    <li>Feuern Sie Events im <span class="ic">TaskService</span> bei <span class="ic">createTask()</span> und <span class="ic">completeTask()</span></li>
+                    <li>Erstellen Sie <span class="ic">TaskLogger</span> (<span class="ic">@Observes</span>) — gibt Events auf der Konsole aus</li>
+                    <li>Erstellen Sie <span class="ic">TaskStatistics</span> (<span class="ic">@Observes</span>) — zählt erstellte/erledigte Tasks</li>
+                    <li><strong>Bonus:</strong> Erstellen Sie einen <span class="ic">@ObservesAsync</span>-Observer für simulierte E-Mail-Benachrichtigungen</li>
+                </ul>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 20 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 55: ÜBUNG 5 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Events" id="slide-55">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 5 — Hinweise</span>
+                <h2 class="exercise-title">Events feuern &amp; beobachten</h2>
+                <pre><code><span class="cm">// Im TaskService:</span>
+<span class="an">@Inject</span>
+<span class="kw">private</span> <span class="ty">Event</span>&lt;<span class="ty">TaskEvent</span>&gt; taskEvent;
+
+<span class="kw">public</span> <span class="ty">Task</span> <span class="fn">createTask</span>(<span class="ty">String</span> title) {
+    <span class="ty">Task</span> task = <span class="kw">new</span> <span class="ty">Task</span>(title);
+    repository.add(task);
+    taskEvent.fire(
+        <span class="kw">new</span> <span class="ty">TaskEvent</span>(task, <span class="ty">Action</span>.CREATED));
+    <span class="kw">return</span> task;
+}</code></pre>
+                <div class="tip-box">
+                    <b>Test: </b>Erstellen Sie mehrere Tasks und rufen Sie die Statistik ab. Logger und Statistik sollten automatisch reagieren, ohne dass der TaskService sie kennt!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 56: SECTION – INTERCEPTORS ==================== -->
+        <section class="slide section-title" data-section="Interceptors" id="slide-56">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Interceptors</h1>
+                <p class="subtitle">Cross-Cutting Concerns sauber trennen</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 57: CROSS-CUTTING CONCERNS ==================== -->
+        <section class="slide light" data-section="Interceptors" id="slide-57">
+            <div class="slide-content">
+                <h2>Cross-Cutting Concerns</h2>
+                <p style="margin-bottom:1rem;">Aspekte, die <strong>quer durch die Anwendung</strong> benötigt werden:</p>
+                <div class="three-col">
+                    <div class="card" style="text-align:center;">
+                        <h3>Logging</h3>
+                        <p style="font-size:0.9rem;">Methodenaufrufe protokollieren</p>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <h3>Security</h3>
+                        <p style="font-size:0.9rem;">Zugriffsrechte prüfen</p>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <h3>Performance</h3>
+                        <p style="font-size:0.9rem;">Ausführungszeit messen</p>
+                    </div>
+                </div>
+                <ul style="margin-top:1.5rem;">
+                    <li>Ohne Interceptors: Logging-Code in <em>jeder</em> Methode</li>
+                    <li>Mit Interceptors: einmal schreiben, überall anwenden</li>
+                    <li>Interceptor ≈ AOP (Aspect-Oriented Programming) in CDI</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 5 — Interceptors</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 58: INTERCEPTOR BINDING ==================== -->
+        <section class="slide light" data-section="Interceptors" id="slide-58">
+            <div class="slide-content">
+                <h2>Schritt 1: Interceptor Binding</h2>
+                <pre><code><span class="an">@InterceptorBinding</span>
+<span class="an">@Retention</span>(<span class="ty">RUNTIME</span>)
+<span class="an">@Target</span>({<span class="ty">TYPE</span>, <span class="ty">METHOD</span>})
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">Logged</span> {}</code></pre>
+                <ul>
+                    <li>Ein <strong>Interceptor Binding</strong> ist eine Annotation mit <span class="ic">@InterceptorBinding</span></li>
+                    <li>Verbindet die <em>Verwendung</em> (auf Bean/Methode) mit der <em>Implementierung</em> (Interceptor-Klasse)</li>
+                    <li>Kann auf <strong>Klasse</strong> (alle Methoden) oder einzelne <strong>Methoden</strong> angewendet werden</li>
+                </ul>
+                <pre><code><span class="cm">// Anwendung auf eine Klasse:</span>
+<span class="an">@Logged</span>
+<span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">TaskService</span> { ... }
+
+<span class="cm">// Oder auf eine einzelne Methode:</span>
+<span class="an">@Logged</span>
+<span class="kw">public</span> <span class="ty">Task</span> <span class="fn">createTask</span>(<span class="ty">String</span> title) { ... }</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 59: INTERCEPTOR IMPL ==================== -->
+        <section class="slide light" data-section="Interceptors" id="slide-59">
+            <div class="slide-content">
+                <h2>Schritt 2: Interceptor implementieren</h2>
+                <pre><code><span class="an">@Interceptor</span>
+<span class="an">@Logged</span>
+<span class="an">@Priority</span>(1000)
+<span class="kw">public class</span> <span class="ty">LoggingInterceptor</span> {
+
+    <span class="an">@AroundInvoke</span>
+    <span class="kw">public</span> <span class="ty">Object</span> <span class="fn">logMethod</span>(
+            <span class="ty">InvocationContext</span> ctx) <span class="kw">throws</span> <span class="ty">Exception</span> {
+        <span class="ty">String</span> method = ctx.getMethod().getName();
+        <span class="ty">System</span>.out.println(<span class="st">"→ "</span> + method);
+        <span class="kw">try</span> {
+            <span class="ty">Object</span> result = ctx.proceed();
+            <span class="ty">System</span>.out.println(<span class="st">"← "</span> + method);
+            <span class="kw">return</span> result;
+        } <span class="kw">catch</span> (<span class="ty">Exception</span> e) {
+            <span class="ty">System</span>.out.println(<span class="st">"✗ "</span> + method);
+            <span class="kw">throw</span> e;
+        }
+    }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 60: INTERCEPTOR AKTIVIEREN ==================== -->
+        <section class="slide light" data-section="Interceptors" id="slide-60">
+            <div class="slide-content">
+                <h2>Schritt 3: Interceptor aktivieren</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Option A: <span class="ic">@Priority</span> <span class="tag">empfohlen</span></h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@Interceptor</span>
+<span class="an">@Logged</span>
+<span class="an">@Priority</span>(1000)
+<span class="kw">public class</span> <span class="ty">LoggingInterceptor</span> {
+  ...
+}</code></pre>
+                        <p style="font-size:0.88rem;">Global aktiv, kein XML nötig</p>
+                    </div>
+                    <div class="card">
+                        <h3>Option B: <span class="ic">beans.xml</span></h3>
+                        <pre style="font-size:0.82rem;"><code><span class="kw">&lt;interceptors&gt;
+  &lt;class&gt;</span>
+    com.taskforge.LoggingInterceptor
+  <span class="kw">&lt;/class&gt;
+&lt;/interceptors&gt;</span></code></pre>
+                        <p style="font-size:0.88rem;">Nur im jeweiligen Bean Archive aktiv</p>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Reihenfolge: </b>Mehrere Interceptors werden nach <span class="ic">@Priority</span>-Wert sortiert (niedrig → hoch). Bereich: 1000–1999 für Anwendungs-Interceptors.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 61: @AROUNDINVOKE DETAIL ==================== -->
+        <section class="slide dark" data-section="Interceptors" id="slide-61">
+            <div class="slide-content">
+                <h2>InvocationContext im Detail</h2>
+                <pre><code><span class="an">@AroundInvoke</span>
+<span class="kw">public</span> <span class="ty">Object</span> <span class="fn">measure</span>(<span class="ty">InvocationContext</span> ctx)
+        <span class="kw">throws</span> <span class="ty">Exception</span> {
+    <span class="cm">// Verfügbare Informationen:</span>
+    ctx.getMethod();      <span class="cm">// java.lang.reflect.Method</span>
+    ctx.getParameters();  <span class="cm">// Object[] — Aufrufparameter</span>
+    ctx.getTarget();      <span class="cm">// das Bean selbst</span>
+    ctx.getContextData(); <span class="cm">// Map für Interceptor-Kette</span>
+
+    <span class="cm">// WICHTIG: proceed() aufrufen!</span>
+    <span class="kw">return</span> ctx.proceed();
+}</code></pre>
+                <div class="warn-box" style="background:rgba(255,243,205,0.15); border-color:var(--warn-border); color:#ffeeba;">
+                    <b style="color:#ffc107;">Wichtig: </b>Ohne <span class="ic">ctx.proceed()</span> wird die eigentliche Methode (oder der nächste Interceptor) <strong>nie aufgerufen</strong>!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 62: LIFECYCLE INTERCEPTORS ==================== -->
+        <section class="slide light" data-section="Interceptors" id="slide-62">
+            <div class="slide-content">
+                <h2>Lifecycle-Interceptors</h2>
+                <pre><code><span class="an">@Interceptor</span> <span class="an">@Logged</span> <span class="an">@Priority</span>(1000)
+<span class="kw">public class</span> <span class="ty">LifecycleLogger</span> {
+
+    <span class="an">@AroundConstruct</span>
+    <span class="kw">public void</span> <span class="fn">onConstruct</span>(<span class="ty">InvocationContext</span> ctx)
+            <span class="kw">throws</span> <span class="ty">Exception</span> {
+        <span class="ty">System</span>.out.println(<span class="st">"Konstruiere: "</span>
+            + ctx.getConstructor().getDeclaringClass());
+        ctx.proceed();
+    }
+
+    <span class="an">@PostConstruct</span>
+    <span class="kw">public void</span> <span class="fn">onPostConstruct</span>(<span class="ty">InvocationContext</span> ctx)
+            <span class="kw">throws</span> <span class="ty">Exception</span> {
+        <span class="ty">System</span>.out.println(<span class="st">"Initialisiert: "</span>
+            + ctx.getTarget().getClass());
+        ctx.proceed();
+    }
+}</code></pre>
+                <ul>
+                    <li><span class="ic">@AroundConstruct</span> — um den Konstruktor-Aufruf</li>
+                    <li><span class="ic">@PostConstruct</span> / <span class="ic">@PreDestroy</span> — um Lifecycle-Callbacks</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 63: ÜBUNG 6 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Interceptors" id="slide-63">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 6</span>
+                <h2 class="exercise-title">Interceptors in TaskForge</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie ein Interceptor Binding <span class="ic">@Timed</span></li>
+                    <li>Implementieren Sie <span class="ic">TimedInterceptor</span> — misst die Ausführungszeit in Millisekunden</li>
+                    <li>Aktivieren Sie ihn mit <span class="ic">@Priority(1000)</span></li>
+                    <li>Wenden Sie <span class="ic">@Timed</span> auf die Methoden von <span class="ic">TaskService</span> an</li>
+                    <li><strong>Bonus:</strong> Erstellen Sie zusätzlich <span class="ic">@Logged</span> + <span class="ic">LoggingInterceptor</span> mit <span class="ic">@Priority(900)</span> — beobachten Sie die Reihenfolge</li>
+                </ul>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 20 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 64: ÜBUNG 6 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Interceptors" id="slide-64">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 6 — Hinweise</span>
+                <h2 class="exercise-title">TimedInterceptor</h2>
+                <pre><code><span class="an">@Interceptor</span> <span class="an">@Timed</span> <span class="an">@Priority</span>(1000)
+<span class="kw">public class</span> <span class="ty">TimedInterceptor</span> {
+    <span class="an">@AroundInvoke</span>
+    <span class="kw">public</span> <span class="ty">Object</span> <span class="fn">measure</span>(<span class="ty">InvocationContext</span> ctx)
+            <span class="kw">throws</span> <span class="ty">Exception</span> {
+        <span class="kw">long</span> start = <span class="ty">System</span>.nanoTime();
+        <span class="kw">try</span> {
+            <span class="kw">return</span> ctx.proceed();
+        } <span class="kw">finally</span> {
+            <span class="kw">long</span> ms = (<span class="ty">System</span>.nanoTime() - start)
+                / 1_000_000;
+            <span class="ty">System</span>.out.printf(<span class="st">"⏱ %s: %dms%n"</span>,
+                ctx.getMethod().getName(), ms);
+        }
+    }
+}</code></pre>
+                <div class="tip-box">
+                    <b>Test: </b>Beide Interceptors (<span class="ic">@Logged</span> @900, <span class="ic">@Timed</span> @1000) auf <span class="ic">TaskService</span> — Logging umschließt Timing!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 65: SECTION – DECORATORS ==================== -->
+        <section class="slide section-title" data-section="Decorators" id="slide-65">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Decorators</h1>
+                <p class="subtitle">Geschäftslogik erweitern — das Decorator-Pattern in CDI</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 66: INTERCEPTOR VS DECORATOR ==================== -->
+        <section class="slide light" data-section="Decorators" id="slide-66">
+            <div class="slide-content">
+                <h2>Interceptor <span class="vs-label">vs</span> Decorator</h2>
+                <table class="comparison">
+                    <tr><th>Eigenschaft</th><th>Interceptor</th><th>Decorator</th></tr>
+                    <tr><td>Zweck</td><td>Technische Aspekte (Logging, Security)</td><td>Geschäftslogik erweitern</td></tr>
+                    <tr><td>Kenntnis</td><td>Generisch — kennt die API nicht</td><td>Typisiert — implementiert das Interface</td></tr>
+                    <tr><td>Zugriff</td><td><span class="ic">InvocationContext</span></td><td>Direkter Zugriff auf Methoden</td></tr>
+                    <tr><td>Bindung</td><td>Über Annotation (<span class="ic">@InterceptorBinding</span>)</td><td>Über Typ (<span class="ic">@Delegate</span>)</td></tr>
+                    <tr><td>Reihenfolge</td><td>Vor Decorators</td><td>Nach Interceptors</td></tr>
+                </table>
+                <div class="tip-box" style="margin-top:1rem;">
+                    <b>Faustregel: </b>Interceptor = „Was passiert <em>um</em> den Aufruf?" · Decorator = „Was passiert <em>zusätzlich zum</em> Aufruf?"
+                </div>
+                <p class="book-ref">Buch: Kapitel 5.5 — Decorators</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 67: DECORATOR IMPLEMENTIERUNG ==================== -->
+        <section class="slide light" data-section="Decorators" id="slide-67">
+            <div class="slide-content">
+                <h2>Decorator implementieren</h2>
+                <pre><code><span class="an">@Decorator</span>
+<span class="an">@Priority</span>(100)
+<span class="kw">public abstract class</span> <span class="ty">ValidatingTaskRepository</span>
+        <span class="kw">implements</span> <span class="ty">TaskRepository</span> {
+
+    <span class="an">@Inject</span> <span class="an">@Delegate</span> <span class="an">@Any</span>
+    <span class="kw">private</span> <span class="ty">TaskRepository</span> delegate;
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">add</span>(<span class="ty">Task</span> task) {
+        <span class="kw">if</span> (task.getTitle() == <span class="kw">null</span>
+                || task.getTitle().isBlank()) {
+            <span class="kw">throw new</span> <span class="ty">IllegalArgumentException</span>(
+                <span class="st">"Titel darf nicht leer sein!"</span>);
+        }
+        delegate.add(task);  <span class="cm">// Weiterleiten</span>
+    }
+    <span class="cm">// findAll() und findByTitle() werden</span>
+    <span class="cm">// automatisch an delegate weitergeleitet</span>
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 68: DECORATOR DETAILS ==================== -->
+        <section class="slide light" data-section="Decorators" id="slide-68">
+            <div class="slide-content">
+                <h2>Decorator — Wichtige Details</h2>
+                <ul>
+                    <li><span class="ic">@Decorator</span> auf der Klasse — markiert sie als Decorator</li>
+                    <li><span class="ic">@Delegate @Any</span> auf dem Injection-Point — das dekorierte Bean</li>
+                    <li>Muss das <strong>gleiche Interface</strong> implementieren wie das dekorierte Bean</li>
+                    <li>Kann <span class="ic">abstract</span> sein — nicht überschriebene Methoden werden weitergeleitet</li>
+                    <li>Aktivierung: <span class="ic">@Priority</span> oder <span class="ic">beans.xml</span></li>
+                </ul>
+                <div class="warn-box">
+                    <b>Achtung: </b>Ein Decorator braucht ein Interface oder eine abstrakte Klasse als Delegate-Typ. Konkrete Klassen ohne Interface können nicht dekoriert werden!
+                </div>
+                <div class="tip-box" style="margin-top:0.5rem;">
+                    <b>Deshalb: </b>In Übung 3 haben wir das <span class="ic">TaskRepository</span>-Interface extrahiert — genau für diesen Moment!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 69: ÜBUNG 7 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Decorators" id="slide-69">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 7</span>
+                <h2 class="exercise-title">Decorators in TaskForge</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie <span class="ic">ValidatingTaskRepository</span> als <span class="ic">@Decorator</span></li>
+                    <li>Validierung: Titel darf nicht leer sein und maximal 100 Zeichen lang</li>
+                    <li>Injizieren Sie das dekorierte Bean mit <span class="ic">@Inject @Delegate @Any</span></li>
+                    <li>Aktivieren Sie den Decorator mit <span class="ic">@Priority(100)</span></li>
+                    <li>Testen Sie: Erstellen Sie einen Task mit leerem Titel — <span class="ic">IllegalArgumentException</span> erwartet</li>
+                    <li><strong>Bonus:</strong> Zweiter Decorator <span class="ic">AuditingTaskRepository</span> — protokolliert alle Zugriffe</li>
+                </ul>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 20 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 70: ÜBUNG 7 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Decorators" id="slide-70">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 7 — Hinweise</span>
+                <h2 class="exercise-title">Decorator-Kette</h2>
+                <pre><code><span class="cm">// Aufruf-Reihenfolge mit zwei Decorators:</span>
+<span class="cm">// 1. Interceptors (falls vorhanden)</span>
+<span class="cm">// 2. ValidatingTaskRepository (@Priority 100)</span>
+<span class="cm">// 3. AuditingTaskRepository  (@Priority 200)</span>
+<span class="cm">// 4. InMemoryTaskRepository  (das echte Bean)</span></code></pre>
+                <div class="tip-box">
+                    <b>Merke: </b>Decorators werden nach <span class="ic">@Priority</span> sortiert (niedrig → hoch). Der letzte Decorator in der Kette ruft das echte Bean auf.
+                </div>
+                <div class="warn-box" style="margin-top:0.5rem;">
+                    <b>Fehlerquelle: </b>Vergessen Sie nicht <span class="ic">delegate.add(task)</span> aufzurufen — sonst wird der Task nie gespeichert!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 71: SECTION – STEREOTYPES ==================== -->
+        <section class="slide section-title" data-section="Stereotypes &amp; Extensions" id="slide-71">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Stereotypes &amp; Extensions</h1>
+                <p class="subtitle">Annotationen bündeln &amp; CDI erweitern</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 72: WAS SIND STEREOTYPES? ==================== -->
+        <section class="slide light" data-section="Stereotypes &amp; Extensions" id="slide-72">
+            <div class="slide-content">
+                <h2>Was sind Stereotypes?</h2>
+                <p style="margin-bottom:1rem;">Ein Stereotype bündelt mehrere Annotationen in einer <strong>einzigen, wiederverwendbaren</strong> Annotation.</p>
+                <div class="two-col">
+                    <div class="card" style="border-color:#e74c3c;">
+                        <h3 style="color:#e74c3c;">Ohne Stereotype</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@ApplicationScoped</span>
+<span class="an">@Logged</span>
+<span class="an">@Transactional</span>
+<span class="an">@Named</span>
+<span class="kw">public class</span> <span class="ty">TaskService</span> {}</code></pre>
+                    </div>
+                    <div class="card" style="border-color:var(--exercise-accent);">
+                        <h3 style="color:var(--exercise-accent);">Mit Stereotype</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@Service</span>
+<span class="kw">public class</span> <span class="ty">TaskService</span> {}</code></pre>
+                    </div>
+                </div>
+                <ul style="margin-top:1rem;">
+                    <li>Reduziert Boilerplate</li>
+                    <li>Drückt die <strong>Rolle</strong> einer Klasse aus</li>
+                    <li>Änderungen am Stereotype wirken auf alle annotierten Klassen</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 5.9 — Stereotypes</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 73: EIGENE STEREOTYPES ==================== -->
+        <section class="slide light" data-section="Stereotypes &amp; Extensions" id="slide-73">
+            <div class="slide-content">
+                <h2>Eigene Stereotypes definieren</h2>
+                <pre><code><span class="an">@Stereotype</span>
+<span class="an">@ApplicationScoped</span>
+<span class="an">@Logged</span>
+<span class="an">@Named</span>
+<span class="an">@Retention</span>(<span class="ty">RUNTIME</span>)
+<span class="an">@Target</span>(<span class="ty">TYPE</span>)
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">Service</span> {}
+
+<span class="an">@Stereotype</span>
+<span class="an">@ApplicationScoped</span>
+<span class="an">@Retention</span>(<span class="ty">RUNTIME</span>)
+<span class="an">@Target</span>(<span class="ty">TYPE</span>)
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">Repository</span> {}</code></pre>
+                <ul>
+                    <li><span class="ic">@Stereotype</span> kennzeichnet die Annotation als Stereotype</li>
+                    <li>Kann Scopes, Interceptor Bindings, <span class="ic">@Named</span> und <span class="ic">@Alternative</span> bündeln</li>
+                    <li>Ist selbst eine Bean-Defining Annotation (wichtig für <span class="ic">annotated</span>-Modus!)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 74: @MODEL ==================== -->
+        <section class="slide dark" data-section="Stereotypes &amp; Extensions" id="slide-74">
+            <div class="slide-content">
+                <h2>Built-in: @Model</h2>
+                <pre><code><span class="cm">// @Model ist definiert als:</span>
+<span class="an">@Stereotype</span>
+<span class="an">@Named</span>
+<span class="an">@RequestScoped</span>
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">Model</span> {}
+
+<span class="cm">// Verwendung:</span>
+<span class="an">@Model</span>
+<span class="kw">public class</span> <span class="ty">TaskForm</span> {
+    <span class="kw">private</span> <span class="ty">String</span> title;
+    <span class="kw">private</span> <span class="ty">String</span> category;
+    <span class="cm">// Getter + Setter für die View-Schicht</span>
+}</code></pre>
+                <ul>
+                    <li>Das einzige built-in Stereotype in CDI</li>
+                    <li>Kombiniert <span class="ic">@Named</span> + <span class="ic">@RequestScoped</span></li>
+                    <li>Ideal für View-Models (JSF Backing Beans)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 75: PORTABLE EXTENSIONS ==================== -->
+        <section class="slide light" data-section="Stereotypes &amp; Extensions" id="slide-75">
+            <div class="slide-content">
+                <h2>Portable Extensions — Überblick</h2>
+                <p style="margin-bottom:1rem;">CDI ist <strong>erweiterbar</strong> — über den Extension-Mechanismus.</p>
+                <ul>
+                    <li><strong>Portable Extensions</strong> (CDI 1.0+): Observen Container-Lifecycle-Events</li>
+                    <li><strong>Build Compatible Extensions</strong> (CDI 4.0): Annotation-basiert, Build-Time-kompatibel</li>
+                </ul>
+                <pre><code><span class="cm">// Portable Extension — registriert sich via SPI</span>
+<span class="kw">public class</span> <span class="ty">TaskForgeExtension</span>
+        <span class="kw">implements</span> <span class="ty">Extension</span> {
+
+    <span class="kw">void</span> <span class="fn">onProcessAnnotatedType</span>(
+            <span class="an">@Observes</span> <span class="ty">ProcessAnnotatedType</span>&lt;?&gt; pat) {
+        <span class="cm">// Beans verändern, hinzufügen, vetoen...</span>
+    }
+}</code></pre>
+                <div class="tip-box">
+                    <b>In der Praxis: </b>Die meisten Entwickler <em>nutzen</em> Extensions (z.B. DeltaSpike) statt sie selbst zu schreiben. Aber das Verständnis hilft beim Debugging!
+                </div>
+                <p class="book-ref">Buch: Kapitel 5.10–5.11 — Extensions</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 76: ÜBUNG 8 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Stereotypes &amp; Extensions" id="slide-76">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 8</span>
+                <h2 class="exercise-title">Stereotypes in TaskForge</h2>
+                <ul class="task-list">
+                    <li>Erstellen Sie ein Stereotype <span class="ic">@Service</span> (<span class="ic">@Dependent</span> + <span class="ic">@Logged</span>)</li>
+                    <li>Erstellen Sie ein Stereotype <span class="ic">@Repository</span> (<span class="ic">@ApplicationScoped</span>)</li>
+                    <li>Ersetzen Sie die direkten Annotationen in <span class="ic">TaskService</span> und den Repository-Klassen</li>
+                    <li>Verifizieren Sie: Die Anwendung verhält sich identisch wie vorher</li>
+                    <li><strong>Bonus:</strong> Fügen Sie <span class="ic">@Timed</span> zum <span class="ic">@Service</span>-Stereotype hinzu — alle Services werden automatisch gemessen</li>
+                </ul>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 15 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 77: ÜBUNG 8 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Stereotypes &amp; Extensions" id="slide-77">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 8 — Hinweise</span>
+                <h2 class="exercise-title">Stereotype-Definitionen</h2>
+                <pre><code><span class="an">@Stereotype</span>
+<span class="an">@Dependent</span>
+<span class="an">@Logged</span>
+<span class="an">@Timed</span>
+<span class="an">@Retention</span>(<span class="ty">RUNTIME</span>)
+<span class="an">@Target</span>(<span class="ty">TYPE</span>)
+<span class="kw">public</span> <span class="an">@interface</span> <span class="ty">Service</span> {}
+
+<span class="cm">// Vorher:</span>
+<span class="an">@Dependent</span> <span class="an">@Logged</span> <span class="an">@Timed</span>
+<span class="kw">public class</span> <span class="ty">TaskService</span> { ... }
+
+<span class="cm">// Nachher:</span>
+<span class="an">@Service</span>
+<span class="kw">public class</span> <span class="ty">TaskService</span> { ... }</code></pre>
+                <div class="tip-box">
+                    <b>Vorteil: </b>Wenn Sie später einen neuen Interceptor für alle Services einführen wollen, ändern Sie nur das <span class="ic">@Service</span>-Stereotype — nicht jede Klasse einzeln!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 78: SECTION – DELTASPIKE ==================== -->
+        <section class="slide section-title" data-section="Apache DeltaSpike" id="slide-78">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1rem;"></div>
+                <h1>Apache DeltaSpike</h1>
+                <p class="subtitle">CDI-Erweiterungen für die Praxis</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 79: WAS IST DELTASPIKE? ==================== -->
+        <section class="slide light" data-section="Apache DeltaSpike" id="slide-79">
+            <div class="slide-content">
+                <h2>Was ist Apache DeltaSpike?</h2>
+                <p style="margin-bottom:1rem;">Eine Sammlung von <strong>CDI Extensions</strong>, die häufig benötigte Funktionen bereitstellen.</p>
+                <div class="three-col">
+                    <div class="card" style="text-align:center;">
+                        <h3>Core</h3>
+                        <p style="font-size:0.88rem;">Config, Exception Handling, Type-safe Messages</p>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <h3>Data</h3>
+                        <p style="font-size:0.88rem;">Repository Pattern, Query-by-Method-Name</p>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <h3>JSF / Security / Test</h3>
+                        <p style="font-size:0.88rem;">View-Config, @Secured, CdiTestRunner</p>
+                    </div>
+                </div>
+                <ul style="margin-top:1.5rem;">
+                    <li>Portable — funktioniert mit Weld, OWB und ArC</li>
+                    <li>Modularer Aufbau — nur verwenden, was gebraucht wird</li>
+                    <li>Aktiv gepflegt von der Apache-Community</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 6–8 — DeltaSpike</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 80: @CONFIGPROPERTY ==================== -->
+        <section class="slide light" data-section="Apache DeltaSpike" id="slide-80">
+            <div class="slide-content">
+                <h2>DeltaSpike: Konfiguration</h2>
+                <pre><code><span class="cm">// apache-deltaspike.properties:</span>
+<span class="cm">// app.name=TaskForge</span>
+<span class="cm">// app.maxTasks=100</span>
+
+<span class="kw">public class</span> <span class="ty">TaskService</span> {
+    <span class="an">@Inject</span>
+    <span class="an">@ConfigProperty</span>(name = <span class="st">"app.name"</span>)
+    <span class="kw">private</span> <span class="ty">String</span> appName;
+
+    <span class="an">@Inject</span>
+    <span class="an">@ConfigProperty</span>(name = <span class="st">"app.maxTasks"</span>,
+                     defaultValue = <span class="st">"50"</span>)
+    <span class="kw">private</span> <span class="ty">Integer</span> maxTasks;
+}</code></pre>
+                <ul>
+                    <li>Typsichere Konfiguration per <span class="ic">@ConfigProperty</span></li>
+                    <li>Quellen: Properties-Dateien, System-Properties, JNDI, Environment</li>
+                    <li>Ersetzt unseren selbstgebauten <span class="ic">ConfigProducer</span>!</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 81: CONFIGRESOLVER ==================== -->
+        <section class="slide light" data-section="Apache DeltaSpike" id="slide-81">
+            <div class="slide-content">
+                <h2>ConfigResolver — Programmatischer Zugriff</h2>
+                <pre><code><span class="cm">// Einfacher Zugriff:</span>
+<span class="ty">String</span> name = <span class="ty">ConfigResolver</span>
+    .getPropertyValue(<span class="st">"app.name"</span>);
+
+<span class="cm">// Typsicher mit Builder:</span>
+<span class="ty">Integer</span> max = <span class="ty">ConfigResolver</span>
+    .resolve(<span class="st">"app.maxTasks"</span>)
+    .as(<span class="ty">Integer</span>.class)
+    .withDefault(50)
+    .getValue();</code></pre>
+                <ul>
+                    <li>Für Fälle, wo Injection nicht möglich ist</li>
+                    <li>Unterstützt Typkonvertierung und Standardwerte</li>
+                    <li>Hierarchische Konfiguration: projektspezifisch überschreibt global</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 6.2 — ConfigResolver</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 82: @EXCLUDE ==================== -->
+        <section class="slide dark" data-section="Apache DeltaSpike" id="slide-82">
+            <div class="slide-content">
+                <h2>@Exclude — Beans bedingt deaktivieren</h2>
+                <pre><code><span class="cm">// Nur aktiv, wenn NICHT im Test-Profil:</span>
+<span class="an">@Exclude</span>(ifProjectStage = <span class="ty">ProjectStage</span>.UnitTest.class)
+<span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">FileTaskRepository</span>
+        <span class="kw">implements</span> <span class="ty">TaskRepository</span> { ... }
+
+<span class="cm">// Nur im Development-Profil aktiv:</span>
+<span class="an">@Exclude</span>(exceptIfProjectStage =
+    <span class="ty">ProjectStage</span>.Development.class)
+<span class="an">@ApplicationScoped</span>
+<span class="kw">public class</span> <span class="ty">DevToolsBean</span> { ... }</code></pre>
+                <ul>
+                    <li>Mächtiger als <span class="ic">@Alternative</span> — bedingte Aktivierung per Profil</li>
+                    <li>Basiert auf <span class="ic">ProjectStage</span>: Development, UnitTest, Production, …</li>
+                    <li>Bean wird komplett aus dem Container entfernt (nicht nur deaktiviert)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 83: CDI TEST ==================== -->
+        <section class="slide light" data-section="Apache DeltaSpike" id="slide-83">
+            <div class="slide-content">
+                <h2>DeltaSpike Test-Control</h2>
+                <pre><code><span class="an">@RunWith</span>(<span class="ty">CdiTestRunner</span>.class)
+<span class="kw">public class</span> <span class="ty">TaskServiceTest</span> {
+
+    <span class="an">@Inject</span>
+    <span class="kw">private</span> <span class="ty">TaskService</span> taskService;
+
+    <span class="an">@Test</span>
+    <span class="kw">public void</span> <span class="fn">shouldCreateTask</span>() {
+        <span class="ty">Task</span> task = taskService.createTask(<span class="st">"Test"</span>);
+        assertNotNull(task);
+        assertEquals(<span class="st">"Test"</span>, task.getTitle());
+    }
+}</code></pre>
+                <ul>
+                    <li><span class="ic">CdiTestRunner</span> startet einen CDI-Container für den Test</li>
+                    <li><span class="ic">@Inject</span> funktioniert direkt in Testklassen</li>
+                    <li>Kombinierbar mit <span class="ic">@Exclude</span> und Mock-Alternatives</li>
+                </ul>
+                <p class="book-ref">Buch: Kapitel 8 — DeltaSpike Test-Control</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 84: DELTASPIKE WEITERE MODULE ==================== -->
+        <section class="slide light" data-section="Apache DeltaSpike" id="slide-84">
+            <div class="slide-content">
+                <h2>Weitere DeltaSpike-Module</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3 class="accent">Data Module</h3>
+                        <pre style="font-size:0.82rem;"><code><span class="an">@Repository</span>
+<span class="kw">public interface</span> <span class="ty">TaskRepo</span>
+  <span class="kw">extends</span> <span class="ty">EntityRepository</span>
+    &lt;<span class="ty">Task</span>, <span class="ty">Long</span>&gt; {
+
+  <span class="ty">List</span>&lt;<span class="ty">Task</span>&gt; <span class="fn">findByTitle</span>(
+    <span class="ty">String</span> title);
+}</code></pre>
+                        <p style="font-size:0.85rem;">Query-by-Method-Name, automatische Implementierung</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="accent">Weitere</h3>
+                        <ul style="font-size:0.9rem;">
+                            <li><strong>Security:</strong> <span class="ic">@Secured</span>, typbasierte Authorisierung</li>
+                            <li><strong>JSF:</strong> Type-safe View-Config, <span class="ic">@WindowScoped</span></li>
+                            <li><strong>Partial-Bean:</strong> Interfaces implementieren lassen</li>
+                            <li><strong>Scheduler:</strong> Quartz-Integration</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="book-ref">Buch: Kapitel 6–8 — DeltaSpike im Detail</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 85: ÜBUNG 9 AUFGABE ==================== -->
+        <section class="slide exercise" data-section="Apache DeltaSpike" id="slide-85">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 9</span>
+                <h2 class="exercise-title">DeltaSpike in TaskForge</h2>
+                <ul class="task-list">
+                    <li>Fügen Sie <span class="ic">deltaspike-core-api</span> und <span class="ic">deltaspike-core-impl</span> als Maven-Abhängigkeiten hinzu</li>
+                    <li>Erstellen Sie <span class="ic">META-INF/apache-deltaspike.properties</span> mit Konfigurationswerten</li>
+                    <li>Ersetzen Sie den eigenen <span class="ic">ConfigProducer</span> durch <span class="ic">@ConfigProperty</span></li>
+                    <li>Verwenden Sie <span class="ic">@Exclude</span> um <span class="ic">FileTaskRepository</span> im UnitTest-Profil zu deaktivieren</li>
+                    <li><strong>Bonus:</strong> Schreiben Sie einen CDI-Test mit <span class="ic">CdiTestRunner</span></li>
+                </ul>
+                <p style="font-size:0.9rem; color:var(--exercise-dark); margin-top:0.5rem;">⏱ ca. 25 Minuten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 86: ÜBUNG 9 HINWEISE ==================== -->
+        <section class="slide exercise" data-section="Apache DeltaSpike" id="slide-86">
+            <div class="slide-content">
+                <span class="exercise-badge">Übung 9 — Hinweise</span>
+                <h2 class="exercise-title">DeltaSpike-Dependencies</h2>
+                <pre><code><span class="cm">&lt;!-- pom.xml --&gt;</span>
+<span class="kw">&lt;dependency&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>org.apache.deltaspike.core<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>deltaspike-core-api<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>2.0.0<span class="kw">&lt;/version&gt;</span>
+<span class="kw">&lt;/dependency&gt;</span>
+<span class="kw">&lt;dependency&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>org.apache.deltaspike.core<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>deltaspike-core-impl<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>2.0.0<span class="kw">&lt;/version&gt;</span>
+    <span class="kw">&lt;scope&gt;</span>runtime<span class="kw">&lt;/scope&gt;</span>
+<span class="kw">&lt;/dependency&gt;</span></code></pre>
+                <div class="tip-box">
+                    <b>Tipp: </b>Löschen Sie Ihren <span class="ic">ConfigProducer</span> — DeltaSpike übernimmt das jetzt. Weniger eigener Code = weniger Wartung!
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 87: BEST PRACTICES ==================== -->
+        <section class="slide dark" data-section="Best Practices" id="slide-87">
+            <div class="slide-content">
+                <h2>Best Practices</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3>✓ Empfohlen</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>Konstruktor-Injection bevorzugen</li>
+                            <li>Interfaces für austauschbare Beans</li>
+                            <li>Enge Scopes wählen (<span class="ic">@Request</span> &gt; <span class="ic">@Application</span>)</li>
+                            <li>Qualifier statt <span class="ic">@Named</span> für DI</li>
+                            <li>Events für lose Kopplung</li>
+                            <li><span class="ic">bean-discovery-mode="annotated"</span></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>✗ Vermeiden</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><span class="ic">@Inject</span> auf <span class="ic">static</span>-Felder</li>
+                            <li><span class="ic">final</span> Klassen/Methoden mit Normal-Scope</li>
+                            <li>Zu viele <span class="ic">@ApplicationScoped</span> Beans</li>
+                            <li>Circular Dependencies</li>
+                            <li><span class="ic">new</span> statt Container für CDI Beans</li>
+                            <li>Geschäftslogik in Interceptors</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 88: HÄUFIGE FEHLER ==================== -->
+        <section class="slide light" data-section="Best Practices" id="slide-88">
+            <div class="slide-content">
+                <h2>Häufige Fehler &amp; Lösungen</h2>
+                <table class="comparison">
+                    <tr><th>Fehler</th><th>Ursache</th><th>Lösung</th></tr>
+                    <tr>
+                        <td><span class="ic">NullPointerException</span> bei @Inject</td>
+                        <td>Bean mit <span class="ic">new</span> erzeugt</td>
+                        <td>Immer Container nutzen</td>
+                    </tr>
+                    <tr>
+                        <td>Ambiguous dependency</td>
+                        <td>Mehrere Implementierungen</td>
+                        <td>Qualifier oder @Alternative</td>
+                    </tr>
+                    <tr>
+                        <td>Unsatisfied dependency</td>
+                        <td>Bean nicht gefunden</td>
+                        <td>beans.xml / Scope prüfen</td>
+                    </tr>
+                    <tr>
+                        <td>Proxy-Fehler</td>
+                        <td><span class="ic">final</span> Klasse + Normal-Scope</td>
+                        <td><span class="ic">final</span> entfernen oder <span class="ic">@Dependent</span></td>
+                    </tr>
+                    <tr>
+                        <td>@PostConstruct nicht aufgerufen</td>
+                        <td>Bean ist <span class="ic">@Dependent</span> + Proxy</td>
+                        <td>Scope und Lifecycle prüfen</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 89: TASKFORGE GESAMTBILD ==================== -->
+        <section class="slide light" data-section="Zusammenfassung" id="slide-89">
+            <div class="slide-content">
+                <h2>TaskForge — Das Gesamtbild</h2>
+                <div class="two-col">
+                    <div>
+                        <h3 class="accent">Domäne</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><span class="ic">Task</span> — Domänenobjekt</li>
+                            <li><span class="ic">TaskEvent</span> — Event-Klasse</li>
+                        </ul>
+                        <h3 class="accent" style="margin-top:1rem;">Services</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><span class="ic">@Service TaskService</span></li>
+                            <li><span class="ic">@Service TaskStatistics</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="accent">Infrastruktur</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><span class="ic">@Repository InMemoryTaskRepository</span></li>
+                            <li><span class="ic">@Repository FileTaskRepository</span></li>
+                            <li><span class="ic">ValidatingTaskRepository</span> (Decorator)</li>
+                        </ul>
+                        <h3 class="accent" style="margin-top:1rem;">Querschnitt</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><span class="ic">LoggingInterceptor</span> + <span class="ic">TimedInterceptor</span></li>
+                            <li><span class="ic">TaskLogger</span> (Observer)</li>
+                            <li>DeltaSpike Config</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 90: AUFRUF-KETTE ==================== -->
+        <section class="slide dark" data-section="Zusammenfassung" id="slide-90">
+            <div class="slide-content">
+                <h2>Die CDI-Aufrufkette</h2>
+                <p style="margin-bottom:1.5rem; opacity:0.8;">Was passiert bei <span class="ic">taskService.createTask("Mein Task")</span>?</p>
+                <div style="display:flex; flex-direction:column; gap:0.6rem; max-width:700px; margin:0 auto;">
+                    <div class="flow-item" style="text-align:left; padding:10px 20px;">
+                        <small style="color:var(--accent);">1. Proxy</small><br>Leitet an aktuelle Instanz weiter
+                    </div>
+                    <div style="text-align:center; color:var(--accent);">↓</div>
+                    <div class="flow-item" style="text-align:left; padding:10px 20px;">
+                        <small style="color:var(--accent);">2. LoggingInterceptor</small><br>Loggt Methodenname → <span class="ic">ctx.proceed()</span>
+                    </div>
+                    <div style="text-align:center; color:var(--accent);">↓</div>
+                    <div class="flow-item" style="text-align:left; padding:10px 20px;">
+                        <small style="color:var(--accent);">3. TimedInterceptor</small><br>Startet Timer → <span class="ic">ctx.proceed()</span>
+                    </div>
+                    <div style="text-align:center; color:var(--accent);">↓</div>
+                    <div class="flow-item" style="text-align:left; padding:10px 20px;">
+                        <small style="color:var(--accent);">4. TaskService.createTask()</small><br>Erstellt Task, speichert, feuert Event
+                    </div>
+                    <div style="text-align:center; color:var(--accent);">↓</div>
+                    <div class="flow-item" style="text-align:left; padding:10px 20px;">
+                        <small style="color:var(--accent);">5. ValidatingTaskRepository</small><br>Validiert → <span class="ic">delegate.add()</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 91: CDI HEUTE ==================== -->
+        <section class="slide light" data-section="Zusammenfassung" id="slide-91">
+            <div class="slide-content">
+                <h2>CDI heute &amp; morgen</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3 class="accent">Jakarta EE</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>CDI 4.1 in Jakarta EE 11</li>
+                            <li>CDI Lite für Build-Time-Optimierung</li>
+                            <li>Namespace: <span class="ic">jakarta.inject</span></li>
+                            <li>Moderne Application-Server (WildFly, Payara, Open Liberty)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="accent">Quarkus</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>ArC — CDI Lite zur Build-Time</li>
+                            <li>Native Images (GraalVM)</li>
+                            <li>Millisekunden-Startzeit</li>
+                            <li>MicroProfile Config statt DeltaSpike</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Tipp: </b>Das Buch enthält drei weitere Kapitel zur Migration: Jakarta EE (Kap. 9), Quarkus (Kap. 10) und Angular-Frontend (Kap. 11).
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 92: DESIGN-PATTERNS ==================== -->
+        <section class="slide light" data-section="Zusammenfassung" id="slide-92">
+            <div class="slide-content">
+                <h2>CDI Design-Patterns auf einen Blick</h2>
+                <table class="comparison">
+                    <tr><th>Pattern</th><th>CDI-Feature</th><th>Beispiel</th></tr>
+                    <tr><td>Singleton</td><td><span class="ic">@ApplicationScoped</span></td><td>TaskRepository</td></tr>
+                    <tr><td>Factory</td><td><span class="ic">@Produces</span></td><td>ConfigProducer</td></tr>
+                    <tr><td>Strategy</td><td>Qualifier + <span class="ic">Instance&lt;T&gt;</span></td><td>@InMemory / @Persistent</td></tr>
+                    <tr><td>Observer</td><td><span class="ic">Event</span> + <span class="ic">@Observes</span></td><td>TaskEvent → TaskLogger</td></tr>
+                    <tr><td>Proxy / AOP</td><td>Interceptors</td><td>LoggingInterceptor</td></tr>
+                    <tr><td>Decorator</td><td><span class="ic">@Decorator</span></td><td>ValidatingTaskRepository</td></tr>
+                    <tr><td>Stereotype</td><td><span class="ic">@Stereotype</span></td><td>@Service, @Repository</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 93: ARCHITEKTUR ==================== -->
+        <section class="slide dark" data-section="Zusammenfassung" id="slide-93">
+            <div class="slide-content" style="text-align:center;">
+                <h2>Typische CDI-Architektur</h2>
+                <div style="display:flex; flex-direction:column; gap:1rem; max-width:600px; margin:1.5rem auto 0;">
+                    <div class="flow-item" style="background:rgba(99,128,255,0.2); border-color:var(--accent);">
+                        <strong>Presentation</strong><br><small>@Named, @Model, JSF/REST</small>
+                    </div>
+                    <div style="color:var(--accent);">↕</div>
+                    <div class="flow-item" style="background:rgba(46,204,113,0.15); border-color:var(--exercise-accent);">
+                        <strong>Business Logic</strong><br><small>@Service, Events, Interceptors</small>
+                    </div>
+                    <div style="color:var(--accent);">↕</div>
+                    <div class="flow-item" style="background:rgba(231,76,60,0.15); border-color:#e74c3c;">
+                        <strong>Data Access</strong><br><small>@Repository, Decorators, @Produces</small>
+                    </div>
+                </div>
+                <p style="margin-top:1.5rem; opacity:0.5; font-size:0.95rem;">Alles verbunden durch CDI — ohne harte Abhängigkeiten</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 94: WEITERFÜHREND ==================== -->
+        <section class="slide light" data-section="Zusammenfassung" id="slide-94">
+            <div class="slide-content">
+                <h2>Weiterführende Themen</h2>
+                <p style="margin-bottom:1.5rem;">Diese Themen gehen über den Kurs hinaus — das Buch behandelt sie ausführlich:</p>
+                <div class="three-col">
+                    <div class="card">
+                        <h3>Kapitel 9</h3>
+                        <p style="font-size:0.9rem;">Migration von Java EE zu Jakarta EE — Namespace, CDI 4.0, Build Compatible Extensions</p>
+                    </div>
+                    <div class="card">
+                        <h3>Kapitel 10</h3>
+                        <p style="font-size:0.9rem;">Migration zu Quarkus — ArC, MicroProfile Config, Native Images</p>
+                    </div>
+                    <div class="card">
+                        <h3>Kapitel 11</h3>
+                        <p style="font-size:0.9rem;">Von JSF zu Angular — REST-API, Scope-Mapping, Quinoa-Integration</p>
+                    </div>
+                </div>
+                <div class="tip-box" style="margin-top:1.5rem;">
+                    <b>Empfehlung: </b>Lesen Sie nach dem Kurs Kapitel 1–8 im Buch für alle Details. Kapitel 9–11 wenn Sie an modernen Architekturen interessiert sind.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 95: BUCHEMPFEHLUNG ==================== -->
+        <section class="slide dark" data-section="Zusammenfassung" id="slide-95">
+            <div class="slide-content" style="text-align:center;">
+                <h2>Zum Nachlesen</h2>
+                <div class="two-col" style="margin-top:1.5rem;">
+                    <div class="card" style="text-align:center;">
+                        <h3>🇩🇪 Deutsche Ausgabe</h3>
+                        <p style="font-size:1.1rem; margin:1rem 0;"><strong>[CDI@Work]:AI</strong></p>
+                        <p style="font-size:0.9rem; opacity:0.7;">11 Kapitel · 88 Abschnitte · 350 Code-Listings</p>
+                        <p style="margin-top:1rem;"><a href="book.html" style="color:var(--accent);">→ book.html</a></p>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <h3>🇬🇧 English Edition</h3>
+                        <p style="font-size:1.1rem; margin:1rem 0;"><strong>[CDI@Work]:AI</strong></p>
+                        <p style="font-size:0.9rem; opacity:0.7;">11 Chapters · 88 Sections · 350 Code Listings</p>
+                        <p style="margin-top:1rem;"><a href="book_en.html" style="color:var(--accent);">→ book_en.html</a></p>
+                    </div>
+                </div>
+                <p style="margin-top:1.5rem; opacity:0.5;">von Gerhard Petracek</p>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 96: CHEAT SHEET ==================== -->
+        <section class="slide light" data-section="Zusammenfassung" id="slide-96">
+            <div class="slide-content">
+                <h2>CDI Cheat Sheet</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>Injection</h3>
+                        <ul style="font-size:0.9rem;">
+                            <li><span class="ic">@Inject</span> — Feld, Konstruktor, Methode</li>
+                            <li><span class="ic">@Produces</span> / <span class="ic">@Disposes</span> — Factory</li>
+                            <li><span class="ic">Instance&lt;T&gt;</span> — programmatischer Lookup</li>
+                        </ul>
+                        <h3 style="margin-top:1rem;">Scopes</h3>
+                        <ul style="font-size:0.9rem;">
+                            <li><span class="ic">@Dependent</span> — Pseudo, immer neu</li>
+                            <li><span class="ic">@RequestScoped</span> — pro Request</li>
+                            <li><span class="ic">@SessionScoped</span> — pro Session</li>
+                            <li><span class="ic">@ApplicationScoped</span> — Singleton</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Auswahl</h3>
+                        <ul style="font-size:0.9rem;">
+                            <li><span class="ic">@Qualifier</span> — eigene Qualifier</li>
+                            <li><span class="ic">@Alternative</span> — Ersatz-Bean</li>
+                            <li><span class="ic">@Priority</span> — Aktivierung + Reihenfolge</li>
+                        </ul>
+                        <h3 style="margin-top:1rem;">Erweiterung</h3>
+                        <ul style="font-size:0.9rem;">
+                            <li><span class="ic">@InterceptorBinding</span> + <span class="ic">@AroundInvoke</span></li>
+                            <li><span class="ic">@Decorator</span> + <span class="ic">@Delegate</span></li>
+                            <li><span class="ic">@Stereotype</span> — Annotationen bündeln</li>
+                            <li><span class="ic">Event</span> + <span class="ic">@Observes</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 97: ZUSAMMENFASSUNG TAG 2 ==================== -->
+        <section class="slide dark" data-section="Zusammenfassung" id="slide-97">
+            <div class="slide-content">
+                <h2>Tag 2 — Zusammenfassung</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <h3 class="accent">Gelernt</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>Events — lose gekoppelte Kommunikation</li>
+                            <li>Interceptors — technische Aspekte</li>
+                            <li>Decorators — Geschäftslogik erweitern</li>
+                            <li>Stereotypes — Annotationen bündeln</li>
+                            <li>DeltaSpike — Config, Exclude, Tests</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="accent">TaskForge-Features</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>10 Übungen aufeinander aufbauend</li>
+                            <li>CRUD mit Events und Statistiken</li>
+                            <li>Logging &amp; Timing per Interceptor</li>
+                            <li>Validierung per Decorator</li>
+                            <li>Konfiguration per DeltaSpike</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 98: FEEDBACK ==================== -->
+        <section class="slide light" data-section="Abschluss" id="slide-98">
+            <div class="slide-content" style="text-align:center;">
+                <h2>Fragen &amp; Feedback</h2>
+                <p style="font-size:1.15rem; margin:2rem 0;">Haben Sie noch Fragen zu den Themen des Kurses?</p>
+                <div class="three-col" style="margin-top:2rem;">
+                    <div class="card">
+                        <h3>Inhalt</h3>
+                        <p style="font-size:0.9rem;">Welche Themen waren besonders hilfreich?</p>
+                    </div>
+                    <div class="card">
+                        <h3>Übungen</h3>
+                        <p style="font-size:0.9rem;">War das Tempo und der Schwierigkeitsgrad angemessen?</p>
+                    </div>
+                    <div class="card">
+                        <h3>Praxis</h3>
+                        <p style="font-size:0.9rem;">Welche Themen werden Sie als erstes einsetzen?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 99: RESSOURCEN ==================== -->
+        <section class="slide light" data-section="Abschluss" id="slide-99">
+            <div class="slide-content">
+                <h2>Ressourcen</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>Spezifikationen</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>Jakarta CDI Specification</li>
+                            <li>Jakarta Interceptors Specification</li>
+                            <li>Jakarta Inject API</li>
+                        </ul>
+                        <h3 style="margin-top:1rem;">Implementierungen</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>Weld (Reference Implementation)</li>
+                            <li>Apache OpenWebBeans</li>
+                            <li>Quarkus ArC</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Frameworks</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li>Apache DeltaSpike</li>
+                            <li>MicroProfile (Config, etc.)</li>
+                            <li>Quarkus Extensions</li>
+                        </ul>
+                        <h3 style="margin-top:1rem;">Buch</h3>
+                        <ul style="font-size:0.95rem;">
+                            <li><a href="book.html" style="color:var(--link);">[CDI@Work]:AI — DE</a></li>
+                            <li><a href="book_en.html" style="color:var(--link);">[CDI@Work]:AI — EN</a></li>
+                            <li><a href="blog/index.html" style="color:var(--link);">Blog: AI Journey</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 100: ABSCHLUSS ==================== -->
+        <section class="slide dark" data-section="Abschluss" id="slide-100">
+            <div class="slide-content" style="text-align:center;">
+                <div class="accent-line" style="margin:0 auto 1.5rem;"></div>
+                <h1 style="font-size:3rem;">Vielen Dank!</h1>
+                <p class="subtitle" style="margin-top:1rem;">CDI Training — 2-Tages-Intensivkurs</p>
+                <div class="accent-line" style="margin:1.5rem auto;"></div>
+                <p style="font-size:1rem; opacity:0.6; margin-top:2rem;">Basierend auf <em>[CDI@Work]:AI</em></p>
+                <p style="font-size:0.9rem; opacity:0.4;">von Gerhard Petracek</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('slidesContainer');
+        const slides = document.querySelectorAll('.slide');
+        const progressFill = document.getElementById('progressFill');
+        const slideCounter = document.getElementById('slideCounter');
+        const sectionLabel = document.getElementById('sectionLabel');
+        const totalSlides = slides.length;
+
+        function updateUI(index) {
+            const pct = (index / (totalSlides - 1)) * 100;
+            progressFill.style.width = pct + '%';
+            slideCounter.textContent = (index + 1) + ' / ' + totalSlides;
+
+            const section = slides[index].dataset.section || '';
+            sectionLabel.textContent = section;
+
+            const isLight = slides[index].classList.contains('light') ||
+                            slides[index].classList.contains('exercise');
+            slideCounter.classList.toggle('on-light', isLight);
+            sectionLabel.classList.toggle('on-light', isLight);
+        }
+
+        // IntersectionObserver for slide visibility + animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const idx = Array.from(slides).indexOf(entry.target);
+                    if (idx >= 0) updateUI(idx);
+                }
+            });
+        }, { root: container, threshold: 0.5 });
+
+        slides.forEach(slide => observer.observe(slide));
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                const current = getCurrentSlideIndex();
+                if (current < totalSlides - 1) {
+                    slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+                }
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                const current = getCurrentSlideIndex();
+                if (current > 0) {
+                    slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+                }
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                slides[0].scrollIntoView({ behavior: 'smooth' });
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                slides[totalSlides - 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        function getCurrentSlideIndex() {
+            const containerRect = container.getBoundingClientRect();
+            const center = containerRect.top + containerRect.height / 2;
+            let closest = 0;
+            let minDist = Infinity;
+            slides.forEach((slide, i) => {
+                const rect = slide.getBoundingClientRect();
+                const slideMid = rect.top + rect.height / 2;
+                const dist = Math.abs(slideMid - center);
+                if (dist < minDist) { minDist = dist; closest = i; }
+            });
+            return closest;
+        }
+
+        // Touch support for mobile
+        let touchStartY = 0;
+        container.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        container.addEventListener('touchend', (e) => {
+            const diff = touchStartY - e.changedTouches[0].clientY;
+            const current = getCurrentSlideIndex();
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && current < totalSlides - 1) {
+                    slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+                } else if (diff < 0 && current > 0) {
+                    slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }, { passive: true });
+
+        // Initialize
+        updateUI(0);
+        slides[0].classList.add('visible');
+    </script>
+</body>
+</html>

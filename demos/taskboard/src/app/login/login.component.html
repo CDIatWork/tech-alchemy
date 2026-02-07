@@ -1,0 +1,61 @@
+<!-- Übung 5: Login-Formular mit E-Mail und Passwort -->
+
+<div class="login-container">
+  <div class="login-card">
+    <h1>Anmelden</h1>
+    <p class="login-subtitle">Melden Sie sich an, um Aufgaben zu verwalten.</p>
+
+    <!-- Fehlermeldung -->
+    @if (error()) {
+      <div class="error-box">{{ error() }}</div>
+    }
+
+    <!-- Login-Formular -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- E-Mail -->
+      <div class="form-group">
+        <label for="email">E-Mail</label>
+        <input id="email" type="email" formControlName="email"
+               placeholder="ihre@email.de">
+
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          @if (form.get('email')?.hasError('required')) {
+            <div class="error-text">E-Mail ist erforderlich.</div>
+          }
+          @if (form.get('email')?.hasError('email')) {
+            <div class="error-text">Bitte geben Sie eine gültige E-Mail-Adresse ein.</div>
+          }
+        }
+      </div>
+
+      <!-- Passwort -->
+      <div class="form-group">
+        <label for="password">Passwort</label>
+        <input id="password" type="password" formControlName="password"
+               placeholder="Passwort eingeben">
+
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          @if (form.get('password')?.hasError('required')) {
+            <div class="error-text">Passwort ist erforderlich.</div>
+          }
+          @if (form.get('password')?.hasError('minlength')) {
+            <div class="error-text">Mindestens 3 Zeichen erforderlich.</div>
+          }
+        }
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-primary" style="width: 100%;"
+              [disabled]="form.invalid">
+        Anmelden
+      </button>
+    </form>
+
+    <!-- Hinweis für die Übung -->
+    <div class="login-hint">
+      Simulierter Login: Verwenden Sie eine beliebige E-Mail und
+      ein Passwort mit mindestens 3 Zeichen.
+    </div>
+  </div>
+</div>

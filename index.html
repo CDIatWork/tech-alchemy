@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[CDI@Work]:AI &ndash; CDI and Apache DeltaSpike</title>
+  <meta name="description" content="[CDI@Work]:AI — a modern web edition of the CDI and Apache DeltaSpike book by Gerhard Petracek. 14 chapters, training slides, demo apps, and an AI Journey blog.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    /* ── Hero ── */
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      line-height: 1.2;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .subtitle {
+      font-size: 1rem;
+      opacity: 0.8;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    /* ── Sections ── */
+
+    .content {
+      max-width: 900px;
+      margin: -2.5rem auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #16213e;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 3rem 0 1.2rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid #0f3460;
+    }
+
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
+    /* ── Cards ── */
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2rem 2.5rem;
+      margin-bottom: 1.2rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      color: #0f3460;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: #444;
+      margin-bottom: 1rem;
+    }
+
+    .card .meta {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Buttons ── */
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.55rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+      margin-bottom: 0.4rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .btn .arrow { font-size: 1rem; }
+
+    .btn-outline {
+      background: transparent;
+      color: #0f3460;
+      border: 2px solid #0f3460;
+    }
+
+    .btn-outline:hover {
+      background: #0f3460;
+      color: #fff;
+    }
+
+    /* ── Slides grid ── */
+
+    .slides-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .slide-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 1.5rem 1.8rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .slide-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .slide-card h3 {
+      font-size: 1rem;
+      color: #0f3460;
+      margin-bottom: 0.4rem;
+    }
+
+    .slide-card p {
+      font-size: 0.82rem;
+      color: #444;
+      margin-bottom: 0.8rem;
+    }
+
+    .slide-card a {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #0f3460;
+      text-decoration: none;
+    }
+
+    .slide-card a:hover { text-decoration: underline; }
+
+    /* ── Demos grid ── */
+
+    .demos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .demo-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 1.5rem 1.8rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .demo-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .demo-card .demo-tag {
+      display: inline-block;
+      background: #e8edf4;
+      color: #0f3460;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.6rem;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.6rem;
+    }
+
+    .demo-card h3 {
+      font-size: 1rem;
+      color: #0f3460;
+      margin-bottom: 0.4rem;
+    }
+
+    .demo-card p {
+      font-size: 0.82rem;
+      color: #444;
+      margin-bottom: 0.8rem;
+    }
+
+    .demo-card a {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #0f3460;
+      text-decoration: none;
+    }
+
+    .demo-card a:hover { text-decoration: underline; }
+
+    /* ── Disclaimer ── */
+
+    .disclaimer {
+      background: #fff9e6;
+      border-left: 4px solid #ffc107;
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2.5rem 0;
+      font-size: 0.88rem;
+      color: #5a4e00;
+      line-height: 1.7;
+    }
+
+    .disclaimer strong {
+      color: #856404;
+    }
+
+    /* ── Footer ── */
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #0f3460;
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+
+    @media (max-width: 720px) {
+      .header { padding: 3.5rem 1.5rem 2.5rem; }
+      .header h1 { font-size: 1.8rem; }
+      .content { margin: -1.5rem 1rem 2rem; }
+      .card { padding: 1.5rem; }
+      .slides-grid { grid-template-columns: 1fr; }
+      .demos-grid { grid-template-columns: 1fr; }
+      .slide-card, .demo-card { padding: 1.3rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">Book &middot; Blog &middot; Training &middot; Demos</div>
+    <h1>[CDI@Work]:AI</h1>
+    <p class="subtitle">
+      CDI and Apache DeltaSpike &mdash; by Gerhard Petracek
+    </p>
+  </header>
+
+  <main class="content">
+
+    <!-- ── The Book ── -->
+
+    <h2 class="section-title">The Book</h2>
+
+    <div class="card">
+      <h3>Contexts and Dependency Injection for Java EE</h3>
+      <p class="meta">14 chapters &middot; 425 code listings &middot; 190 tip boxes</p>
+      <p>
+        From CDI basics and DeltaSpike extensions through the full migration path to
+        Jakarta&nbsp;EE, Quarkus, Angular, and cloud deployment. Chapters 1&ndash;8
+        cover the original material; Chapters 9&ndash;14 extend the journey to modern
+        Java and frontend development.
+      </p>
+      <a href="book.html" class="btn"><span class="arrow">&rarr;</span> Deutsche Ausgabe</a>
+      <a href="book_en.html" class="btn"><span class="arrow">&rarr;</span> English Edition</a>
+    </div>
+
+    <!-- ── AI Journey Blog ── -->
+
+    <h2 class="section-title">AI Journey Blog</h2>
+
+    <div class="card">
+      <h3>12 Posts &mdash; From LaTeX to Modern Web</h3>
+      <p>
+        The complete story of transforming a dated LaTeX-generated website into a modern
+        bilingual web book, adding new chapters, training slides, and demo applications
+        &mdash; all driven by AI collaboration.
+      </p>
+      <a href="blog/index.html" class="btn"><span class="arrow">&rarr;</span> Read the Blog</a>
+    </div>
+
+    <!-- ── Training Slides ── -->
+
+    <h2 class="section-title">Training &amp; Slides</h2>
+
+    <div class="slides-grid">
+
+      <div class="slide-card">
+        <h3>CDI Training</h3>
+        <p>2-day intensive course. 100 slides with 10 progressive TaskForge exercises building a complete CDI application.</p>
+        <a href="slides/cdi-training-slides.html">Open slides &rarr;</a>
+      </div>
+
+      <div class="slide-card">
+        <h3>Angular Training</h3>
+        <p>1-day course for Java developers. 5 exercises building a TaskBoard app with Angular standalone components.</p>
+        <a href="slides/angular-training-slides.html">Open slides &rarr;</a>
+      </div>
+
+
+      <div class="slide-card">
+        <h3>Apache DeltaSpike</h3>
+        <p>Chapter 5 covers the DeltaSpike ecosystem: Core, Data, Security, JSF modules, and integration with CDI.</p>
+        <a href="book_en.html#!idx:/deltaspike.html:5">Read Chapter 5 &rarr;</a>
+      </div>
+
+      <div class="slide-card">
+        <h3>Project Overview</h3>
+        <p>Marketing-style slide deck introducing [CDI@Work]:AI, its scope, and the AI-driven creation process.</p>
+        <a href="slides/marketing-slides.html">Open slides &rarr;</a>
+      </div>
+
+    </div>
+
+    <!-- ── Demo Applications ── -->
+
+    <h2 class="section-title">Demo Applications</h2>
+
+    <div class="demos-grid">
+
+      <div class="demo-card">
+        <div class="demo-tag">Java CDI</div>
+        <h3>TaskForge</h3>
+        <p>CDI training exercises using DeltaSpike. Builds incrementally from an empty Maven project to producers, events, interceptors, and decorators.</p>
+        <a href="demos/taskforge/">Browse source &rarr;</a>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-tag">Angular</div>
+        <h3>TaskBoard</h3>
+        <p>Angular standalone app with a json-server mock API. 5 progressive exercises covering components, routing, signals, and drag-and-drop.</p>
+        <a href="demos/taskboard/">Browse source &rarr;</a>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-tag">Full Stack</div>
+        <h3>TaskBoard Quarkus</h3>
+        <p>The same Angular frontend backed by a real Quarkus REST API with Hibernate Panache. Includes Playwright e2e tests.</p>
+        <a href="demos/taskboard-quarkus/">Browse source &rarr;</a>
+      </div>
+
+    </div>
+
+    <!-- ── AI Disclaimer ── -->
+
+    <div class="disclaimer">
+      <strong>Important:</strong> The modernized HTML layout, the English translation, all content from
+      Chapter 9 onward, the blog, training slides, and demo applications were completely AI-generated
+      using <a href="https://claude.ai" style="color:#856404;">Claude</a>, without any manual post-review or post-edits.
+      The content may contain inaccuracies, mistranslations, or errors and should not be treated as a
+      verified or authoritative reference. Use at your own risk.
+    </div>
+
+  </main>
+
+  <footer>
+    [CDI@Work]:AI &middot; Gerhard Petracek &middot; 2026 &middot; Generated with <a href="https://claude.ai">Claude</a>
+  </footer>
+
+</body>
+</html>

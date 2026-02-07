@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bridging the Knowledge Gap &ndash; [CDI@Work]:AI AI Journey</title>
+  <meta name="description" content="Chapter 11 assumed Angular familiarity. Seven targeted insertions now bridge the gap for JSF developers &mdash; explaining signals, Observables, and TypeScript through CDI analogies.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .meta {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    article {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2.5rem 3rem;
+    }
+
+    article p {
+      margin-bottom: 1.4rem;
+    }
+
+    article h2 {
+      font-size: 1.3rem;
+      color: #0f3460;
+      margin: 2.2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    article a {
+      color: #0f3460;
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
+    }
+
+    article a:hover {
+      text-decoration-color: #0f3460;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+      border-left: 4px solid #0f3460;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong {
+      color: #0f3460;
+    }
+
+    .warning-highlight {
+      background: linear-gradient(135deg, #fff8f0, #fff3e0);
+      border-left: 4px solid #e67e22;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .warning-highlight strong {
+      color: #e67e22;
+    }
+
+    .book-links {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.45rem;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      width: 2px;
+      background: #d0d8e4;
+    }
+
+    .timeline li {
+      list-style: none;
+      position: relative;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -1.45rem;
+      top: 0.55rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0f3460;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #d0d8e4;
+    }
+
+    code {
+      background: #f0f3f7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .mapping-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .mapping-table th {
+      background: #0f3460;
+      color: #fff;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .mapping-table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #e8ecf1;
+    }
+
+    .mapping-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .mapping-table tr:nth-child(even) {
+      background: #f8f9fb;
+    }
+
+    .post-nav {
+      max-width: 680px;
+      margin: -0.5rem auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .post-nav a {
+      color: #0f3460;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      transition: color 0.2s;
+    }
+
+    .post-nav a:hover {
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+    }
+
+    .post-nav .prev { text-align: left; }
+    .post-nav .next { text-align: right; margin-left: auto; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      article { margin: -1.5rem 1rem 3rem; padding: 1.5rem; }
+      .book-links { flex-direction: column; }
+      .mapping-table { font-size: 0.8rem; }
+      .mapping-table th, .mapping-table td { padding: 0.4rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">AI Journey &middot; Blog Post #7</div>
+    <h1>Bridging the Knowledge Gap</h1>
+    <p class="meta">February 2026</p>
+  </header>
+
+  <article>
+    <p>
+      Chapter 11 shipped with 27 code examples mapping JSF concepts to Angular equivalents.
+      But a review revealed a problem: the code assumed familiarity with Angular concepts
+      that a JSF developer wouldn&rsquo;t have. <code>signal&lt;Idea[]&gt;([])</code>,
+      <code>subscribe()</code>, TypeScript decorators, <code>inject()</code> &mdash; all
+      used in code listings without introduction. The target audience &mdash; Java developers
+      who know CDI but not Angular &mdash; would hit a wall. This post covers the seven
+      targeted insertions that bridge this knowledge gap.
+    </p>
+
+    <h2>The Problem &mdash; Code Without Context</h2>
+
+    <p>
+      The chapter was structured around concept pairs: each section took a JSF/DeltaSpike
+      feature, explained its purpose, and showed the Angular equivalent. The mapping was
+      correct. But the Angular side assumed you already knew Angular.
+    </p>
+
+    <p>
+      A JSF developer reading <code>signal&lt;Idea[]&gt;([])</code> has no frame of
+      reference. What is a signal? Why the angle brackets? What does the empty array mean?
+      Similarly, <code>subscribe()</code> appears in examples before Observables are ever
+      explained. The <code>app.config.ts</code> bootstrap &mdash; where providers, routes,
+      and interceptors all connect &mdash; was never shown. And TypeScript syntax like
+      arrow functions, decorators, and type annotations went uncommented, even though Java
+      developers would encounter them for the first time.
+    </p>
+
+    <p>
+      The chapter told you <em>what</em> the Angular code does. It didn&rsquo;t tell you
+      <em>how to read it</em>.
+    </p>
+
+    <h2>Seven Targeted Insertions</h2>
+
+    <p>
+      The fix was surgical: seven additions placed at the exact points where a JSF developer
+      would first encounter an unfamiliar concept. No restructuring, no rewriting of existing
+      content. Just bridging prose and three small code blocks inserted where they&rsquo;re needed.
+    </p>
+
+    <ul class="timeline">
+      <li><strong><code>app.config.ts</code> bootstrap</strong> &mdash; the &ldquo;beans.xml of Angular.&rdquo; A new code listing showing where providers, routes, and interceptors are wired together, inserted in Section 11.2 before standalone components are discussed</li>
+      <li><strong>TypeScript primer for Java developers</strong> &mdash; decorators are annotations, arrow functions are lambdas, <code>string</code> is <code>String</code>. A concise paragraph bridging syntax before the first code examples appear</li>
+      <li><strong>Signals explanation</strong> &mdash; Angular&rsquo;s reactive primitive since v16, compared to a CDI producer that auto-notifies its observers. Explains <code>signal()</code>, <code>computed()</code>, and <code>effect()</code> with Java analogies</li>
+      <li><strong>Signal inputs and Observables forward-reference</strong> &mdash; <code>input.required&lt;string&gt;()</code> explained as a typed constructor parameter, with a note that <code>subscribe()</code> will be covered in Section 11.7</li>
+      <li><strong>Route-scoped providers code listing</strong> &mdash; a concrete <code>providers: [PromotionWizardService]</code> example showing how Angular scopes a service to a route subtree, making the <code>@GroupedConversationScoped</code> mapping tangible</li>
+      <li><strong>Observables introduction</strong> &mdash; <code>Observable&lt;T&gt;</code> compared to <code>CompletableFuture&lt;T&gt;</code>: both represent async results, but Observables are non-blocking streams that you <code>subscribe()</code> to instead of <code>.get()</code></li>
+      <li><strong><code>Step1Component</code> listing</strong> &mdash; a complete component tying together <code>inject()</code>, signals, and <code>subscribe()</code> in one place, so the reader sees all the new concepts working together before the wizard walkthrough</li>
+    </ul>
+
+    <h2>Teaching Through Analogy</h2>
+
+    <div class="highlight">
+      <strong>The key insight:</strong> Every Angular concept is explained through
+      its CDI/Java equivalent. The reader never has to learn from scratch &mdash;
+      they learn by mapping from what they already know.
+    </div>
+
+    <p>
+      The analogies are deliberately precise, not loose metaphors:
+    </p>
+
+    <table class="mapping-table">
+      <tr>
+        <th>Angular Concept</th>
+        <th>CDI / Java Analogy</th>
+      </tr>
+      <tr>
+        <td><code>inject(Service)</code></td>
+        <td><code>@Inject</code> field injection</td>
+      </tr>
+      <tr>
+        <td><code>@Injectable({providedIn: 'root'})</code></td>
+        <td><code>@ApplicationScoped</code></td>
+      </tr>
+      <tr>
+        <td><code>signal()</code></td>
+        <td>CDI producer + <code>@Observes</code> (client-side, real-time)</td>
+      </tr>
+      <tr>
+        <td><code>Observable&lt;T&gt;</code></td>
+        <td><code>CompletableFuture&lt;T&gt;</code> (but non-blocking)</td>
+      </tr>
+      <tr>
+        <td>Route-scoped <code>providers</code></td>
+        <td><code>@GroupedConversationScoped</code></td>
+      </tr>
+      <tr>
+        <td><code>standalone: true</code></td>
+        <td>Annotated bean discovery without <code>beans.xml</code></td>
+      </tr>
+    </table>
+
+    <p>
+      This approach works because the book&rsquo;s readers spent eight chapters building a
+      deep understanding of CDI. They know what <code>@ApplicationScoped</code> means, how
+      producer methods work, and why grouped conversations exist. The Angular concepts aren&rsquo;t
+      foreign &mdash; they&rsquo;re the same ideas in a different runtime.
+    </p>
+
+    <h2>What Didn&rsquo;t Change</h2>
+
+    <p>
+      The additions are purely additive. No existing content was restructured, no sections
+      were moved, and no original code listings were modified. All 88 sections remain the same.
+      All 27 original code listings in Chapter 11 are untouched.
+    </p>
+
+    <p>
+      This is the editorial equivalent of adding margin notes to an existing textbook.
+      The narrative flow is preserved; the new content fills gaps that only become visible
+      when you read through the eyes of the target audience.
+    </p>
+
+    <p>
+      Both the German and English editions received identical insertions, maintaining the
+      structural parity that the <a href="04-170-layout-tests.html">Playwright test suite</a>
+      enforces.
+    </p>
+
+    <h2>Updated Numbers</h2>
+
+    <div class="highlight">
+      <strong>By the numbers:</strong> The book now contains 11 chapters, 88 sections,
+      350 code listings, and 105 tip/warning boxes &mdash; verified by 198 automated tests
+      across both the German and English editions. All green.
+    </div>
+
+    <div class="book-links">
+      <a href="../book.html">
+        <span class="arrow">&rarr;</span> Deutsche Ausgabe
+      </a>
+      <a href="../book_en.html">
+        <span class="arrow">&rarr;</span> English Edition
+      </a>
+    </div>
+
+    <p>
+      This is how books improve &mdash; not by rewriting, but by listening to the
+      reader&rsquo;s perspective. A JSF developer doesn&rsquo;t need Angular documentation;
+      they need a bridge from what they know. These seven additions build that bridge.
+    </p>
+
+    <p style="margin-bottom:0; color:#666; font-size:0.9rem;">
+      <em>Original book by Gerhard Petracek. Chapter 11 improvements and this blog post
+      written by Claude (Anthropic) without subsequent manual edits.</em>
+    </p>
+  </article>
+
+  <nav class="post-nav">
+    <a href="06-from-jsf-to-angular.html" class="prev">&larr; From JSF to Angular</a>
+    <a href="08-a-new-name.html" class="next">[CDI@Work]:AI &rarr;</a>
+  </nav>
+
+  <footer>
+    <a href="index.html">&larr; All Blog Posts</a>
+    <br>
+    [CDI@Work]:AI &middot; An AI Journey &middot; 2026
+  </footer>
+
+</body>
+</html>

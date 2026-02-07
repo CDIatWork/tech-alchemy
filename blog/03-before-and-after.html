@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From LaTeX to Modern Web &ndash; A Visual Before &amp; After</title>
+  <meta name="description" content="Comparing the original LaTeX-generated [CDI@Work]:AI website with the new AI-rebuilt version.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .meta {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    article {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2.5rem 3rem;
+    }
+
+    article p {
+      margin-bottom: 1.4rem;
+    }
+
+    article h2 {
+      font-size: 1.3rem;
+      color: #0f3460;
+      margin: 2.2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    article a {
+      color: #0f3460;
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
+    }
+
+    article a:hover {
+      text-decoration-color: #0f3460;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .comparison figure {
+      margin: 0;
+    }
+
+    .comparison img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #d0d8e4;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+
+    .comparison figcaption {
+      font-size: 0.8rem;
+      color: #666;
+      text-align: center;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+      border-left: 4px solid #0f3460;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong {
+      color: #0f3460;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .detail-card {
+      background: #f8f9fc;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    .detail-card strong {
+      display: block;
+      color: #0f3460;
+      margin-bottom: 0.3rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .book-links {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    .post-nav {
+      max-width: 680px;
+      margin: -0.5rem auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .post-nav a {
+      color: #0f3460;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      transition: color 0.2s;
+    }
+
+    .post-nav a:hover {
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+    }
+
+    .post-nav .prev { text-align: left; }
+    .post-nav .next { text-align: right; margin-left: auto; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      article { margin: -1.5rem 1rem 3rem; padding: 1.5rem; }
+      .comparison { grid-template-columns: 1fr; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .book-links { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">AI Journey &middot; Blog Post #3</div>
+    <h1>From LaTeX to Modern Web &ndash; A Visual Before &amp; After</h1>
+    <p class="meta">February 2026</p>
+  </header>
+
+  <article>
+    <p>
+      When a friend helped me turn <em>[CDI@Work]:AI</em> from LaTeX into a website years ago,
+      it was a big step forward &mdash; suddenly the book was accessible as an online resource
+      instead of just a PDF. A frameset layout with purple navigation, clean structure,
+      and everything a reader needed. It served its purpose well for a long time.
+      But web expectations have evolved since then, and the design started to show its age.
+    </p>
+
+    <p>
+      Here's what the transformation looks like side by side:
+    </p>
+
+    <div class="comparison">
+      <figure>
+        <img src="old_book_screenshot.png" alt="The original LaTeX-generated [CDI@Work]:AI website">
+        <figcaption>The original LaTeX-generated site</figcaption>
+      </figure>
+      <figure>
+        <img src="new_book_screenshot.png" alt="The new AI-rebuilt [CDI@Work]:AI website">
+        <figcaption>The new AI-rebuilt version</figcaption>
+      </figure>
+    </div>
+
+    <h2>What Changed</h2>
+
+    <p>
+      Everything about the presentation &mdash; nothing about the content.
+      The original German text and all 292 code listings were preserved exactly
+      as written. What changed was how it's all presented.
+    </p>
+
+    <div class="detail-grid">
+      <div class="detail-card">
+        <strong>Navigation</strong>
+        Old: flat frameset with a purple sidebar listing all sections as plain links.
+        New: collapsible dark sidebar with hierarchical chapter/section structure and
+        active section highlighting.
+      </div>
+      <div class="detail-card">
+        <strong>Typography</strong>
+        Old: browser defaults, no visual hierarchy. New: carefully chosen font sizes,
+        weights, and spacing. Entry numbers in accent blue. Clear h1/h2/h3 hierarchy.
+      </div>
+      <div class="detail-card">
+        <strong>Code Blocks</strong>
+        Old: white background, browser monospace, no distinction from surrounding text.
+        New: dark theme (Catppuccin-inspired), rounded corners, proper padding and overflow handling.
+      </div>
+      <div class="detail-card">
+        <strong>Tip Boxes</strong>
+        Old: plain text, indistinguishable from regular content.
+        New: light blue background with accent border, visually distinct callout style.
+      </div>
+    </div>
+
+    <h2>A Single Prompt, A Complete Redesign</h2>
+
+    <p>
+      What makes this interesting isn't just the visual improvement &mdash; it's how
+      little guidance was needed. I didn't provide wireframes, color palettes, or
+      typography specs. The prompt was essentially: here's the old site, make it modern.
+      Claude analyzed the content structure (chapters, sections, code listings, tips, tables)
+      and made its own design decisions. The result is a self-contained single HTML file
+      with embedded CSS and JavaScript &mdash; no build tools, no dependencies, no frameworks.
+    </p>
+
+    <div class="highlight">
+      <strong>Key numbers:</strong> 9 chapters, 68 sections, 292 code listings, 74 tip boxes,
+      over 10,000 lines of HTML &mdash; all in one self-contained file per language.
+    </div>
+
+    <h2>Two Languages, Same Structure</h2>
+
+    <p>
+      After the redesign, Claude translated the entire book from German to English.
+      The result: two files with identical DOM structure, identical code blocks, and
+      matching anchor links. Every section number, every listing, every tip box
+      exists in both versions at the same structural position.
+    </p>
+
+    <div class="book-links">
+      <a href="../book.html">
+        <span class="arrow">&rarr;</span> Deutsche Ausgabe
+      </a>
+      <a href="../book_en.html">
+        <span class="arrow">&rarr;</span> English Edition
+      </a>
+    </div>
+
+    <p style="margin-bottom:0; color:#666; font-size:0.9rem;">
+      <em>Original book by Gerhard Petracek. AI-assisted conversion, translation, and this
+      blog post by Claude (Anthropic). No manual edits were made after generation.</em>
+    </p>
+  </article>
+
+  <nav class="post-nav">
+    <a href="02-new-chapter-jakarta-ee.html" class="prev">&larr; From Java EE to Jakarta EE</a>
+    <a href="04-170-layout-tests.html" class="next">170 Tests to Guard a Book &rarr;</a>
+  </nav>
+
+  <footer>
+    <a href="index.html">&larr; All Blog Posts</a>
+    <br>
+    [CDI@Work]:AI &middot; An AI Journey &middot; 2026
+  </footer>
+
+</body>
+</html>

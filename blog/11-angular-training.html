@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Theory to Practice &ndash; [CDI@Work]:AI AI Journey</title>
+  <meta name="description" content="A 1-day Angular training for Java developers, a progressive TaskBoard demo app, and the lessons learned from bridging CDI backends with Angular frontends.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+    }
+
+    .header .meta {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    article {
+      max-width: 680px;
+      margin: -2rem auto 4rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2.5rem 3rem;
+    }
+
+    article p {
+      margin-bottom: 1.4rem;
+    }
+
+    article h2 {
+      font-size: 1.3rem;
+      color: #0f3460;
+      margin: 2.2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    article a {
+      color: #0f3460;
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
+    }
+
+    article a:hover {
+      text-decoration-color: #0f3460;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+      border-left: 4px solid #0f3460;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong {
+      color: #0f3460;
+    }
+
+    .book-links {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f3460;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .book-links a:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+    }
+
+    .book-links a .arrow { font-size: 1.1rem; }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.45rem;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      width: 2px;
+      background: #d0d8e4;
+    }
+
+    .timeline li {
+      list-style: none;
+      position: relative;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -1.45rem;
+      top: 0.55rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0f3460;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #d0d8e4;
+    }
+
+    code {
+      background: #f0f3f7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .mapping-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .mapping-table th {
+      background: #0f3460;
+      color: #fff;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .mapping-table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #e8ecf1;
+    }
+
+    .mapping-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .mapping-table tr:nth-child(even) {
+      background: #f8f9fb;
+    }
+
+    .post-nav {
+      max-width: 680px;
+      margin: -0.5rem auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .post-nav a {
+      color: #0f3460;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      transition: color 0.2s;
+    }
+
+    .post-nav a:hover {
+      text-decoration: underline;
+      text-decoration-color: #b8c6db;
+      text-underline-offset: 3px;
+    }
+
+    .post-nav .prev { text-align: left; }
+    .post-nav .next { text-align: right; margin-left: auto; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 3rem 1.5rem 2rem; }
+      .header h1 { font-size: 1.6rem; }
+      article { margin: -1.5rem 1rem 3rem; padding: 1.5rem; }
+      .book-links { flex-direction: column; }
+      .mapping-table { font-size: 0.8rem; }
+      .mapping-table th, .mapping-table td { padding: 0.4rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="tag">AI Journey &middot; Blog Post #11</div>
+    <h1>From Theory to Practice &mdash; An Angular Training for Java Developers</h1>
+    <p class="meta">February 2026</p>
+  </header>
+
+  <article>
+    <p>
+      <a href="10-training-slides.html">Post #10</a> created a 2-day CDI training
+      with progressive exercises that build a complete application. The natural next
+      step: a 1-day Angular training for the same audience &mdash; Java developers who
+      know <code>@Inject</code> and <code>@ApplicationScoped</code> but have never
+      seen <code>inject()</code> or <code>providedIn: 'root'</code>. This post is
+      about what was learned by building that training, its demo application, and the
+      real backend that replaced the mock.
+    </p>
+
+    <h2>Teaching Angular to CDI Developers</h2>
+
+    <p>
+      The CDI training maps Java EE concepts onto slides. The Angular training
+      faces the opposite challenge: mapping CDI concepts onto a completely different
+      runtime. The audience already understands dependency injection, scopes, and
+      lifecycle &mdash; they just don&rsquo;t know how those ideas translate to a
+      browser environment.
+    </p>
+
+    <p>
+      The result is a 60-slide deck that consistently anchors every Angular concept
+      in something the audience already knows. Angular&rsquo;s <code>inject()</code>
+      is CDI&rsquo;s <code>@Inject</code>. A service with
+      <code>providedIn: 'root'</code> is <code>@ApplicationScoped</code>.
+      An Angular component is a managed bean with a template. Route guards are
+      the client-side equivalent of <code>@RolesAllowed</code>. The CDI mental
+      model becomes the bridge, not the baggage.
+    </p>
+
+    <h2>TaskBoard &mdash; The Training Application</h2>
+
+    <p>
+      Just as the CDI training has <em>TaskForge</em>, the Angular training has
+      <strong>TaskBoard</strong> &mdash; a task management SPA that grows across
+      5 progressive exercises from a static component to a complete application
+      with routing, services, forms, and authentication.
+    </p>
+
+    <table class="mapping-table">
+      <tr><th>Exercise</th><th>Topic</th><th>What Gets Added to TaskBoard</th></tr>
+      <tr><td>1</td><td>Components &amp; Model</td><td><code>Task</code> interface, <code>TaskListComponent</code>, template rendering</td></tr>
+      <tr><td>2</td><td>Routing</td><td>Multi-page navigation, <code>TaskDetailComponent</code>, route parameters</td></tr>
+      <tr><td>3</td><td>Services &amp; HTTP</td><td><code>TaskService</code> with <code>HttpClient</code>, REST integration, proxy config</td></tr>
+      <tr><td>4</td><td>Forms</td><td>Reactive forms, validation, create/edit workflows</td></tr>
+      <tr><td>5</td><td>Security</td><td>Login, JWT handling, <code>AuthGuard</code>, protected routes</td></tr>
+    </table>
+
+    <div class="highlight">
+      <strong>Same principle as TaskForge:</strong> Every exercise builds on the
+      previous one. You never throw away code. Exercise&nbsp;3&rsquo;s service
+      gets an auth header in Exercise&nbsp;5. Exercise&nbsp;2&rsquo;s routes
+      gain guards. The final TaskBoard is a single, coherent application &mdash;
+      not five disconnected samples.
+    </div>
+
+    <h2>From Mock to Real Backend</h2>
+
+    <p>
+      The first TaskBoard variant uses <em>json-server</em> as its backend &mdash;
+      a zero-code REST API that serves a JSON file. For a frontend training,
+      this is ideal: no Java setup, no database, instant feedback. Attendees
+      focus on Angular, not on configuring a backend they already understand.
+    </p>
+
+    <p>
+      But the story doesn&rsquo;t end there. A second variant replaces json-server
+      with a real <strong>Quarkus + JAX-RS backend</strong> backed by an H2 database.
+      Same Angular code, same API contract, same 52 end-to-end tests &mdash;
+      different backend. This is the payoff from Chapter&nbsp;10 and 11 of the book:
+      the full CDI-to-Angular stack, running and tested.
+    </p>
+
+    <p>
+      The switch demonstrates a point that&rsquo;s hard to make in slides alone:
+      a well-designed REST API is backend-agnostic. The Angular frontend neither
+      knows nor cares whether the <code>/api/tasks</code> endpoint is served by
+      a 50-line JSON file or a Quarkus application with JPA, Panache, and JWT
+      security. The contract is the boundary.
+    </p>
+
+    <h2>Lessons from the Container</h2>
+
+    <p>
+      Both TaskBoard variants use Podman containers for reproducible testing.
+      The Quarkus variant runs three containers on <code>--network=host</code>:
+    </p>
+
+    <table class="mapping-table">
+      <tr><th>Container</th><th>Role</th></tr>
+      <tr><td><code>maven:3.9-eclipse-temurin-17</code></td><td>Build and run the Quarkus backend</td></tr>
+      <tr><td><code>node:22-slim</code></td><td>Build and serve the Angular frontend</td></tr>
+      <tr><td><code>mcr.microsoft.com/playwright:v1.58.1-noble</code></td><td>Run 52 Playwright e2e tests</td></tr>
+    </table>
+
+    <p>
+      Three containers, one shared network, 52 tests in about 30 seconds. No local
+      JDK, no local Node.js, no &ldquo;works on my machine&rdquo;. The same
+      <code>run-tests.sh</code> script runs identically in CI and on a developer&rsquo;s
+      laptop. The json-server variant is simpler &mdash; two containers instead
+      of three &mdash; but follows the same pattern.
+    </p>
+
+    <h2>Pitfalls Worth Documenting</h2>
+
+    <p>
+      Building the training and both demo variants surfaced practical issues that
+      no tutorial covers. These are the kind of problems that cost an hour of
+      debugging in a real project:
+    </p>
+
+    <ul class="timeline">
+      <li><strong>PATCH must be explicitly allowed in CORS</strong> &mdash; a default
+        <code>GET, POST, PUT, DELETE</code> list silently rejects <code>PATCH</code>
+        requests. Angular&rsquo;s <code>HttpClient</code> sends a preflight
+        <code>OPTIONS</code> request, and the browser blocks the <code>PATCH</code>
+        without a useful error message.</li>
+      <li><strong>PATCH with <code>Map&lt;String, Object&gt;</code></strong> &mdash; for
+        partial updates (toggling a boolean without sending the entire entity), the JAX-RS
+        endpoint accepts a map instead of the entity class. This loses compile-time type
+        safety but matches how JavaScript frontends actually send partial JSON.</li>
+      <li><strong>Sequence generator vs. seed data</strong> &mdash; Panache with
+        <code>@SequenceGenerator(allocationSize=1)</code> starts IDs at 1, which
+        collides with <code>import.sql</code> seed data. The fix:
+        <code>ALTER SEQUENCE ... RESTART WITH 100</code> to push generated IDs
+        above the seed range.</li>
+      <li><strong>Angular proxy: <code>pathRewrite</code> depends on the backend</strong> &mdash;
+        json-server serves at the root (<code>/tasks</code>), so the proxy needs
+        <code>pathRewrite: {"^/api": ""}</code> to strip the <code>/api</code> prefix.
+        Quarkus serves at <code>/api/tasks</code> directly, so no rewrite is needed.
+        Switching backends means changing one line in <code>proxy.conf.json</code>.</li>
+      <li><strong>String vs. numeric IDs</strong> &mdash; json-server v1 generates hex
+        string IDs; Quarkus generates <code>Long</code> values. Angular&rsquo;s
+        <code>id: string</code> handles both via duck typing, but route parameters
+        and comparison operators need attention.</li>
+      <li><strong>Route ordering matters</strong> &mdash; <code>/tasks/new</code> must
+        be defined before <code>/tasks/:id</code>, or the router matches
+        &ldquo;new&rdquo; as the <code>:id</code> parameter and sends a failed API
+        lookup for a task with ID &ldquo;new&rdquo;.</li>
+      <li><strong>Client-side auth guards are UX, not security</strong> &mdash; a route
+        guard prevents navigation to a protected page, but an attacker can bypass it.
+        Real security lives in Quarkus with <code>@RolesAllowed</code>. The guard
+        improves user experience; the backend enforces authorization.</li>
+    </ul>
+
+    <h2>What Goes Back into the Book</h2>
+
+    <p>
+      Several of these lessons are general enough to benefit the book&rsquo;s readers.
+      Chapter&nbsp;10 (Migration to Quarkus) receives tips about CORS configuration
+      for frontend-backend separation, <code>@PATCH</code> support for partial REST
+      updates, and Panache sequence ID handling with seed data. Chapter&nbsp;11
+      (From JSF to Angular) gets notes on Angular proxy configuration and route
+      ordering. These are practical insights that apply to any Quarkus + Angular
+      project &mdash; not TaskBoard-specific code.
+    </p>
+
+    <h2>The Numbers</h2>
+
+    <div class="highlight">
+      <strong>Project inventory:</strong> 2 training decks (100 + 60 slides),
+      2 demo applications (TaskForge + TaskBoard), 2 TaskBoard variants
+      (json-server mock + Quarkus backend), 52 end-to-end tests, 31 unit tests
+      &mdash; all green.
+    </div>
+
+    <p>
+      The Angular training completes the arc that the CDI training started.
+      A Java developer can now attend both courses &mdash; two days on CDI
+      fundamentals, one day on Angular &mdash; and leave with a mental model
+      that connects backend dependency injection to frontend component architecture.
+      Not as separate worlds, but as two implementations of the same ideas.
+    </p>
+
+    <div class="book-links">
+      <a href="../slides/angular-training-slides.html">
+        <span class="arrow">&rarr;</span> Angular Training Slides
+      </a>
+      <a href="../slides/cdi-training-slides.html">
+        <span class="arrow">&rarr;</span> CDI Training Slides
+      </a>
+      <a href="../book.html">
+        <span class="arrow">&rarr;</span> Deutsche Ausgabe
+      </a>
+      <a href="../book_en.html">
+        <span class="arrow">&rarr;</span> English Edition
+      </a>
+    </div>
+
+    <p style="margin-bottom:0; color:#666; font-size:0.9rem;">
+      <em>Original book by Gerhard Petracek. Angular training, TaskBoard demo
+      application, and this blog post by Claude (Anthropic) without subsequent
+      manual edits.</em>
+    </p>
+  </article>
+
+  <nav class="post-nav">
+    <a href="10-training-slides.html" class="prev">&larr; From Book to Classroom</a>
+    <a href="12-completing-the-stack.html" class="next">Completing the Stack &rarr;</a>
+  </nav>
+
+  <footer>
+    <a href="index.html">&larr; All Blog Posts</a>
+    <br>
+    [CDI@Work]:AI &middot; An AI Journey &middot; 2026
+  </footer>
+
+</body>
+</html>

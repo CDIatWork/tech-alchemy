@@ -1,0 +1,52 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Angular Grundlagen lernen",
+      "category": "learning",
+      "description": "Komponenten, Templates und Signals verstehen — die Basis für jede Angular-Anwendung.",
+      "completed": true,
+      "createdAt": "2025-01-15T09:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "REST-API mit Quarkus erstellen",
+      "category": "work",
+      "description": "JAX-RS Endpoints für die TaskBoard-Anwendung implementieren. CRUD-Operationen für Tasks bereitstellen.",
+      "completed": false,
+      "createdAt": "2025-01-16T10:30:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "TaskBoard-Frontend mit Angular bauen",
+      "category": "work",
+      "description": "Standalone Components, Routing und HttpClient-Integration für das TaskBoard umsetzen.",
+      "completed": false,
+      "createdAt": "2025-01-17T14:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "title": "DeltaSpike zu MicroProfile migrieren",
+      "category": "learning",
+      "description": "ConfigResolver durch MicroProfile Config ersetzen, BeanProvider-Aufrufe durch CDI.current() ablösen.",
+      "completed": false,
+      "createdAt": "2025-01-18T08:15:00.000Z"
+    },
+    {
+      "id": 5,
+      "title": "Unit-Tests schreiben",
+      "category": "work",
+      "description": "Jasmine-Tests für TaskService und TaskListComponent erstellen. Mindestens 80% Code-Abdeckung anstreben.",
+      "completed": false,
+      "createdAt": "2025-01-19T11:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "title": "TypeScript-Buch lesen",
+      "category": "personal",
+      "description": "Kapitel über Generics und Utility Types nachlesen — besonders Partial<T>, Pick<T> und Omit<T>.",
+      "completed": true,
+      "createdAt": "2025-01-20T16:45:00.000Z"
+    }
+  ]
+}

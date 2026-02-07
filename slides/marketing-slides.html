@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[CDI@Work]:AI — Slide Deck</title>
+  <meta name="description" content="Marketing slide deck for [CDI@Work]:AI — CDI und Apache DeltaSpike by Gerhard Petracek">
+  <meta name="author" content="Gerhard Petracek">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      font-size: 17px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #2c3e50;
+      background: #1a1f36;
+    }
+
+    /* ===== Slide Layout ===== */
+    .slide {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-inner {
+      max-width: 1100px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .slide.visible .slide-inner {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Slide themes */
+    .slide--dark {
+      background: linear-gradient(135deg, #16213e, #0f3460);
+      color: #e2e6ed;
+    }
+
+    .slide--navy {
+      background: #1a1f36;
+      color: #e2e6ed;
+    }
+
+    .slide--light {
+      background: #f8f9fa;
+      color: #2c3e50;
+    }
+
+    /* ===== Typography ===== */
+    .slide-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    .slide--light .slide-title { color: #1a1f36; }
+    .slide--dark .slide-title,
+    .slide--navy .slide-title { color: #fff; }
+
+    .slide-subtitle {
+      font-size: 1.15rem;
+      opacity: 0.85;
+      margin-bottom: 1rem;
+    }
+
+    .accent { color: #6380ff; }
+    .accent-line {
+      width: 60px;
+      height: 3px;
+      background: #6380ff;
+      border-radius: 2px;
+      margin: 1.5rem 0;
+    }
+
+    /* ===== Navigation Dots ===== */
+    .nav-dots {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      padding: 0;
+    }
+
+    .nav-dot.active {
+      background: #6380ff;
+      transform: scale(1.3);
+    }
+
+    .nav-dot:hover { background: rgba(99,128,255,0.6); }
+
+    /* Slide counter */
+    .slide-counter {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      z-index: 100;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ===== Slide 1: Title ===== */
+    .title-slide { text-align: center; }
+
+    .title-slide h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.3rem;
+    }
+
+    .title-slide .subtitle {
+      font-size: 1.3rem;
+      color: #8892a4;
+      margin-bottom: 0.5rem;
+    }
+
+    .title-slide .author {
+      font-size: 1rem;
+      color: #6380ff;
+      margin-top: 1rem;
+    }
+
+    .title-slide .accent-line { margin: 1.5rem auto; }
+
+    /* ===== Slide 2: Two Columns ===== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .box-challenge {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .box-challenge b { color: #856404; }
+
+    .box-solution {
+      background: #f0f4ff;
+      border-left: 4px solid #4361ee;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .box-solution b { color: #4361ee; }
+
+    .box-challenge ul, .box-solution ul {
+      margin: 0.75rem 0 0 1.2rem;
+      line-height: 1.8;
+    }
+
+    /* ===== Slide 3: Timeline ===== */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 1.5rem;
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: rgba(99,128,255,0.3);
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.35rem 0;
+      position: relative;
+    }
+
+    .timeline-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #3a4568;
+      border: 2px solid #6380ff;
+      flex-shrink: 0;
+      position: absolute;
+      left: -2rem;
+      z-index: 1;
+    }
+
+    .timeline-item.ai .timeline-dot {
+      background: #6380ff;
+      box-shadow: 0 0 8px rgba(99,128,255,0.5);
+    }
+
+    .timeline-label {
+      font-size: 0.95rem;
+      color: #c8ccd4;
+    }
+
+    .timeline-label .ch-num {
+      color: #6380ff;
+      font-weight: 700;
+      margin-right: 0.5rem;
+      min-width: 2.5rem;
+      display: inline-block;
+    }
+
+    .ai-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: #6380ff;
+      color: #fff;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== Slide 4: Card Grid ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1f36;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #5a6577;
+      line-height: 1.6;
+    }
+
+    .card .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ===== Slide 5: AI Chapters ===== */
+    .ai-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .ai-card {
+      display: flex;
+      gap: 1.25rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(99,128,255,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      align-items: flex-start;
+    }
+
+    .ai-card-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #6380ff;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .ai-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .ai-card p {
+      font-size: 0.88rem;
+      color: #8892a4;
+      line-height: 1.5;
+    }
+
+    .disclaimer-box {
+      background: rgba(255,243,205,0.12);
+      border-left: 4px solid #ffc107;
+      padding: 0.8rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #c8ccd4;
+    }
+
+    /* ===== Slide 6: Migration Path ===== */
+    .migration-path {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .migration-node {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      min-width: 180px;
+    }
+
+    .migration-node h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1f36;
+      margin-bottom: 0.25rem;
+    }
+
+    .migration-node p {
+      font-size: 0.82rem;
+      color: #5a6577;
+    }
+
+    .migration-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1rem;
+      color: #6380ff;
+    }
+
+    .migration-arrow .arrow-line {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .migration-arrow .arrow-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 0.15rem;
+    }
+
+    /* ===== Slide 7: Stats Grid ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(99,128,255,0.15);
+      border-radius: 12px;
+    }
+
+    .stat-num {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #6380ff;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #8892a4;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== Slide 8: Code Showcase ===== */
+    .code-block {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      padding: 1.25rem 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.65;
+      border: 1px solid #313244;
+      font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+      margin-top: 1.5rem;
+    }
+
+    .code-block .kw { color: #cba6f7; }
+    .code-block .type { color: #89b4fa; }
+    .code-block .ann { color: #f9e2af; }
+    .code-block .str { color: #a6e3a1; }
+    .code-block .cm { color: #6c7086; font-style: italic; }
+
+    .tip-box {
+      background: #f0f4ff;
+      border-left: 4px solid #4361ee;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.93rem;
+      margin-top: 1.25rem;
+      color: #2c3e50;
+    }
+
+    .tip-box b { color: #4361ee; }
+
+    /* ===== Slide 9: Bilingual ===== */
+    .book-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .book-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(99,128,255,0.2);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .book-card .book-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .book-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .book-card p {
+      font-size: 0.9rem;
+      color: #8892a4;
+    }
+
+    .bilingual-note {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #8892a4;
+      font-style: italic;
+    }
+
+    /* ===== Slide 10: CTA ===== */
+    .cta-slide { text-align: center; }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.25rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99,128,255,0.3);
+      text-decoration: none;
+    }
+
+    .cta-btn--primary {
+      background: #6380ff;
+      color: #fff;
+    }
+
+    .cta-btn--secondary {
+      background: transparent;
+      color: #6380ff;
+      border: 2px solid #6380ff;
+    }
+
+    .cta-blog {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .cta-blog a {
+      color: #8fa4ff;
+      text-decoration: none;
+    }
+
+    .cta-blog a:hover { text-decoration: underline; }
+
+    .cta-footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: #5a6577;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .slide { padding: 2rem 1.5rem; }
+      .slide-title { font-size: 1.9rem; }
+      .title-slide h1 { font-size: 2.5rem; }
+      .two-col { grid-template-columns: 1fr; }
+      .card-grid { grid-template-columns: 1fr; }
+      .book-cards { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .migration-path { flex-direction: column; gap: 1rem; }
+      .migration-arrow { transform: rotate(90deg); }
+      .ai-card { flex-direction: column; }
+    }
+
+    @media (max-width: 600px) {
+      html { font-size: 15px; }
+      .slide { padding: 1.5rem 1rem; }
+      .slide-title { font-size: 1.5rem; }
+      .title-slide h1 { font-size: 2rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stat-num { font-size: 2rem; }
+      .code-block { font-size: 0.72rem; padding: 0.8rem; }
+      .nav-dots {
+        right: auto;
+        top: auto;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        flex-direction: row;
+      }
+      .slide-counter { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation dots -->
+  <nav class="nav-dots" aria-label="Slide navigation">
+    <button class="nav-dot active" data-slide="0" aria-label="Slide 1"></button>
+    <button class="nav-dot" data-slide="1" aria-label="Slide 2"></button>
+    <button class="nav-dot" data-slide="2" aria-label="Slide 3"></button>
+    <button class="nav-dot" data-slide="3" aria-label="Slide 4"></button>
+    <button class="nav-dot" data-slide="4" aria-label="Slide 5"></button>
+    <button class="nav-dot" data-slide="5" aria-label="Slide 6"></button>
+    <button class="nav-dot" data-slide="6" aria-label="Slide 7"></button>
+    <button class="nav-dot" data-slide="7" aria-label="Slide 8"></button>
+    <button class="nav-dot" data-slide="8" aria-label="Slide 9"></button>
+    <button class="nav-dot" data-slide="9" aria-label="Slide 10"></button>
+  </nav>
+  <div class="slide-counter"><span id="current-slide">1</span> / 10</div>
+
+  <!-- Slide 1: Title -->
+  <section class="slide slide--dark title-slide" id="slide-0">
+    <div class="slide-inner">
+      <h1>[CDI@Work]:AI</h1>
+      <div class="accent-line"></div>
+      <p class="subtitle">CDI und Apache DeltaSpike</p>
+      <p class="author">by Gerhard Petracek</p>
+    </div>
+  </section>
+
+  <!-- Slide 2: The Knowledge Gap -->
+  <section class="slide slide--light" id="slide-1">
+    <div class="slide-inner">
+      <h2 class="slide-title">The Knowledge Gap</h2>
+      <div class="two-col">
+        <div class="box-challenge">
+          <b>Challenge</b>
+          <ul>
+            <li>CDI books go stale within years</li>
+            <li>Java EE has become Jakarta EE</li>
+            <li>JSF is losing ground to SPAs</li>
+            <li>Developers need migration guidance</li>
+          </ul>
+        </div>
+        <div class="box-solution">
+          <b>Solution</b>
+          <ul>
+            <li>AI co-author adds 3 modern chapters</li>
+            <li>Jakarta EE migration covered</li>
+            <li>Quarkus path documented</li>
+            <li>Angular frontend replacement shown</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 3: Chapter Overview / Timeline -->
+  <section class="slide slide--navy" id="slide-2">
+    <div class="slide-inner">
+      <h2 class="slide-title">11 Chapters. One Migration Arc.</h2>
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 1</span> Introduction</span></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 2</span> CDI Fundamentals</span></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 3</span> Events, Interceptors &amp; Decorators</span></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 4</span> Portable CDI Extensions</span></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 5</span> Java EE Integration</span></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 6</span> CDI Lite &amp; Micro-Applications</span></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 7</span> Apache DeltaSpike Overview</span></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 8</span> IdeaFork &mdash; Case Study</span></div>
+        <div class="timeline-item ai"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 9</span> From Java EE to Jakarta EE <span class="ai-badge">AI</span></span></div>
+        <div class="timeline-item ai"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 10</span> Migration to Quarkus <span class="ai-badge">AI</span></span></div>
+        <div class="timeline-item ai"><div class="timeline-dot"></div><span class="timeline-label"><span class="ch-num">Ch 11</span> From JSF to Angular <span class="ai-badge">AI</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 4: The Foundation -->
+  <section class="slide slide--light" id="slide-3">
+    <div class="slide-inner">
+      <h2 class="slide-title">The Proven Foundation</h2>
+      <p class="slide-subtitle">Chapters 1&ndash;8: The original expert-authored content</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">&#9881;</div>
+          <h3>CDI Fundamentals</h3>
+          <p>Beans, scopes, qualifiers, producers, disposers &mdash; the complete injection model from the ground up.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#9889;</div>
+          <h3>Events &amp; Interceptors</h3>
+          <p>Type-safe observer pattern, interceptor bindings, decorators, and stereotypes in practice.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#9878;</div>
+          <h3>Apache DeltaSpike</h3>
+          <p>Configuration, security, data, JSF, and scheduling modules &mdash; the CDI ecosystem toolkit.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128736;</div>
+          <h3>IdeaFork Case Study</h3>
+          <p>A complete Java EE application built step by step, demonstrating every concept in context.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 5: AI-Enhanced Chapters -->
+  <section class="slide slide--dark" id="slide-4">
+    <div class="slide-inner">
+      <h2 class="slide-title">Three New Chapters. Written by AI.</h2>
+      <div class="ai-cards">
+        <div class="ai-card">
+          <div class="ai-card-num">9</div>
+          <div>
+            <h3>From Java EE to Jakarta EE</h3>
+            <p>Namespace migration, CDI Lite/Full split, Build Compatible Extensions, bean discovery changes, DeltaSpike 2.0 &mdash; the complete upgrade path to CDI 4.1.</p>
+          </div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-num">10</div>
+          <div>
+            <h3>Migration to Quarkus</h3>
+            <p>CDI Full to ArC migration, MicroProfile Config, build-time extensions, DeltaSpike module replacements, native image compilation.</p>
+          </div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-num">11</div>
+          <div>
+            <h3>From JSF to Angular</h3>
+            <p>Component mapping, scope lifecycle equivalents, forms and validation, REST communication, Quarkus + Quinoa integration.</p>
+          </div>
+        </div>
+      </div>
+      <div class="disclaimer-box">These chapters were authored by Claude (Anthropic) based on the original book&rsquo;s concepts, extending the migration arc into modern Java and frontend development.</div>
+    </div>
+  </section>
+
+  <!-- Slide 6: Migration Path -->
+  <section class="slide slide--light" id="slide-5">
+    <div class="slide-inner">
+      <h2 class="slide-title">The Complete Migration Arc</h2>
+      <div class="migration-path">
+        <div class="migration-node">
+          <h3>Java EE + CDI 1.x</h3>
+          <p>Chapters 1&ndash;8</p>
+        </div>
+        <div class="migration-arrow">
+          <span class="arrow-line">&rarr;</span>
+          <span class="arrow-label">Ch 9</span>
+        </div>
+        <div class="migration-node">
+          <h3>Jakarta EE + CDI 4.1</h3>
+          <p>Namespaces &amp; APIs</p>
+        </div>
+        <div class="migration-arrow">
+          <span class="arrow-line">&rarr;</span>
+          <span class="arrow-label">Ch 10&ndash;11</span>
+        </div>
+        <div class="migration-node">
+          <h3>Quarkus + Angular</h3>
+          <p>Cloud-native stack</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 7: By the Numbers -->
+  <section class="slide slide--navy" id="slide-6">
+    <div class="slide-inner">
+      <h2 class="slide-title" style="text-align:center;">By the Numbers</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">11</div>
+          <div class="stat-label">Chapters</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">88</div>
+          <div class="stat-label">Sections</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">350</div>
+          <div class="stat-label">Code Listings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">105</div>
+          <div class="stat-label">Tips &amp; Warnings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">2</div>
+          <div class="stat-label">Languages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">9</div>
+          <div class="stat-label">Blog Posts</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 8: Code Showcase -->
+  <section class="slide slide--light" id="slide-7">
+    <div class="slide-inner">
+      <h2 class="slide-title">Real-World Code Examples</h2>
+      <p class="slide-subtitle">Constructor injection with CDI &mdash; from the IdeaFork case study</p>
+      <pre class="code-block"><code><span class="kw">public class</span> <span class="type">IdeaManager</span> {
+  <span class="kw">private final</span> <span class="type">IdeaValidator</span> ideaValidator;
+
+  <span class="ann">@Inject</span>
+  <span class="kw">protected</span> <span class="type">IdeaManager</span>(<span class="type">IdeaValidator</span> ideaValidator) {
+    <span class="kw">this</span>.ideaValidator = ideaValidator;
+  }
+
+  <span class="kw">public</span> <span class="type">Idea</span> createIdeaFor(<span class="type">String</span> topic, <span class="type">String</span> category) {
+    <span class="type">Idea</span> result = <span class="kw">new</span> <span class="type">Idea</span>(topic, category);
+    <span class="kw">if</span> (!ideaValidator.checkIdea(result)) {
+      <span class="kw">throw new</span> <span class="type">IllegalArgumentException</span>(
+        <span class="str">"Please try it harder next time!"</span>);
+    }
+    <span class="kw">return</span> result;
+  }
+}</code></pre>
+      <div class="tip-box"><b>Tip: </b>350 code listings like this one guide you from fundamentals through migration &mdash; every concept is shown in runnable context.</div>
+    </div>
+  </section>
+
+  <!-- Slide 9: Bilingual Editions -->
+  <section class="slide slide--dark" id="slide-8">
+    <div class="slide-inner" style="text-align:center;">
+      <h2 class="slide-title">Two Editions. One Codebase.</h2>
+      <div class="book-cards">
+        <div class="book-card">
+          <div class="book-icon">&#128214;</div>
+          <h3>Deutsche Ausgabe</h3>
+          <p>Das Original &mdash; vollst&auml;ndig auf Deutsch mit allen Fachbegriffen</p>
+        </div>
+        <div class="book-card">
+          <div class="book-icon">&#127758;</div>
+          <h3>English Edition</h3>
+          <p>Professional translation preserving all code examples unchanged</p>
+        </div>
+      </div>
+      <p class="bilingual-note">Translated in 8 minutes using 12 parallel AI agents</p>
+    </div>
+  </section>
+
+  <!-- Slide 10: Call to Action -->
+  <section class="slide slide--dark cta-slide" id="slide-9">
+    <div class="slide-inner">
+      <h2 class="slide-title" style="text-align:center;">Start Reading</h2>
+      <div class="accent-line" style="margin:1rem auto;"></div>
+      <div class="cta-buttons">
+        <a href="book.html" class="cta-btn cta-btn--primary">Deutsche Ausgabe</a>
+        <a href="book_en.html" class="cta-btn cta-btn--secondary">English Edition</a>
+      </div>
+      <p class="cta-blog"><a href="blog/index.html">Read the AI Journey blog &rarr;</a></p>
+      <p class="cta-footer">Gerhard Petracek &middot; 2025</p>
+    </div>
+  </section>
+
+  <script>
+    (function() {
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.nav-dot');
+      const counter = document.getElementById('current-slide');
+      let currentIndex = 0;
+
+      // IntersectionObserver for active tracking & entrance animation
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            const idx = Array.from(slides).indexOf(entry.target);
+            if (idx >= 0) {
+              currentIndex = idx;
+              counter.textContent = idx + 1;
+              dots.forEach(function(d, i) {
+                d.classList.toggle('active', i === idx);
+              });
+            }
+          }
+        });
+      }, { threshold: 0.5 });
+
+      slides.forEach(function(slide) { observer.observe(slide); });
+
+      // Dot click navigation
+      dots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+          var idx = parseInt(this.getAttribute('data-slide'));
+          slides[idx].scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          if (currentIndex < slides.length - 1) {
+            slides[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+          }
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          if (currentIndex > 0) {
+            slides[currentIndex - 1].scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      });
+
+      // Mark first slide visible on load
+      slides[0].classList.add('visible');
+    })();
+  </script>
+</body>
+</html>

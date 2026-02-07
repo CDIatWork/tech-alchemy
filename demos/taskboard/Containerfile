@@ -1,0 +1,18 @@
+FROM node:22-slim
+
+WORKDIR /app
+
+# Copy project files
+COPY package.json ./
+RUN npm install
+
+COPY . .
+
+# Create missing favicon to avoid build warning
+RUN touch src/favicon.ico
+
+# Expose ports: 4200 (Angular dev server), 3000 (json-server)
+EXPOSE 4200
+
+# Run both json-server and Angular dev server
+CMD ["npx", "concurrently", "npx json-server db.json --port 3000", "npx ng serve --host 0.0.0.0 --proxy-config proxy.conf.json"]

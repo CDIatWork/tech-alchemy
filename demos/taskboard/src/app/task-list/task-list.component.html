@@ -1,0 +1,67 @@
+<!-- Übung 1: Aufgabenliste mit @for, computed()-Zähler, erledigt-Button -->
+<!-- Übung 2: Klick navigiert zur Detail-Ansicht -->
+<!-- Übung 3: Loading-State und Fehlerbehandlung mit @if -->
+
+<div class="task-list-header">
+  <div class="flex-between">
+    <h1>Aufgaben</h1>
+    <div class="counters">
+      <span class="badge badge-open">{{ openCount() }} offen</span>
+      <span class="badge badge-completed">{{ completedCount() }} erledigt</span>
+    </div>
+  </div>
+</div>
+
+<!-- Loading-State (Übung 3) -->
+@if (loading()) {
+  <div class="loading">Aufgaben werden geladen</div>
+}
+
+<!-- Fehler-Anzeige (Übung 3) -->
+@else if (error()) {
+  <div class="task-grid">
+    <div class="error-box">{{ error() }}</div>
+    <button class="btn btn-secondary" (click)="loadTasks()">Erneut versuchen</button>
+  </div>
+}
+
+<!-- Aufgabenliste (Übung 1) -->
+@else {
+  <div class="task-grid">
+    @if (tasks().length === 0) {
+      <div class="empty-state">
+        <p>Keine Aufgaben vorhanden.</p>
+        <a routerLink="/tasks/new" class="btn btn-primary mt-2">Erste Aufgabe erstellen</a>
+      </div>
+    }
+
+    <!-- @for-Schleife — wie ui:repeat in JSF (Übung 1) -->
+    @for (task of tasks(); track task.id) {
+      <div class="task-card" [class.completed]="task.completed" (click)="goToDetail(task)">
+        <div class="task-info">
+          <div class="task-title">{{ task.title }}</div>
+          <div class="task-meta">
+            <span class="badge" [class.badge-work]="task.category === 'work'"
+                                [class.badge-learning]="task.category === 'learning'"
+                                [class.badge-personal]="task.category === 'personal'">
+              {{ task.category }}
+            </span>
+            &middot;
+            {{ task.createdAt | date:'dd.MM.yyyy' }}
+          </div>
+        </div>
+        <div class="task-actions">
+          @if (task.completed) {
+            <button class="btn btn-sm btn-secondary" (click)="complete(task, $event)">
+              Wiederherstellen
+            </button>
+          } @else {
+            <button class="btn btn-sm btn-success" (click)="complete(task, $event)">
+              Erledigt
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
